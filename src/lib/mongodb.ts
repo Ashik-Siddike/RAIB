@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/raib_bags";
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
-}
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://raibdevelopment_db_user:DJHnB7IILD4J6KXb@cluster0.mceas1s.mongodb.net/raib_bags?retryWrites=true&w=majority&appName=Cluster0";
 
 let cached = (global as any).mongoose;
 
@@ -20,10 +16,11 @@ export async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s if Atlas is slow
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => {
+      return m;
     });
   }
 
@@ -31,6 +28,7 @@ export async function connectToDatabase() {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.error("MongoDB Atlas Connection Timeout / Error:", e);
     throw e;
   }
 
