@@ -86,10 +86,10 @@ export function LiveChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Floating Trigger Bubble */}
+      {/* Floating Solid Red Trigger Bubble */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 rounded-full bg-gradient-to-r from-red-600 via-red-700 to-zinc-900 text-white shadow-2xl shadow-red-950/80 border border-red-500/50 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer group"
+        className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-2xl shadow-red-950/80 border border-red-500/50 flex items-center justify-center transition-transform hover:scale-110 cursor-pointer group"
         title="Live Chat Support"
       >
         <MessageCircle className="w-6 h-6 group-hover:rotate-12 transition-transform text-white" />
