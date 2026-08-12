@@ -17,16 +17,13 @@ import {
   Check,
   ArrowRight,
   Share2,
-  Sparkles,
   Flame,
   Clock,
   ChevronDown,
   MessageSquare,
   Award,
   CheckCircle2,
-  XCircle,
-  ThumbsUp,
-  Send
+  ThumbsUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -67,7 +64,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       helpful: 24,
     },
     {
-      commment: "অর্ডার দেওয়ার ৪৮ ঘণ্টার মধ্যে চট্টগ্রামে ডেলিভারি পেয়েছি। ডাস্ট ব্যাগ ও প্যাকিংটা অনেক লাক্সারি ছিল।",
       id: 2,
       name: "Nusrat Rahman",
       location: "Chittagong",
@@ -238,13 +234,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16 w-full overflow-x-hidden">
       
       {/* 1. Urgency & Stock Scarcity Counter Header */}
-      <div className="bg-gradient-to-r from-red-950/80 via-zinc-950 to-red-950/80 p-3.5 sm:p-4 rounded-2xl border border-red-900/40 flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2 text-red-400 font-bold">
+      <div className="bg-zinc-900 border border-red-900/60 p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2 text-red-500 font-bold">
           <Flame className="w-4 h-4 text-red-500 animate-bounce" />
           <span>🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।</span>
         </div>
 
-        <div className="flex items-center gap-2 text-zinc-300 font-mono font-bold bg-zinc-900 px-3 py-1 rounded-xl border border-zinc-800">
+        <div className="flex items-center gap-2 text-zinc-300 font-mono font-bold bg-zinc-950 px-3 py-1 rounded-xl border border-zinc-800">
           <Clock className="w-3.5 h-3.5 text-amber-400" />
           <span>অফার শেষ হতে বাকি: <strong>০৪:১৮:৩৫</strong></span>
         </div>
@@ -270,14 +266,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             
             <button
               onClick={() => toggleWishlist(product.id)}
-              className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md border border-white/10 transition z-10 ${
+              className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md border border-white/10 transition z-10 cursor-pointer ${
                 isWishlisted ? "bg-red-600 text-white shadow-lg" : "bg-zinc-950/60 text-zinc-300 hover:bg-red-600 hover:text-white"
               }`}
             >
               <Heart className={`w-5 h-5 ${isWishlisted ? "fill-current" : ""}`} />
             </button>
 
-            <span className="absolute top-4 left-4 bg-gradient-to-r from-red-600 to-red-800 text-white px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg border border-red-500/40">
+            <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg border border-red-500">
               100% Genuine Italian Leather
             </span>
           </motion.div>
@@ -375,7 +371,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
-          {/* Call to Action Buttons */}
+          {/* Call to Action Solid Color Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               onClick={() => addToCart(product, selectedColor, quantity)}
@@ -387,7 +383,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             <a
               href="#express-order-form"
-              className="flex-1 py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-red-950/80 transition flex items-center justify-center gap-2 group cursor-pointer"
+              className="flex-1 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-widest rounded-2xl shadow-xl transition flex items-center justify-center gap-2 group cursor-pointer"
             >
               <span>১-ক্লিকে এখনই অর্ডার করুন</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -496,10 +492,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </section>
 
-      {/* 5. 1-Click Express Cash on Delivery Order Form (সহজ ক্যাশ অন ডেলিভারি ফর্ম) */}
-      <section id="express-order-form" className="max-w-2xl mx-auto p-6 sm:p-10 rounded-3xl bg-gradient-to-r from-zinc-950 via-red-950/40 to-zinc-950 border-2 border-red-800/80 space-y-6 shadow-2xl">
+      {/* 5. 1-Click Express Cash on Delivery Order Form */}
+      <section id="express-order-form" className="max-w-2xl mx-auto p-6 sm:p-10 rounded-3xl bg-zinc-900 border-2 border-red-800 space-y-6 shadow-2xl">
         <div className="text-center space-y-2">
-          <span className="text-xs font-bold text-red-400 uppercase tracking-widest bg-red-950/80 px-3.5 py-1 rounded-full border border-red-800">
+          <span className="text-xs font-bold text-red-400 uppercase tracking-widest bg-red-950 px-3.5 py-1 rounded-full border border-red-800">
             Express Cash on Delivery Order
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-serif">
@@ -585,7 +581,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               <button
                 type="submit"
                 disabled={isSubmittingExpress}
-                className="w-full py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-2xl shadow-xl shadow-red-950/80 transition cursor-pointer"
+                className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm uppercase tracking-widest rounded-2xl shadow-xl transition cursor-pointer"
               >
                 {isSubmittingExpress ? "অর্ডার প্রসেসিং হচ্ছে..." : `অর্ডার কনফার্ম করুন (মোট ৳${(product.price * quantity + 120).toLocaleString()})`}
               </button>
@@ -594,7 +590,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         )}
       </section>
 
-      {/* 6. Product Comparison Table (RAIB Genuine Leather vs Market Fake Leather) */}
+      {/* 6. Product Comparison Table */}
       <section className="space-y-6 pt-8 border-t border-zinc-900">
         <div className="text-center max-w-xl mx-auto space-y-2">
           <span className="text-xs font-bold text-red-500 uppercase tracking-widest">
@@ -640,7 +636,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </section>
 
-      {/* 7. Verified Customer Reviews & Photos Section */}
+      {/* 7. Verified Customer Reviews Section */}
       <section className="space-y-8 pt-8 border-t border-zinc-900">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
@@ -661,7 +657,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           </button>
         </div>
 
-        {/* Add Review Drawer/Form */}
+        {/* Add Review Form */}
         <AnimatePresence>
           {showReviewForm && (
             <motion.form
@@ -711,7 +707,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
               <button
                 type="submit"
-                className="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase rounded-xl"
+                className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase rounded-xl cursor-pointer"
               >
                 পাবলিশ করুন
               </button>
@@ -719,7 +715,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           )}
         </AnimatePresence>
 
-        {/* Reviews List Grid */}
+        {/* Reviews List */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {reviewsList.map((rev) => (
             <div key={rev.id} className="p-6 rounded-3xl bg-zinc-900/80 border border-zinc-800 space-y-4 shadow-xl">
@@ -755,7 +751,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </section>
 
-      {/* 8. Product FAQ Accordion (সাধারণ প্রশ্নাবলি) */}
+      {/* 8. Product FAQ Accordion */}
       <section className="space-y-6 pt-8 border-t border-zinc-900 max-w-3xl mx-auto">
         <div className="text-center space-y-2">
           <span className="text-xs font-bold text-red-500 uppercase tracking-widest">
@@ -787,7 +783,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </section>
 
-      {/* 9. Related Products Section */}
+      {/* 9. Related Products */}
       {relatedProducts.length > 0 && (
         <section className="pt-12 border-t border-zinc-900 space-y-8">
           <div className="flex items-center justify-between">

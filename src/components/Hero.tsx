@@ -92,14 +92,14 @@ export function Hero() {
                 {lang === "bn" ? (
                   <>
                     <span className="block">আধুনিক নারীদের অভিজাত</span>
-                    <span className="bg-gradient-to-r from-red-500 via-amber-200 to-red-400 bg-clip-text text-transparent italic font-serif">
+                    <span className="text-red-500 italic font-serif">
                       রুচির সেরা স্মারক
                     </span>
                   </>
                 ) : (
                   <>
                     <span className="block">Elegance Redefined For</span>
-                    <span className="bg-gradient-to-r from-red-500 via-amber-200 to-red-400 bg-clip-text text-transparent italic font-serif">
+                    <span className="text-red-500 italic font-serif">
                       The Modern Woman
                     </span>
                   </>
@@ -110,7 +110,7 @@ export function Hero() {
               </p>
             </motion.div>
 
-            {/* Action Buttons */}
+            {/* Action Solid Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -119,7 +119,7 @@ export function Hero() {
             >
               <Link
                 href="/shop"
-                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-xs uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-2xl shadow-red-950/80 hover:scale-105 flex items-center justify-center gap-2 group cursor-pointer"
+                className="w-full sm:w-auto px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-2xl shadow-red-950/80 hover:scale-105 flex items-center justify-center gap-2 group cursor-pointer"
               >
                 <span>{t("heroCtaPrimary")}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -192,7 +192,7 @@ export function Hero() {
 
                     <Link
                       href={`/product/${activeItem.id}`}
-                      className="px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-800 text-white rounded-xl text-xs font-bold flex-shrink-0 hover:scale-105 transition shadow-md"
+                      className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex-shrink-0 hover:scale-105 transition shadow-md"
                     >
                       Buy Now
                     </Link>
@@ -200,7 +200,7 @@ export function Hero() {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Carousel Controls (Chevron Buttons) */}
+              {/* Carousel Controls */}
               <button
                 onClick={prevSlide}
                 className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-zinc-950/80 text-white border border-zinc-800 hover:bg-red-600 transition backdrop-blur-md opacity-80 group-hover:opacity-100 cursor-pointer"

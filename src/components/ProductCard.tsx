@@ -72,12 +72,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
         {/* Discount Badge */}
         {discountPercent > 0 && (
-          <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-gradient-to-r from-red-600 to-red-800 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shadow-lg border border-red-500/40">
+          <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-red-600 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider shadow-lg border border-red-500">
             {discountPercent}% {t("discountBadge")}
           </div>
         )}
 
-        {/* Quick View Trigger on Hover */}
+        {/* Quick View Trigger */}
         <div className="absolute bottom-2.5 left-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2 z-10 hidden sm:flex">
           <Link
             href={`/product/${product.id}`}
@@ -117,7 +117,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
           </p>
         </div>
 
-        {/* Price & Add To Cart Button */}
+        {/* Price & Solid Red Add To Cart Button */}
         <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-2 w-full">
           <div>
             <div className="text-base sm:text-lg font-extrabold text-white font-sans">
@@ -132,7 +132,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           <button
             onClick={() => addToCart(product)}
-            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-md hover:scale-105 cursor-pointer flex-shrink-0"
+            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-md hover:scale-105 cursor-pointer flex-shrink-0"
           >
             <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>{t("addToCart")}</span>

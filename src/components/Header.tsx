@@ -18,7 +18,7 @@ export function Header() {
   return (
     <>
       {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-zinc-950 via-red-950 to-zinc-950 text-zinc-300 text-[10px] sm:text-xs py-1.5 px-3 sm:px-6 border-b border-red-900/30">
+      <div className="bg-zinc-950 text-zinc-300 text-[10px] sm:text-xs py-1.5 px-3 sm:px-6 border-b border-red-900/30">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
             <span className="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
@@ -127,10 +127,10 @@ export function Header() {
               <User className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
-            {/* Cart Drawer Trigger */}
+            {/* Cart Drawer Solid Red Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-full transition-all duration-300 shadow-md shadow-red-950/60 hover:scale-105 group cursor-pointer"
+              className="flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-300 shadow-md shadow-red-950/60 hover:scale-105 group cursor-pointer"
             >
               <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover:rotate-12 transition-transform" />
               <span className="hidden md:inline font-sans text-xs font-bold uppercase tracking-wider">
@@ -230,7 +230,7 @@ export function Header() {
                     setIsMobileMenuOpen(false);
                     setIsAuthOpen(true);
                   }}
-                  className="w-full py-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-red-950/40 cursor-pointer"
+                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-red-950/40 cursor-pointer"
                 >
                   <User className="w-4 h-4" />
                   {t("loginBtn")}
