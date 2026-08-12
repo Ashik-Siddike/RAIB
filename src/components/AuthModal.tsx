@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useApp } from "@/lib/store";
-import { X, Mail, Lock, Phone, User, ShieldCheck, ArrowRight } from "lucide-react";
+import { X, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signIn } from "next-auth/react";
 
@@ -33,7 +33,7 @@ export function AuthModal() {
 
   const handleGoogleSignIn = () => {
     try {
-      signIn("google", { callbackUrl: "/" });
+      signIn("google", { callbackUrl: "https://raib.site" });
       showToast(lang === "en" ? "Redirecting to Google Sign-In..." : "গুগল সাইন-ইনে রিডাইরেক্ট করা হচ্ছে...");
     } catch (e) {
       showToast(lang === "en" ? "Google Sign-In Triggered" : "গুগল সাইন-ইন ট্রিপল হয়েছে");
@@ -42,7 +42,7 @@ export function AuthModal() {
 
   const handleFacebookSignIn = () => {
     try {
-      signIn("facebook", { callbackUrl: "/" });
+      signIn("facebook", { callbackUrl: "https://raib.site" });
       showToast(lang === "en" ? "Redirecting to Facebook Sign-In..." : "ফেসবুক সাইন-ইনে রিডাইরেক্ট করা হচ্ছে...");
     } catch (e) {
       showToast(lang === "en" ? "Facebook Sign-In Triggered" : "ফেসবুক সাইন-ইন ট্রিপল হয়েছে");
@@ -69,9 +69,6 @@ export function AuthModal() {
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 space-y-6 overflow-hidden"
         >
-          {/* Subtle Ambient Glow */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
-
           <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
             <div>
               <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest font-sans">
@@ -175,7 +172,7 @@ export function AuthModal() {
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-xl shadow-red-950/60 transition cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-xl transition cursor-pointer flex items-center justify-center gap-2"
             >
               <span>{authMode === "login" ? t("loginBtn") : "Sign Up"}</span>
               <ArrowRight className="w-4 h-4" />

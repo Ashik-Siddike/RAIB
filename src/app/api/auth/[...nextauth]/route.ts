@@ -23,7 +23,6 @@ export const authOptions: AuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-        // Return custom authenticated user session
         return {
           id: "user-" + Date.now(),
           name: credentials.email.split("@")[0] || "RAIB Customer",
@@ -37,6 +36,14 @@ export const authOptions: AuthOptions = {
   },
   pages: {
     signIn: "/",
+  },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      const customDomain = "https://raib.site";
+      if (url.startsWith("/")) return `${customDomain}${url}`;
+      else if (new URL(url).origin === new URL(customDomain).origin) return url;
+      return customDomain;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET || "raib_super_secret_key_2026",
 };

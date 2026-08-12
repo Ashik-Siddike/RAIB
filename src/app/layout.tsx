@@ -45,6 +45,12 @@ export const metadata: Metadata = {
   authors: [{ name: "RAIB Luxury Leather Goods" }],
   creator: "RAIB",
   publisher: "RAIB",
+  alternates: {
+    canonical: "https://raib.site",
+  },
+  verification: {
+    google: "google-site-verification-raib-2026",
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -90,7 +96,39 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
+  // Enhanced Google SearchAction & Organization Schemas for Top Google Rankings
+  const googleWebSiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "RAIB",
+    "url": "https://raib.site",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://raib.site/shop?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const googleOrganizationLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "RAIB Luxury Leather Goods",
+    "url": "https://raib.site",
+    "logo": "https://raib.site/logo.png",
+    "sameAs": [
+      "https://facebook.com/raib.official",
+      "https://instagram.com/raib.official"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+8801700000000",
+      "contactType": "customer service",
+      "areaServed": "BD",
+      "availableLanguage": ["English", "Bengali"]
+    }
+  };
+
+  const googleStoreLd = {
     "@context": "https://schema.org",
     "@type": "OnlineStore",
     "name": "RAIB",
@@ -124,7 +162,15 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(googleWebSiteLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(googleOrganizationLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(googleStoreLd) }}
         />
       </head>
       <body className={`${inter.variable} ${cinzel.variable} ${cormorant.variable} font-sans bg-zinc-950 text-zinc-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col justify-between overflow-x-hidden`}>
