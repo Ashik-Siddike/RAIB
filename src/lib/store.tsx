@@ -40,7 +40,7 @@ interface AppContextType {
   setLang: (lang: Language) => void;
   t: (key: keyof typeof translations['en'], params?: Record<string, string | number>) => string;
   cart: CartItem[];
-  addToCart: (product: ProductType, color?: string) => void;
+  addToCart: (product: ProductType, selectedColor?: string, quantity?: number) => void;
   removeFromCart: (id: string, color: string) => void;
   updateQuantity: (id: string, color: string, qty: number) => void;
   clearCart: () => void;
@@ -115,14 +115,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return text;
   };
 
-  const addToCart = (product: ProductType, selectedColor?: string) => {
+  const addToCart = (product: ProductType, selectedColor?: string, quantityAdd = 1) => {
     const color = selectedColor || product.color || "Default";
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id && item.color === color);
       if (existing) {
         return prev.map((item) =>
           item.id === product.id && item.color === color
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantityAdd }
             : item
         );
       }
@@ -136,7 +136,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           originalPrice: product.originalPrice,
           image: product.image,
           color,
-          quantity: 1,
+          quantity: quantityAdd,
         },
       ];
     });

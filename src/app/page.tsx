@@ -1,19 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Hero } from "@/components/Hero";
 import { ProductCard } from "@/components/ProductCard";
 import { Craftsmanship } from "@/components/Craftsmanship";
+import { ProductType, useApp } from "@/lib/store";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
-import { useApp } from "@/lib/store";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 
 export default function Home() {
   const { lang, t } = useApp();
+  const [products, setProducts] = useState<ProductType[]>(SAMPLE_PRODUCTS);
   const [activeTab, setActiveTab] = useState<"all" | "bestseller" | "new">("all");
+
+  // Fetch live products dynamically from MongoDB Atlas API
+  useEffect(() => {
+    async function fetchLiveProducts() {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        if (data.success && data.products && data.products.length > 0) {
+          setProducts(data.products);
+        }
+      } catch (err) {
+        console.error("Failed to fetch live products for homepage:", err);
+      }
+    }
+    fetchLiveProducts();
+  }, []);
 
   const categories = [
     { name: "Tote Bags", nameBn: "টোট ব্যাগ", count: "12 Items", image: "/tote_bag_red_1786395433017.jpg", href: "/shop?category=Tote Bags" },
@@ -22,14 +39,14 @@ export default function Home() {
     { name: "Clutches & Evening", nameBn: "ক্লাচ ব্যাগ", count: "9 Items", image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800&auto=format&fit=crop&q=80", href: "/shop?category=Clutches & Evening" },
   ];
 
-  const filteredProducts = SAMPLE_PRODUCTS.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     if (activeTab === "bestseller") return p.isBestSeller;
     if (activeTab === "new") return p.isNewArrival;
     return true;
   });
 
   return (
-    <div className="space-y-16 pb-12">
+    <div className="space-y-16 pb-12 w-full overflow-x-hidden">
       {/* Hero Banner */}
       <Hero />
 
@@ -139,8 +156,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Product Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Dynamic Product Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -150,7 +167,7 @@ export default function Home() {
       {/* Craftsmanship Section */}
       <Craftsmanship />
 
-      {/* Testimonials & Customer Reviews */}
+      {/* Customer Reviews */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center max-w-xl mx-auto mb-12">
           <span className="text-xs font-bold text-red-500 uppercase tracking-widest">
@@ -222,7 +239,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Instagram / UGC Gallery Section */}
+      {/* UGC Gallery Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="flex items-center justify-between mb-8">
           <div>

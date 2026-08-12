@@ -12,7 +12,13 @@ export interface SettingsType {
   deliveryCharge: number;
 }
 
-const DEFAULT_SETTINGS: SettingsType = {
+interface SettingsContextType {
+  settings: SettingsType;
+  updateSettings: (newSettings: Partial<SettingsType>) => Promise<void>;
+  isLoading: boolean;
+}
+
+const defaultSettings: SettingsType = {
   bkashNumber: "01700-000000",
   nagadNumber: "01800-000000",
   rocketNumber: "01900-000000",
@@ -22,37 +28,47 @@ const DEFAULT_SETTINGS: SettingsType = {
   deliveryCharge: 120,
 };
 
-interface SettingsContextType {
-  settings: SettingsType;
-  updateSettings: (newSettings: Partial<SettingsType>) => void;
-}
-
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettings] = useState<SettingsType>(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState<SettingsType>(defaultSettings);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Fetch settings dynamically from MongoDB on mount
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("raib_settings");
-      if (saved) {
-        setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(saved) });
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        const data = await res.json();
+        if (data.success && data.settings) {
+          setSettings(data.settings);
+        }
+      } catch (err) {
+        console.error("Failed to load dynamic settings from API:", err);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {
-      console.error(e);
     }
+    loadSettings();
   }, []);
 
-  const updateSettings = (newSettings: Partial<SettingsType>) => {
-    setSettings((prev) => {
-      const updated = { ...prev, ...newSettings };
-      localStorage.setItem("raib_settings", JSON.stringify(updated));
-      return updated;
-    });
+  const updateSettings = async (newSettings: Partial<SettingsType>) => {
+    const updated = { ...settings, ...newSettings };
+    setSettings(updated);
+
+    try {
+      await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated),
+      });
+    } catch (err) {
+      console.error("Failed to sync settings to MongoDB:", err);
+    }
   };
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings }}>
+    <SettingsContext.Provider value={{ settings, updateSettings, isLoading }}>
       {children}
     </SettingsContext.Provider>
   );

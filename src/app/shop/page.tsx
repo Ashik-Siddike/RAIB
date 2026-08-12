@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductType, useApp } from "@/lib/store";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
-import { useApp } from "@/lib/store";
 import { SlidersHorizontal, ArrowUpDown, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,10 +15,27 @@ function ShopContent() {
 
   const { lang, t, wishlist } = useApp();
 
+  const [products, setProducts] = useState<ProductType[]>(SAMPLE_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || "All");
   const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [sortBy, setSortBy] = useState<string>("featured");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Fetch live catalog dynamically from MongoDB Atlas API
+  useEffect(() => {
+    async function loadLiveProducts() {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        if (data.success && data.products && data.products.length > 0) {
+          setProducts(data.products);
+        }
+      } catch (err) {
+        console.error("Failed to load live catalog from API:", err);
+      }
+    }
+    loadLiveProducts();
+  }, []);
 
   const categories = [
     "All",
@@ -31,7 +48,7 @@ function ShopContent() {
   ];
 
   const filteredProducts = useMemo(() => {
-    let result = [...SAMPLE_PRODUCTS];
+    let result = [...products];
 
     if (wishlistParam === "true") {
       result = result.filter((p) => wishlist.includes(p.id));
@@ -54,7 +71,7 @@ function ShopContent() {
     }
 
     return result;
-  }, [selectedCategory, maxPrice, sortBy, wishlistParam, wishlist]);
+  }, [products, selectedCategory, maxPrice, sortBy, wishlistParam, wishlist]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8 w-full overflow-x-hidden">
@@ -165,7 +182,7 @@ function ShopContent() {
             </div>
           </div>
 
-          {/* Products Grid */}
+          {/* Dynamic Products Grid */}
           {filteredProducts.length === 0 ? (
             <div className="text-center py-16 bg-zinc-900/40 rounded-3xl border border-zinc-800 space-y-4">
               <p className="text-zinc-400 text-sm font-medium">No bags found matching your filters.</p>
