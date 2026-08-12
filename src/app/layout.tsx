@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     canonical: "https://raib.site",
   },
   verification: {
-    google: "google-site-verification-raib-2026",
+    google: "google1ef720d3778009d8",
   },
   formatDetection: {
     email: false,
