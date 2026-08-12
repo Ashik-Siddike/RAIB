@@ -21,7 +21,7 @@ export function Footer() {
             </div>
             <div>
               <h4 className="text-sm font-bold text-white font-serif">Express Delivery</h4>
-              <p className="text-xs text-zinc-500">Free shipping on orders over ৳3,000</p>
+              <p className="text-xs text-zinc-500">Free shipping on orders over ৳3,000 in BD</p>
             </div>
           </div>
 
@@ -31,7 +31,7 @@ export function Footer() {
             </div>
             <div>
               <h4 className="text-sm font-bold text-white font-serif">Authenticity Guaranteed</h4>
-              <p className="text-xs text-zinc-500">100% Genuine Italian Leather</p>
+              <p className="text-xs text-zinc-500">100% Tuscan Full-Grain Italian Leather</p>
             </div>
           </div>
 
@@ -81,7 +81,8 @@ export function Footer() {
             <ul className="space-y-2 text-xs">
               <li><Link href="/" className="hover:text-red-400 transition">{t("navHome")}</Link></li>
               <li><Link href="/shop" className="hover:text-red-400 transition">{t("navShop")}</Link></li>
-              <li><Link href="/shop?category=Best Sellers" className="hover:text-red-400 transition">{t("navBestSellers")}</Link></li>
+              <li><Link href="/track-order" className="hover:text-red-400 transition text-red-400 font-bold">📦 Track Order (অর্ডার ট্র্যাকিং)</Link></li>
+              <li><Link href="/faq" className="hover:text-red-400 transition font-medium">❓ FAQ & Returns (প্রশ্ন ও রিটার্ন)</Link></li>
               <li><Link href="/checkout" className="hover:text-red-400 transition">{t("checkoutTitle")}</Link></li>
             </ul>
           </div>
