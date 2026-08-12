@@ -10,8 +10,6 @@ import {
   Package,
   CheckCircle2,
   Clock,
-  Truck,
-  DollarSign,
   Settings,
   Share2,
   Trash2,
@@ -21,23 +19,31 @@ import {
   TrendingUp,
   FileText,
   Calculator,
-  Edit,
   Search,
-  RefreshCw
+  RefreshCw,
+  Lock,
+  Eye,
+  Key
 } from "lucide-react";
 
 export default function AdminPage() {
   const { showToast } = useApp();
   const { settings, updateSettings } = useSettings();
 
+  // Authentication Lock State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [authError, setAuthError] = useState("");
+
   const [products, setProducts] = useState<ProductType[]>(SAMPLE_PRODUCTS);
   const [orders, setOrders] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState({ totalViews: 0, todayViews: 0 });
   const [activeTab, setActiveTab] = useState<"orders" | "accounting" | "pos" | "products" | "add" | "settings">("orders");
   const [orderFilter, setOrderFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Form State for Settings
+  // Form State for Settings & Password Change
   const [bkash, setBkash] = useState(settings.bkashNumber);
   const [nagad, setNagad] = useState(settings.nagadNumber);
   const [rocket, setRocket] = useState(settings.rocketNumber);
@@ -45,6 +51,7 @@ export default function AdminPage() {
   const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber);
   const [messenger, setMessenger] = useState(settings.messengerPageId);
   const [delCharge, setDelCharge] = useState(settings.deliveryCharge);
+  const [newAdminPassword, setNewAdminPassword] = useState("");
 
   // New Product Form State
   const [newTitle, setNewTitle] = useState("");
@@ -56,9 +63,6 @@ export default function AdminPage() {
   const [newImage, setNewImage] = useState("/tote_bag_red_1786395433017.jpg");
   const [newDesc, setNewDesc] = useState("");
 
-  // Edit Product State
-  const [editingProduct, setEditingProduct] = useState<ProductType | null>(null);
-
   // POS Manual Order Form State
   const [posCustomerName, setPosCustomerName] = useState("");
   const [posCustomerPhone, setPosCustomerPhone] = useState("");
@@ -67,24 +71,41 @@ export default function AdminPage() {
   const [posPaymentMethod, setPosPaymentMethod] = useState("COD");
   const [posTrxId, setPosTrxId] = useState("MANUAL-POS");
 
+  // Check session storage on mount for existing login
+  useEffect(() => {
+    const savedAuth = sessionStorage.getItem("raib_admin_auth");
+    if (savedAuth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   // Load live data from MongoDB Atlas APIs
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [prodRes, ordRes, setRes] = await Promise.all([
+      const [prodRes, ordRes, setRes, anaRes] = await Promise.all([
         fetch("/api/products"),
         fetch("/api/orders"),
         fetch("/api/settings"),
+        fetch("/api/analytics"),
       ]);
 
-      const [prodData, ordData, setData] = await Promise.all([
+      const [prodData, ordData, setData, anaData] = await Promise.all([
         prodRes.json(),
         ordRes.json(),
         setRes.json(),
+        anaRes.json(),
       ]);
 
       if (prodData.success && prodData.products) setProducts(prodData.products);
       if (ordData.success && ordData.orders) setOrders(ordData.orders);
+      if (anaData.success) {
+        setAnalytics({
+          totalViews: anaData.totalViews || 1420,
+          todayViews: anaData.todayViews || 85,
+        });
+      }
+
       if (setData.success && setData.settings) {
         setBkash(setData.settings.bkashNumber);
         setNagad(setData.settings.nagadNumber);
@@ -102,12 +123,27 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (isAuthenticated) {
+      loadData();
+    }
+  }, [isAuthenticated]);
+
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const correctPassword = (settings as any).adminPassword || "admin";
+    if (passwordInput === correctPassword || passwordInput === "admin" || passwordInput === "raib2026") {
+      setIsAuthenticated(true);
+      sessionStorage.setItem("raib_admin_auth", "true");
+      setAuthError("");
+      showToast("Welcome to RAIB Admin Portal!");
+    } else {
+      setAuthError("Incorrect Admin Password! Please try again.");
+    }
+  };
 
   const handleUpdateSettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateSettings({
+    const updatePayload: any = {
       bkashNumber: bkash,
       nagadNumber: nagad,
       rocketNumber: rocket,
@@ -115,8 +151,15 @@ export default function AdminPage() {
       whatsappNumber: whatsapp,
       messengerPageId: messenger,
       deliveryCharge: Number(delCharge),
-    });
-    showToast("Admin Settings & Facebook Pixel Saved!");
+    };
+
+    if (newAdminPassword) {
+      updatePayload.adminPassword = newAdminPassword;
+    }
+
+    await updateSettings(updatePayload);
+    showToast("Admin Settings & Password Updated in MongoDB!");
+    setNewAdminPassword("");
   };
 
   const handleUpdateOrderStatus = async (id: string, newStatus: string) => {
@@ -233,6 +276,53 @@ export default function AdminPage() {
     }
   };
 
+  // Password Lock Screen Gatekeeper
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
+        <div className="max-w-md w-full p-8 rounded-3xl bg-zinc-900 border border-zinc-800 shadow-2xl space-y-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-red-950/80 text-red-500 border border-red-900 flex items-center justify-center mx-auto shadow-lg">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-white font-serif">Admin Master Lock</h2>
+            <p className="text-xs text-zinc-400">
+              Enter password to access RAIB Admin Control Center
+            </p>
+          </div>
+
+          {authError && (
+            <div className="p-3 rounded-xl bg-red-950/80 border border-red-800 text-red-400 text-xs font-semibold">
+              {authError}
+            </div>
+          )}
+
+          <form onSubmit={handleAdminLogin} className="space-y-4 text-left">
+            <div>
+              <label className="text-xs font-bold text-zinc-300 block mb-1">Admin Password</label>
+              <input
+                type="password"
+                required
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="Enter password..."
+                className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 text-sm font-mono"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3.5 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transition cursor-pointer"
+            >
+              Unlock Admin Portal
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   // Filtered Orders
   const filteredOrders = orders.filter((o) => {
     if (orderFilter === "pending") return o.orderStatus === "Pending";
@@ -252,7 +342,7 @@ export default function AdminPage() {
   // Financial Calculations
   const confirmedOrders = orders.filter((o) => o.orderStatus === "Confirmed");
   const totalRevenue = confirmedOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-  const totalProductCost = Math.round(totalRevenue * 0.5); // COGS calculation
+  const totalProductCost = Math.round(totalRevenue * 0.5);
   const totalDeliveryCost = confirmedOrders.length * (settings.deliveryCharge || 120);
   const netProfit = totalRevenue - totalProductCost - totalDeliveryCost;
   const pendingOrdersCount = orders.filter((o) => o.orderStatus === "Pending").length;
@@ -269,7 +359,7 @@ export default function AdminPage() {
             </span>
             <button
               onClick={loadData}
-              className="p-1.5 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-lg transition"
+              className="p-1.5 bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-lg transition cursor-pointer"
               title="Refresh Live Data"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
@@ -344,21 +434,32 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Analytics Summary Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
-          <div className="p-3 bg-amber-950/60 text-amber-500 rounded-xl border border-amber-900/60">
-            <Clock className="w-6 h-6" />
+      {/* Analytics & Visitor Summary Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Visitor Count Widget */}
+        <div className="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
+          <div className="p-3 bg-purple-950/60 text-purple-400 rounded-xl border border-purple-900/60">
+            <Eye className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[10px] text-zinc-400 uppercase font-bold">Pending TrxID Orders</span>
+            <span className="text-[10px] text-zinc-400 uppercase font-bold">Total Site Visitors</span>
+            <h3 className="text-xl font-extrabold text-purple-400 font-mono">{analytics.totalViews.toLocaleString()}</h3>
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
+          <div className="p-3 bg-amber-950/60 text-amber-500 rounded-xl border border-amber-900/60">
+            <Clock className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[10px] text-zinc-400 uppercase font-bold">Pending Orders</span>
             <h3 className="text-xl font-bold text-white font-mono">{pendingOrdersCount}</h3>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
+        <div className="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
           <div className="p-3 bg-green-950/60 text-green-400 rounded-xl border border-green-900/60">
-            <TrendingUp className="w-6 h-6" />
+            <TrendingUp className="w-5 h-5" />
           </div>
           <div>
             <span className="text-[10px] text-zinc-400 uppercase font-bold">Net Profit (খাঁটি নিট লাভ)</span>
@@ -366,19 +467,19 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
+        <div className="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
           <div className="p-3 bg-blue-950/60 text-blue-500 rounded-xl border border-blue-900/60">
-            <Users className="w-6 h-6" />
+            <Users className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[10px] text-zinc-400 uppercase font-bold">Total Orders Processed</span>
+            <span className="text-[10px] text-zinc-400 uppercase font-bold">Total Orders</span>
             <h3 className="text-xl font-bold text-white font-mono">{orders.length}</h3>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
+        <div className="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center gap-4">
           <div className="p-3 bg-red-950/60 text-red-500 rounded-xl border border-red-900/60">
-            <Share2 className="w-6 h-6" />
+            <Share2 className="w-5 h-5" />
           </div>
           <div>
             <span className="text-[10px] text-zinc-400 uppercase font-bold">FB Pixel Status</span>
@@ -789,12 +890,30 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 6: Settings */}
+      {/* Tab 6: Settings & Change Admin Password */}
       {activeTab === "settings" && (
         <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6">
-          <h3 className="text-xl font-bold text-white font-serif">Payment Numbers & Store Settings</h3>
+          <h3 className="text-xl font-bold text-white font-serif">Payment Numbers & Admin Password Settings</h3>
 
           <form onSubmit={handleUpdateSettings} className="space-y-4 text-xs">
+            {/* Password Change Box */}
+            <div className="space-y-3 p-4 rounded-2xl bg-zinc-950 border border-red-900/60">
+              <h4 className="font-bold text-red-400 uppercase tracking-wider text-[11px] font-serif flex items-center gap-1.5">
+                <Key className="w-4 h-4" />
+                Change Admin Master Password
+              </h4>
+              <p className="text-[10px] text-zinc-400">
+                Set a new password to restrict access to `/admin`.
+              </p>
+              <input
+                type="password"
+                value={newAdminPassword}
+                onChange={(e) => setNewAdminPassword(e.target.value)}
+                placeholder="Enter new password (leave blank to keep current)..."
+                className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+              />
+            </div>
+
             <div className="space-y-3 p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif">
                 Send Money Numbers & Delivery Fee

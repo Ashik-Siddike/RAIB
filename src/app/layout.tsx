@@ -12,6 +12,7 @@ import { SearchModal } from "@/components/SearchModal";
 import { Toast } from "@/components/Toast";
 import { LiveChatWidget } from "@/components/LiveChatWidget";
 import { FacebookPixel } from "@/components/FacebookPixel";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
@@ -89,7 +90,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // JSON-LD Structured Data Schema for Bangladesh E-Commerce & Google Search
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "OnlineStore",
@@ -130,6 +130,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${cinzel.variable} ${cormorant.variable} font-sans bg-zinc-950 text-zinc-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col justify-between overflow-x-hidden`}>
         <SettingsProvider>
           <AppProvider>
+            <AnalyticsTracker />
             <FacebookPixel />
             <Header />
             <main className="flex-1 w-full overflow-x-hidden">{children}</main>

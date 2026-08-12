@@ -27,7 +27,7 @@ export function Header() {
             </span>
           </div>
 
-          {/* Language Switcher Button in Topbar */}
+          {/* Language Switcher Button */}
           <button
             onClick={toggleLanguage}
             className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-700/60 text-zinc-200 hover:border-red-500 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-semibold flex-shrink-0"
@@ -39,11 +39,11 @@ export function Header() {
         </div>
       </div>
 
-      {/* Main Glassmorphic Sticky Header */}
+      {/* Sticky Header */}
       <header className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800/80 shadow-2xl transition-all">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
           
-          {/* Left: Mobile Menu Trigger & Navigation Links */}
+          {/* Left: Mobile Trigger & Navigation */}
           <div className="flex items-center gap-2 sm:gap-6">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -69,7 +69,7 @@ export function Header() {
             </nav>
           </div>
 
-          {/* Center Brand Logo (Icon + Cropped lgo2.png Wordmark Image) */}
+          {/* Center Brand Logo (Icon + Cropped Wordmark Graphic) */}
           <Link href="/" className="flex items-center gap-2 group py-1">
             <div className="relative w-7 h-7 sm:w-9 sm:h-9 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <Image
@@ -98,7 +98,7 @@ export function Header() {
             {/* Search Trigger */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-1.5 sm:p-2 text-zinc-300 hover:text-red-400 hover:bg-zinc-900 rounded-full transition-colors relative"
+              className="p-1.5 sm:p-2 text-zinc-300 hover:text-red-400 hover:bg-zinc-900 rounded-full transition-colors relative cursor-pointer"
               title="Search Bags"
             >
               <Search className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -121,7 +121,7 @@ export function Header() {
             {/* User Account / Auth Trigger */}
             <button
               onClick={() => setIsAuthOpen(true)}
-              className="p-1.5 sm:p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-full transition-colors"
+              className="p-1.5 sm:p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-full transition-colors cursor-pointer"
               title="Sign In / Account"
             >
               <User className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -208,20 +208,13 @@ export function Header() {
                   >
                     {t("checkoutTitle")}
                   </Link>
-                  <Link
-                    href="/admin"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-medium text-red-400 hover:bg-red-950/40 rounded-xl transition"
-                  >
-                    {t("navAdmin")}
-                  </Link>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-zinc-800 space-y-4">
                 <button
                   onClick={toggleLanguage}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs font-medium"
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs font-medium cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
                     <Globe className="w-4 h-4 text-red-500" />
@@ -237,7 +230,7 @@ export function Header() {
                     setIsMobileMenuOpen(false);
                     setIsAuthOpen(true);
                   }}
-                  className="w-full py-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-red-950/40"
+                  className="w-full py-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-red-950/40 cursor-pointer"
                 >
                   <User className="w-4 h-4" />
                   {t("loginBtn")}
