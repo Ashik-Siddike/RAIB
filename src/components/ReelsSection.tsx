@@ -29,6 +29,9 @@ export function ReelsSection() {
     return null;
   }
 
+  // Display top 5 video reels in single row
+  const displayReels = reelsList.slice(0, 5);
+
   const handleOpenReel = (reel: ReelType) => {
     setActiveReel(reel);
     setIsPlaying(true);
@@ -60,7 +63,7 @@ export function ReelsSection() {
 
   return (
     <section className="py-16 sm:py-24 bg-white text-zinc-900 border-b border-stone-200 overflow-hidden transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 space-y-10">
         
         {/* Section Header */}
         <div className="text-center space-y-2">
@@ -75,9 +78,9 @@ export function ReelsSection() {
           </p>
         </div>
 
-        {/* Larger 9:16 Video Cards Grid (4 columns on desktop, 2 on mobile) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {reelsList.map((reel) => {
+        {/* 5 Video Cards Side-By-Side in 1 Single Row (No 2nd Line Break) */}
+        <div className="flex gap-4 sm:gap-5 overflow-x-auto snap-x scrollbar-none pb-4 lg:grid lg:grid-cols-5 lg:overflow-visible">
+          {displayReels.map((reel) => {
             const linkedProduct =
               SAMPLE_PRODUCTS.find((p) => p.id === reel.productId) || SAMPLE_PRODUCTS[0];
 
@@ -86,7 +89,7 @@ export function ReelsSection() {
                 key={reel.id}
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="group relative aspect-[9/16] min-h-[380px] sm:min-h-[440px] lg:min-h-[480px] w-full rounded-3xl overflow-hidden bg-zinc-950 border border-stone-200 shadow-xl cursor-pointer flex flex-col justify-between"
+                className="group relative aspect-[9/16] min-w-[240px] sm:min-w-[260px] lg:min-w-0 min-h-[360px] sm:min-h-[420px] lg:min-h-[440px] w-full rounded-3xl overflow-hidden bg-zinc-950 border border-stone-200 shadow-xl cursor-pointer flex flex-col justify-between flex-shrink-0 lg:flex-shrink"
                 onClick={() => handleOpenReel(reel)}
               >
                 {/* Background Video Preview / Poster */}
@@ -113,19 +116,19 @@ export function ReelsSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
 
                 {/* Top Play Indicator Badge */}
-                <div className="relative p-4 flex items-center justify-between z-10">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/90 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
-                    Client Story
+                <div className="relative p-3.5 flex items-center justify-between z-10">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/90 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20">
+                    Story
                   </span>
-                  <span className="p-3 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 group-hover:scale-110 transition shadow-lg">
-                    <Play className="w-4 h-4 fill-current" />
+                  <span className="p-2.5 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 group-hover:scale-110 transition shadow-lg">
+                    <Play className="w-3.5 h-3.5 fill-current" />
                   </span>
                 </div>
 
                 {/* Bottom Product Info & Add To Cart Button */}
-                <div className="relative p-4 sm:p-5 space-y-3.5 z-10">
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-white/30 flex-shrink-0 bg-zinc-950 shadow-md">
+                <div className="relative p-3.5 sm:p-4 space-y-3 z-10">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-white/30 flex-shrink-0 bg-zinc-950 shadow-md">
                       <Image
                         src={reel.poster || linkedProduct.image}
                         alt={reel.title}
@@ -135,10 +138,10 @@ export function ReelsSection() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-xs sm:text-sm font-bold text-white line-clamp-1 font-serif leading-snug drop-shadow">
+                      <h4 className="text-xs font-bold text-white line-clamp-1 font-serif leading-snug drop-shadow">
                         {reel.title}
                       </h4>
-                      <p className="text-xs sm:text-sm font-extrabold text-amber-400 font-mono drop-shadow">
+                      <p className="text-xs font-extrabold text-amber-400 font-mono drop-shadow">
                         ৳{reel.price ? reel.price.toLocaleString() : linkedProduct.price.toLocaleString()}
                       </p>
                     </div>
@@ -152,13 +155,13 @@ export function ReelsSection() {
                         addToCart(linkedProduct);
                         showToast("Added to bag!");
                       }}
-                      className="flex-1 py-2.5 px-3 hover:bg-zinc-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="flex-1 py-2 px-2.5 hover:bg-zinc-800 transition flex items-center justify-center gap-1 cursor-pointer"
                     >
-                      <ShoppingCart className="w-3.5 h-3.5 text-red-500" />
+                      <ShoppingCart className="w-3 h-3 text-red-500" />
                       <span>Add To Cart</span>
                     </button>
-                    <div className="p-2.5 border-l border-zinc-700 bg-zinc-900 text-zinc-400">
-                      <ChevronDown className="w-3.5 h-3.5" />
+                    <div className="p-2 border-l border-zinc-700 bg-zinc-900 text-zinc-400">
+                      <ChevronDown className="w-3 h-3" />
                     </div>
                   </div>
                 </div>
