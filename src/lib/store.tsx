@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { translations, Language } from "./translations";
 
-export type ThemeMode = "dark" | "light";
+export type ThemeMode = "light" | "dark";
 
 export interface CartItem {
   id: string;
@@ -75,15 +75,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Default to light theme & clear any previous dark theme override on mount
+  // Force Light Mode on mount & clear any old dark mode in localStorage
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem("raib_theme") as ThemeMode;
-      if (savedTheme === "light" || savedTheme === "dark") {
-        setThemeState(savedTheme);
-      } else {
-        setThemeState('light');
-      }
+      localStorage.removeItem("raib_theme");
+      const root = document.documentElement;
+      root.classList.remove("dark");
+      root.classList.add("light");
+      setThemeState('light');
 
       const savedLang = localStorage.getItem("raib_lang") as Language;
       if (savedLang) setLang(savedLang);
@@ -98,9 +97,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Update <html> class name whenever theme changes
+  // Ensure root element stays light
   useEffect(() => {
-    localStorage.setItem("raib_theme", theme);
     const root = document.documentElement;
     if (theme === "dark") {
       root.classList.add("dark");
