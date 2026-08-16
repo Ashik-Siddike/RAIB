@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { translations, Language } from "./translations";
 
+export type ThemeMode = "dark" | "light";
+
 export interface CartItem {
   id: string;
   name: string;
@@ -36,6 +38,9 @@ export interface ProductType {
 }
 
 interface AppContextType {
+  theme: ThemeMode;
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
   lang: Language;
   setLang: (lang: Language) => void;
   t: (key: keyof typeof translations['en'], params?: Record<string, string | number>) => string;
@@ -61,6 +66,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<ThemeMode>('dark');
   const [lang, setLang] = useState<Language>('en');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
@@ -72,6 +78,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // Load saved state from localStorage
   useEffect(() => {
     try {
+      const savedTheme = localStorage.getItem("raib_theme") as ThemeMode;
+      if (savedTheme === "dark" || savedTheme === "light") {
+        setThemeState(savedTheme);
+      }
+
       const savedLang = localStorage.getItem("raib_lang") as Language;
       if (savedLang) setLang(savedLang);
 
@@ -84,6 +95,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       console.error(e);
     }
   }, []);
+
+  // Update <html> class name whenever theme changes
+  useEffect(() => {
+    localStorage.setItem("raib_theme", theme);
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    } else {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    }
+  }, [theme]);
+
+  const setTheme = (newTheme: ThemeMode) => {
+    setThemeState(newTheme);
+  };
+
+  const toggleTheme = () => {
+    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   // Save to localStorage
   useEffect(() => {
@@ -181,6 +213,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider
       value={{
+        theme,
+        setTheme,
+        toggleTheme,
         lang,
         setLang,
         t,
