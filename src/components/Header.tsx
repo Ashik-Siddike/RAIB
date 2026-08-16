@@ -66,10 +66,10 @@ export function Header() {
               </button>
             </div>
 
-            {/* Center: Brand Logo Area with Dark Translucent Backdrop Container */}
+            {/* Center: Clean Brand Logos directly on dark navbar */}
             <Link
               href="/"
-              className="group relative flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-2xl bg-zinc-950/85 border border-zinc-800/80 backdrop-blur-md shadow-inner hover:border-zinc-700 transition cursor-pointer"
+              className="flex items-center gap-2 sm:gap-3 cursor-pointer py-1"
             >
               {/* Main emblem logo */}
               <div className="relative h-7 sm:h-9 w-7 sm:w-9 flex-shrink-0">
@@ -183,7 +183,7 @@ export function Header() {
                 
                 {/* Header inside drawer */}
                 <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
-                  <div className="flex items-center gap-2 p-1.5 rounded-xl bg-zinc-900 border border-zinc-800">
+                  <div className="flex items-center gap-2">
                     <div className="relative h-6 w-6 flex-shrink-0">
                       <Image src="/main-logo.png" alt="RAIB Logo" fill className="object-contain" />
                     </div>

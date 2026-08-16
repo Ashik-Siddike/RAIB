@@ -31,6 +31,7 @@ export interface SettingsType {
   heroTitle: string;
   heroSubtitle: string;
   heroCtaText: string;
+  heroImage: string;
 
   bestsellersBadge: string;
   bestsellersTitle: string;
@@ -72,6 +73,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   heroTitle: "RAIB",
   heroSubtitle: "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.",
   heroCtaText: "SHOP COLLECTION",
+  heroImage: "/tote_bag_red_1786395433017.jpg",
 
   bestsellersBadge: "FEATURED TODAY",
   bestsellersTitle: "Bestsellers",

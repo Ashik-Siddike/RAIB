@@ -28,7 +28,8 @@ import {
   Sliders,
   Sparkles,
   Tag,
-  Type
+  Type,
+  ImageIcon
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -65,11 +66,12 @@ export default function AdminPage() {
   const [showNewArrivals, setShowNewArrivals] = useState(settings.showNewArrivals ?? true);
   const [showOfferBanner, setShowOfferBanner] = useState(settings.showOfferBanner ?? true);
 
-  // Section Titles, Subtitles, Badges State
+  // Section Titles, Subtitles, Badges & Hero Image State
   const [heroBadge, setHeroBadge] = useState(settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN");
   const [heroTitle, setHeroTitle] = useState(settings.heroTitle || "RAIB");
   const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
   const [heroCtaText, setHeroCtaText] = useState(settings.heroCtaText || "SHOP COLLECTION");
+  const [heroImage, setHeroImage] = useState(settings.heroImage || "/tote_bag_red_1786395433017.jpg");
 
   const [bestsellersBadge, setBestsellersBadge] = useState(settings.bestsellersBadge || "FEATURED TODAY");
   const [bestsellersTitle, setBestsellersTitle] = useState(settings.bestsellersTitle || "Bestsellers");
@@ -135,6 +137,7 @@ export default function AdminPage() {
     setHeroTitle(settings.heroTitle || "RAIB");
     setHeroSubtitle(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
     setHeroCtaText(settings.heroCtaText || "SHOP COLLECTION");
+    setHeroImage(settings.heroImage || "/tote_bag_red_1786395433017.jpg");
 
     setBestsellersBadge(settings.bestsellersBadge || "FEATURED TODAY");
     setBestsellersTitle(settings.bestsellersTitle || "Bestsellers");
@@ -237,6 +240,7 @@ export default function AdminPage() {
       heroTitle,
       heroSubtitle,
       heroCtaText,
+      heroImage,
 
       bestsellersBadge,
       bestsellersTitle,
@@ -263,7 +267,7 @@ export default function AdminPage() {
     }
 
     await updateSettings(updatePayload);
-    showToast("All Admin Settings, Section Titles & Toggles Updated in MongoDB!");
+    showToast("All Admin Settings, Hero Background & Section Titles Saved to MongoDB!");
     setNewAdminPassword("");
   };
 
@@ -1221,44 +1225,33 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 2. Section Titles & Subtitles Editor */}
+            {/* 2. Hero Background Image & Titles Customizer */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
-                <Type className="w-4 h-4 text-red-500" />
-                Section-wise Title & Subtitle Customizer (টাইটেল ও ডেসক্রিপশন এডিটর)
+                <ImageIcon className="w-4 h-4 text-red-500" />
+                Hero Background Image & Text Customizer (হিরো ব্যাকগ্রাউন্ড ও টেক্সট কন্ট্রোল)
               </h4>
 
-              <div className="space-y-4">
-                {/* Hero Controls */}
-                <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
-                  <h5 className="font-bold text-amber-400 text-xs">Hero Section</h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-zinc-400 block mb-1">Badge Tag</label>
-                      <input
-                        type="text"
-                        value={heroBadge}
-                        onChange={(e) => setHeroBadge(e.target.value)}
-                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-zinc-400 block mb-1">Hero Title</label>
-                      <input
-                        type="text"
-                        value={heroTitle}
-                        onChange={(e) => setHeroTitle(e.target.value)}
-                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
-                      />
-                    </div>
-                  </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Hero Background Image URL (হিরো ব্যাকগ্রাউন্ড পিকচার URL)</label>
+                  <input
+                    type="text"
+                    value={heroImage}
+                    onChange={(e) => setHeroImage(e.target.value)}
+                    placeholder="/tote_bag_red_1786395433017.jpg"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-zinc-400 block mb-1">Hero Subtitle</label>
-                    <textarea
-                      rows={2}
-                      value={heroSubtitle}
-                      onChange={(e) => setHeroSubtitle(e.target.value)}
-                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                    <label className="text-zinc-400 block mb-1">Hero Badge Tag</label>
+                    <input
+                      type="text"
+                      value={heroBadge}
+                      onChange={(e) => setHeroBadge(e.target.value)}
+                      className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
                     />
                   </div>
                   <div>
@@ -1267,11 +1260,31 @@ export default function AdminPage() {
                       type="text"
                       value={heroCtaText}
                       onChange={(e) => setHeroCtaText(e.target.value)}
-                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                      className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
                     />
                   </div>
                 </div>
 
+                <div>
+                  <label className="text-zinc-400 block mb-1">Hero Subtitle Statement</label>
+                  <textarea
+                    rows={2}
+                    value={heroSubtitle}
+                    onChange={(e) => setHeroSubtitle(e.target.value)}
+                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Section Titles & Subtitles Editor */}
+            <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
+                <Type className="w-4 h-4 text-red-500" />
+                Section-wise Title & Subtitle Customizer (টাইটেল ও ডেসক্রিপশন এডিটর)
+              </h4>
+
+              <div className="space-y-4">
                 {/* Bestsellers Controls */}
                 <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
                   <h5 className="font-bold text-amber-400 text-xs">Bestsellers Section</h5>
@@ -1377,7 +1390,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 3. Offer Banner Customization */}
+            {/* 4. Offer Banner Customization */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <Tag className="w-4 h-4 text-red-500" />
@@ -1429,7 +1442,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 4. Password Change Box */}
+            {/* 5. Password Change Box */}
             <div className="space-y-3 p-5 rounded-2xl bg-zinc-950 border border-red-900/60">
               <h4 className="font-bold text-red-400 uppercase tracking-wider text-[11px] font-serif flex items-center gap-1.5">
                 <Key className="w-4 h-4" />
@@ -1444,7 +1457,7 @@ export default function AdminPage() {
               />
             </div>
 
-            {/* 5. Payment Numbers & Delivery */}
+            {/* 6. Payment Numbers & Delivery */}
             <div className="space-y-3 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif">
                 Send Money Numbers & Delivery Fee

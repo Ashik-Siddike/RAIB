@@ -12,17 +12,19 @@ export function Hero() {
   const { lang } = useApp();
   const { settings } = useSettings();
 
+  const heroBgImage = settings.heroImage || "/tote_bag_red_1786395433017.jpg";
+
   return (
     <section className="relative overflow-hidden bg-white text-zinc-900 min-h-[75vh] flex items-center justify-center border-b border-stone-200 transition-colors">
       
-      {/* Background Image Overlay */}
+      {/* Dynamic Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/tote_bag_red_1786395433017.jpg"
+          src={heroBgImage}
           alt="RAIB Luxury Bag Collection"
-          className="w-full h-full object-cover opacity-15 filter brightness-105"
+          className="w-full h-full object-cover opacity-20 filter brightness-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/40" />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6 sm:space-y-8 py-20">
@@ -37,15 +39,15 @@ export function Hero() {
           {settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN"}
         </motion.span>
 
-        {/* Hero Styled Logo Graphic (Replacing Plain Text "RAIB") */}
+        {/* Hero Logo Graphic (Clean rendering directly without separate dark box wrapper) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
           className="flex items-center justify-center gap-3 sm:gap-5 py-2"
         >
-          <div className="relative p-3 sm:p-4 rounded-3xl bg-zinc-950/90 border border-zinc-800 shadow-2xl backdrop-blur-md flex items-center gap-3 sm:gap-5">
-            <div className="relative h-12 sm:h-20 lg:h-24 w-12 sm:w-20 lg:w-24 flex-shrink-0">
+          <div className="flex items-center gap-3 sm:gap-5">
+            <div className="relative h-14 sm:h-24 lg:h-28 w-14 sm:w-24 lg:w-28 flex-shrink-0">
               <Image
                 src="/main-logo.png"
                 alt="RAIB Main Logo"
@@ -54,7 +56,7 @@ export function Hero() {
                 className="object-contain"
               />
             </div>
-            <div className="relative h-12 sm:h-20 lg:h-24 w-44 sm:w-72 lg:w-80 flex-shrink-0">
+            <div className="relative h-14 sm:h-24 lg:h-28 w-48 sm:w-76 lg:w-84 flex-shrink-0">
               <Image
                 src="/raib leter logo.png"
                 alt="RAIB Letter Logo"
