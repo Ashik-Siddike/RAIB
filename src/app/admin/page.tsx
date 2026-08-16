@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ProductType, useApp } from "@/lib/store";
-import { useSettings, ReelType } from "@/lib/settingsStore";
+import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import {
   Plus,
@@ -29,7 +29,8 @@ import {
   Sparkles,
   Tag,
   Type,
-  ImageIcon
+  ImageIcon,
+  Link as LinkIcon
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -91,13 +92,12 @@ export default function AdminPage() {
   const [offerBtnText, setOfferBtnText] = useState(settings.offerBannerButtonText || "SHOP THE SALE");
   const [offerLink, setOfferLink] = useState(settings.offerBannerLink || "/shop");
 
-  // Reels State
-  const [reelsList, setReelsList] = useState<ReelType[]>(settings.reels || []);
-  const [reelTitle, setReelTitle] = useState("");
-  const [reelVideoUrl, setReelVideoUrl] = useState("");
-  const [reelPoster, setReelPoster] = useState("");
-  const [reelProductId, setReelProductId] = useState(products[0]?.id || "raib-tote-01");
-  const [reelPrice, setReelPrice] = useState("");
+  // 5 Explicit Numbered Slots State for Video Reels
+  const [slot1, setSlot1] = useState<ReelType>(DEFAULT_SETTINGS.reels[0]);
+  const [slot2, setSlot2] = useState<ReelType>(DEFAULT_SETTINGS.reels[1]);
+  const [slot3, setSlot3] = useState<ReelType>(DEFAULT_SETTINGS.reels[2]);
+  const [slot4, setSlot4] = useState<ReelType>(DEFAULT_SETTINGS.reels[3]);
+  const [slot5, setSlot5] = useState<ReelType>(DEFAULT_SETTINGS.reels[4]);
 
   // New Product Form State
   const [newTitle, setNewTitle] = useState("");
@@ -156,7 +156,13 @@ export default function AdminPage() {
     setOfferBtnText(settings.offerBannerButtonText || "SHOP THE SALE");
     setOfferLink(settings.offerBannerLink || "/shop");
 
-    setReelsList(settings.reels || []);
+    // Initialize 5 numbered slots
+    const rList = (settings.reels && settings.reels.length >= 5) ? settings.reels : DEFAULT_SETTINGS.reels;
+    setSlot1(rList[0] || DEFAULT_SETTINGS.reels[0]);
+    setSlot2(rList[1] || DEFAULT_SETTINGS.reels[1]);
+    setSlot3(rList[2] || DEFAULT_SETTINGS.reels[2]);
+    setSlot4(rList[3] || DEFAULT_SETTINGS.reels[3]);
+    setSlot5(rList[4] || DEFAULT_SETTINGS.reels[4]);
   }, [settings]);
 
   // Check session storage on mount for existing login
@@ -219,6 +225,13 @@ export default function AdminPage() {
     }
   };
 
+  const handleSave5ReelsSlots = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const updated5Slots = [slot1, slot2, slot3, slot4, slot5];
+    await updateSettings({ reels: updated5Slots });
+    showToast("5 Numbered Reel Slots & Instagram Links Saved Successfully!");
+  };
+
   const handleUpdateSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     const updatePayload: any = {
@@ -259,7 +272,7 @@ export default function AdminPage() {
       offerBannerButtonText: offerBtnText,
       offerBannerLink: offerLink,
 
-      reels: reelsList,
+      reels: [slot1, slot2, slot3, slot4, slot5],
     };
 
     if (newAdminPassword) {
@@ -269,41 +282,6 @@ export default function AdminPage() {
     await updateSettings(updatePayload);
     showToast("All Admin Settings, Hero Background & Section Titles Saved to MongoDB!");
     setNewAdminPassword("");
-  };
-
-  const handleAddReel = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!reelTitle || !reelVideoUrl) {
-      showToast("Please enter title and video URL.");
-      return;
-    }
-
-    const newReelItem: ReelType = {
-      id: "reel-" + Date.now(),
-      title: reelTitle,
-      videoUrl: reelVideoUrl,
-      poster: reelPoster || "/tote_bag_red_1786395433017.jpg",
-      productId: reelProductId || "raib-tote-01",
-      price: Number(reelPrice) || 3500,
-    };
-
-    const updatedReels = [newReelItem, ...reelsList];
-    setReelsList(updatedReels);
-    await updateSettings({ reels: updatedReels });
-
-    setReelTitle("");
-    setReelVideoUrl("");
-    setReelPoster("");
-    setReelPrice("");
-    showToast("New Video Reel Published & Saved to Homepage!");
-  };
-
-  const handleDeleteReel = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this Video Reel?")) return;
-    const updated = reelsList.filter((r) => r.id !== id);
-    setReelsList(updated);
-    await updateSettings({ reels: updated });
-    showToast("Video Reel removed!");
   };
 
   const handleUpdateOrderStatus = async (id: string, newStatus: string) => {
@@ -543,7 +521,7 @@ export default function AdminPage() {
             }`}
           >
             <Video className="w-4 h-4" />
-            <span>Reels Manager ({reelsList.length})</span>
+            <span>Reels Manager (5 Slots)</span>
           </button>
 
           <button
@@ -635,8 +613,8 @@ export default function AdminPage() {
             <Video className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[10px] text-zinc-400 uppercase font-bold">Active Video Reels</span>
-            <h3 className="text-xl font-bold text-white font-mono">{reelsList.length}</h3>
+            <span className="text-[10px] text-zinc-400 uppercase font-bold">Active Reel Slots</span>
+            <h3 className="text-xl font-bold text-white font-mono">5 Cards Single Row</h3>
           </div>
         </div>
       </div>
@@ -644,7 +622,7 @@ export default function AdminPage() {
       {/* Tab 1: Orders & TrxID Verification */}
       {activeTab === "orders" && (
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h3 className="text-xl font-bold text-white font-serif">Customer Orders & Verification</h3>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -793,122 +771,312 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 2: Video Reels Manager */}
+      {/* Tab 2: 5 Numbered Video Reels Slots Manager (Instagram Reel Link Support) */}
       {activeTab === "reels" && (
         <div className="space-y-8">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-white font-serif">Video Reels Manager ("STORIES THAT LEAD")</h3>
-            <span className="text-xs text-zinc-400">{reelsList.length} Active Video Reels</span>
+            <h3 className="text-xl font-bold text-white font-serif flex items-center gap-2">
+              <Video className="w-5 h-5 text-red-500" />
+              Instagram Video Reels Manager (৫টি নির্দিষ্ট নাম্বারিং স্লট)
+            </h3>
+            <span className="text-xs text-red-400 font-bold bg-red-950/60 px-3 py-1 rounded-full border border-red-900">
+              Direct Instagram Link & MP4 Support
+            </span>
           </div>
 
-          {/* Add New Video Reel Form */}
-          <form onSubmit={handleAddReel} className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
-            <h4 className="font-bold text-red-400 uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
-              <Video className="w-4 h-4" />
-              Add New 9:16 Video Reel
-            </h4>
+          <p className="text-xs text-zinc-400 leading-relaxed">
+            ইনস্টাগ্রাম থেকে রিলস শেয়ার করে লিংক কপি করে নিচের ১ থেকে ৫ নাম্বার স্লটে বসিয়ে দিন। যে স্লটে যেই রিলসের লিংক দেবেন, হোমপেজের সেই নির্দিষ্ট কার্ডেই রিলসটি স্বয়ংক্রিয়ভাবে প্লে হতে থাকবে!
+          </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-zinc-400 block mb-1">Reel Title *</label>
-                <input
-                  type="text"
-                  required
-                  value={reelTitle}
-                  onChange={(e) => setReelTitle(e.target.value)}
-                  placeholder="e.g. Italian Leather Commuter Shoulder Bag"
-                  className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
-                />
+          <form onSubmit={handleSave5ReelsSlots} className="space-y-6">
+            
+            {/* Slot 1 */}
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
+              <h4 className="font-bold text-amber-400 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
+                <LinkIcon className="w-4 h-4 text-red-500" />
+                Slot 1 (রিল ১ - ১ম কার্ড)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Reel Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot1.title}
+                    onChange={(e) => setSlot1({ ...slot1, title: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Instagram Reel Link / MP4 Video URL *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot1.videoUrl}
+                    onChange={(e) => setSlot1({ ...slot1, videoUrl: e.target.value })}
+                    placeholder="https://www.instagram.com/reel/... or https://...mp4"
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
               </div>
-
-              <div>
-                <label className="text-zinc-400 block mb-1">Video MP4 URL *</label>
-                <input
-                  type="text"
-                  required
-                  value={reelVideoUrl}
-                  onChange={(e) => setReelVideoUrl(e.target.value)}
-                  placeholder="https://assets.mixkit.co/.../video.mp4"
-                  className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Associated Product</label>
+                  <select
+                    value={slot1.productId}
+                    onChange={(e) => setSlot1({ ...slot1, productId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 cursor-pointer"
+                  >
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} (৳{p.price})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Price (BDT ৳)</label>
+                  <input
+                    type="number"
+                    value={slot1.price}
+                    onChange={(e) => setSlot1({ ...slot1, price: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="text-zinc-400 block mb-1">Cover Poster Image URL</label>
-                <input
-                  type="text"
-                  value={reelPoster}
-                  onChange={(e) => setReelPoster(e.target.value)}
-                  placeholder="/tote_bag_red_1786395433017.jpg"
-                  className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
-                />
+            {/* Slot 2 */}
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
+              <h4 className="font-bold text-amber-400 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
+                <LinkIcon className="w-4 h-4 text-red-500" />
+                Slot 2 (রিল ২ - ২য় কার্ড)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Reel Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot2.title}
+                    onChange={(e) => setSlot2({ ...slot2, title: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Instagram Reel Link / MP4 Video URL *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot2.videoUrl}
+                    onChange={(e) => setSlot2({ ...slot2, videoUrl: e.target.value })}
+                    placeholder="https://www.instagram.com/reel/..."
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
               </div>
-
-              <div>
-                <label className="text-zinc-400 block mb-1">Associated Bag Product</label>
-                <select
-                  value={reelProductId}
-                  onChange={(e) => setReelProductId(e.target.value)}
-                  className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 cursor-pointer"
-                >
-                  {products.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} (৳{p.price})
-                    </option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Associated Product</label>
+                  <select
+                    value={slot2.productId}
+                    onChange={(e) => setSlot2({ ...slot2, productId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 cursor-pointer"
+                  >
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} (৳{p.price})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Price (BDT ৳)</label>
+                  <input
+                    type="number"
+                    value={slot2.price}
+                    onChange={(e) => setSlot2({ ...slot2, price: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
               </div>
+            </div>
 
-              <div>
-                <label className="text-zinc-400 block mb-1">Price in Reel (BDT ৳)</label>
-                <input
-                  type="number"
-                  value={reelPrice}
-                  onChange={(e) => setReelPrice(e.target.value)}
-                  placeholder="3500"
-                  className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
-                />
+            {/* Slot 3 */}
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
+              <h4 className="font-bold text-amber-400 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
+                <LinkIcon className="w-4 h-4 text-red-500" />
+                Slot 3 (রিল ৩ - ৩য় কার্ড)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Reel Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot3.title}
+                    onChange={(e) => setSlot3({ ...slot3, title: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Instagram Reel Link / MP4 Video URL *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot3.videoUrl}
+                    onChange={(e) => setSlot3({ ...slot3, videoUrl: e.target.value })}
+                    placeholder="https://www.instagram.com/reel/..."
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Associated Product</label>
+                  <select
+                    value={slot3.productId}
+                    onChange={(e) => setSlot3({ ...slot3, productId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 cursor-pointer"
+                  >
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} (৳{p.price})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Price (BDT ৳)</label>
+                  <input
+                    type="number"
+                    value={slot3.price}
+                    onChange={(e) => setSlot3({ ...slot3, price: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Slot 4 */}
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
+              <h4 className="font-bold text-amber-400 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
+                <LinkIcon className="w-4 h-4 text-red-500" />
+                Slot 4 (রিল ৪ - ৪র্থ কার্ড)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Reel Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot4.title}
+                    onChange={(e) => setSlot4({ ...slot4, title: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Instagram Reel Link / MP4 Video URL *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot4.videoUrl}
+                    onChange={(e) => setSlot4({ ...slot4, videoUrl: e.target.value })}
+                    placeholder="https://www.instagram.com/reel/..."
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Associated Product</label>
+                  <select
+                    value={slot4.productId}
+                    onChange={(e) => setSlot4({ ...slot4, productId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 cursor-pointer"
+                  >
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} (৳{p.price})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Price (BDT ৳)</label>
+                  <input
+                    type="number"
+                    value={slot4.price}
+                    onChange={(e) => setSlot4({ ...slot4, price: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Slot 5 */}
+            <div className="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-4 text-xs">
+              <h4 className="font-bold text-amber-400 uppercase tracking-wider text-xs flex items-center gap-2 font-mono">
+                <LinkIcon className="w-4 h-4 text-red-500" />
+                Slot 5 (রিল ৫ - ৫ম কার্ড)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Reel Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot5.title}
+                    onChange={(e) => setSlot5({ ...slot5, title: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Instagram Reel Link / MP4 Video URL *</label>
+                  <input
+                    type="text"
+                    required
+                    value={slot5.videoUrl}
+                    onChange={(e) => setSlot5({ ...slot5, videoUrl: e.target.value })}
+                    placeholder="https://www.instagram.com/reel/..."
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Associated Product</label>
+                  <select
+                    value={slot5.productId}
+                    onChange={(e) => setSlot5({ ...slot5, productId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 cursor-pointer"
+                  >
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} (৳{p.price})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-zinc-400 block mb-1">Price (BDT ৳)</label>
+                  <input
+                    type="number"
+                    value={slot5.price}
+                    onChange={(e) => setSlot5({ ...slot5, price: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                  />
+                </div>
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl cursor-pointer"
+              className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xl cursor-pointer"
             >
-              Publish Video Reel to Homepage
+              Save All 5 Reel Slots to Homepage & MongoDB
             </button>
           </form>
-
-          {/* Active Reels List */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {reelsList.map((reel) => (
-              <div key={reel.id} className="relative aspect-[9/16] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 p-3 flex flex-col justify-between">
-                {reel.videoUrl ? (
-                  <video src={reel.videoUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-60" />
-                ) : (
-                  <Image src={reel.poster} alt={reel.title} fill className="object-cover opacity-60" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent pointer-events-none" />
-
-                <div className="relative flex justify-end z-10">
-                  <button
-                    onClick={() => handleDeleteReel(reel.id)}
-                    className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition shadow-lg cursor-pointer"
-                    title="Delete Reel"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="relative space-y-1 z-10">
-                  <h4 className="text-xs font-bold text-white line-clamp-2 font-serif">{reel.title}</h4>
-                  <p className="text-[10px] font-bold text-red-400">৳{reel.price?.toLocaleString()}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
