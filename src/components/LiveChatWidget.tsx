@@ -9,7 +9,8 @@ export function LiveChatWidget() {
   const { settings } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
 
-  const cleanWhatsapp = settings.whatsappNumber.replace(/[^0-9]/g, "");
+  const rawWhatsapp = settings?.whatsappNumber || "+8801700000000";
+  const cleanWhatsapp = rawWhatsapp.replace(/[^0-9]/g, "");
 
   const handleWhatsApp = () => {
     const defaultText = encodeURIComponent("Hi RAIB Team! I am interested in your ladies bag collection.");
@@ -18,7 +19,8 @@ export function LiveChatWidget() {
   };
 
   const handleMessenger = () => {
-    const url = `https://m.me/${settings.messengerPageId}`;
+    const rawMessenger = settings?.messengerPageId || "raib.official";
+    const url = `https://m.me/${rawMessenger}`;
     window.open(url, "_blank");
   };
 

@@ -6,7 +6,7 @@ import { useSettings } from "@/lib/settingsStore";
 
 export function FacebookPixel() {
   const { settings } = useSettings();
-  const pixelId = settings.facebookPixelId;
+  const pixelId = settings?.facebookPixelId || "";
 
   useEffect(() => {
     if (!pixelId) return;
