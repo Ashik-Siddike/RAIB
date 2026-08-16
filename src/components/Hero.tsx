@@ -38,35 +38,21 @@ export function Hero() {
           {settings.heroBadge || "STYLED FOR THE MODERN WOMAN"}
         </motion.span>
 
-        {/* Hero Unified Centered Logo Graphic Container */}
+        {/* Hero Styled Letter Logo Only (Centered) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="w-full flex items-center justify-center gap-3 sm:gap-5 py-2 mx-auto"
+          className="w-full flex items-center justify-center py-2 mx-auto"
         >
-          <div className="flex items-center justify-center gap-3 sm:gap-5 drop-shadow-lg mx-auto">
-            {/* Emblem Logo */}
-            <div className="relative h-12 sm:h-20 lg:h-24 w-12 sm:w-20 lg:w-24 flex-shrink-0">
-              <Image
-                src="/main-logo.png"
-                alt="RAIB Main Emblem Logo"
-                fill
-                priority
-                className="object-contain"
-              />
-            </div>
-
-            {/* Letter Wordmark Logo */}
-            <div className="relative h-12 sm:h-20 lg:h-24 w-44 sm:w-72 lg:w-80 flex-shrink-0">
-              <Image
-                src="/raib leter logo.png"
-                alt="RAIB Letter Logo"
-                fill
-                priority
-                className="object-contain object-left"
-              />
-            </div>
+          <div className="relative h-16 sm:h-24 lg:h-28 w-56 sm:w-84 lg:w-96 drop-shadow-lg flex-shrink-0">
+            <Image
+              src="/raib leter logo.png"
+              alt="RAIB Letter Logo"
+              fill
+              priority
+              className="object-contain"
+            />
           </div>
         </motion.div>
 
