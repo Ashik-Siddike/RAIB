@@ -10,10 +10,9 @@ import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import { ProductType, useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
 import { ShieldCheck, Truck, RotateCcw, Award, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function Home() {
-  const { lang, t } = useApp();
+  const { lang } = useApp();
   const { settings } = useSettings();
 
   const [products, setProducts] = useState<ProductType[]>(SAMPLE_PRODUCTS);
@@ -38,21 +37,21 @@ export default function Home() {
   const newArrivals = products.slice(0, 8);
 
   return (
-    <div className="space-y-0 w-full overflow-x-hidden bg-stone-50 dark:bg-zinc-950 text-zinc-900 dark:text-white transition-colors">
+    <div className="space-y-0 w-full overflow-x-hidden bg-white text-zinc-900 transition-colors">
       
       {/* 1. Hero Section */}
       {settings.showHero && <Hero />}
 
       {/* 2. Bestsellers Section */}
       {settings.showBestsellers && (
-        <section className="py-16 sm:py-24 bg-stone-50 dark:bg-zinc-950 border-b border-stone-200 dark:border-zinc-900 transition-colors">
+        <section className="py-16 sm:py-24 bg-white border-b border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             
             <div className="text-center space-y-2">
-              <span className="text-xs font-bold text-red-600 dark:text-red-500 uppercase tracking-widest block font-sans">
+              <span className="text-xs font-bold text-red-600 uppercase tracking-widest block font-sans">
                 FEATURED TODAY
               </span>
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 dark:text-white font-serif tracking-tight">
+              <h2 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 font-serif tracking-tight">
                 Bestsellers
               </h2>
             </div>
@@ -66,7 +65,7 @@ export default function Home() {
             <div className="text-center pt-4">
               <Link
                 href="/shop?category=Best Sellers"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition group"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition group"
               >
                 <span>VIEW ALL BESTSELLERS</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-red-600" />
@@ -82,14 +81,14 @@ export default function Home() {
 
       {/* 4. New Arrivals Section */}
       {settings.showNewArrivals && (
-        <section className="py-16 sm:py-24 bg-stone-50 dark:bg-zinc-950 border-b border-stone-200 dark:border-zinc-900 transition-colors">
+        <section className="py-16 sm:py-24 bg-white border-b border-stone-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             
             <div className="text-center space-y-2">
-              <span className="text-xs font-bold text-red-600 dark:text-red-500 uppercase tracking-widest block font-sans">
+              <span className="text-xs font-bold text-red-600 uppercase tracking-widest block font-sans">
                 JUST ARRIVED
               </span>
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 dark:text-white font-serif tracking-tight">
+              <h2 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 font-serif tracking-tight">
                 New Arrivals
               </h2>
             </div>
@@ -103,7 +102,7 @@ export default function Home() {
             <div className="text-center pt-4">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition group"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition group"
               >
                 <span>EXPLORE ALL BAGS</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-red-600" />
@@ -118,30 +117,30 @@ export default function Home() {
       {settings.showOfferBanner && <OfferBanner />}
 
       {/* Trust Badges */}
-      <section className="py-12 bg-stone-100 dark:bg-zinc-950 border-b border-stone-200 dark:border-zinc-900 transition-colors">
+      <section className="py-12 bg-stone-50 border-b border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
             <div className="p-4 space-y-2">
               <Award className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 dark:text-white uppercase font-serif">100% Genuine Italian Leather</h4>
+              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">100% Genuine Italian Leather</h4>
               <p className="text-[11px] text-zinc-500">Handcrafted by master artisans</p>
             </div>
 
             <div className="p-4 space-y-2">
               <Truck className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 dark:text-white uppercase font-serif">Cash on Delivery</h4>
+              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">Cash on Delivery</h4>
               <p className="text-[11px] text-zinc-500">Fast home delivery across BD</p>
             </div>
 
             <div className="p-4 space-y-2">
               <RotateCcw className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 dark:text-white uppercase font-serif">7-Day Easy Exchange</h4>
+              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">7-Day Easy Exchange</h4>
               <p className="text-[11px] text-zinc-500">Guaranteed replacement protection</p>
             </div>
 
             <div className="p-4 space-y-2">
               <ShieldCheck className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 dark:text-white uppercase font-serif">18K Gold-Plated Hardware</h4>
+              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">18K Gold-Plated Hardware</h4>
               <p className="text-[11px] text-zinc-500">Rust & tarnish resistant</p>
             </div>
           </div>

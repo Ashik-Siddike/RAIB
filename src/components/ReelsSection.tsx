@@ -53,15 +53,15 @@ export function ReelsSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-stone-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border-b border-stone-200 dark:border-zinc-900 overflow-hidden transition-colors">
+    <section className="py-12 sm:py-16 bg-white text-zinc-900 border-b border-stone-200 overflow-hidden transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Section Header */}
         <div className="text-center space-y-1">
-          <h2 className="text-xl sm:text-3xl font-extrabold tracking-widest uppercase font-serif text-zinc-900 dark:text-white">
+          <h2 className="text-xl sm:text-3xl font-extrabold tracking-widest uppercase font-serif text-zinc-900">
             STORIES THAT LEAD
           </h2>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 font-sans">
+          <p className="text-xs text-zinc-600 font-sans">
             Real clients showcasing RAIB genuine Italian leather bags in motion
           </p>
         </div>
@@ -76,7 +76,7 @@ export function ReelsSection() {
               <motion.div
                 key={reel.id}
                 whileHover={{ y: -5 }}
-                className="group relative aspect-[9/16] w-full rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-lg cursor-pointer flex flex-col justify-between"
+                className="group relative aspect-[9/16] w-full rounded-2xl overflow-hidden bg-white border border-stone-200 shadow-md cursor-pointer flex flex-col justify-between"
                 onClick={() => handleOpenReel(reel)}
               >
                 {/* Background Video Preview / Poster */}
@@ -99,7 +99,7 @@ export function ReelsSection() {
                   />
                 )}
 
-                {/* Dark Gradient Overlays */}
+                {/* Dark Gradient Overlays for Video Contrast */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
 
                 {/* Top Play Indicator */}
@@ -167,7 +167,7 @@ export function ReelsSection() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={handleCloseReel}
-              className="fixed inset-0 bg-black/90 backdrop-blur-md"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md"
             />
 
             {/* Modal Content Box */}

@@ -14,16 +14,16 @@ export function OfferBanner() {
   }
 
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32 bg-stone-900 dark:bg-zinc-950 text-white border-b border-stone-800 dark:border-zinc-900">
+    <section className="relative overflow-hidden py-24 sm:py-32 bg-stone-100 text-zinc-900 border-b border-stone-200">
       
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <img
           src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=1600&auto=format&fit=crop&q=80"
           alt="Fall Collection Offer Banner"
-          className="w-full h-full object-cover opacity-40 filter brightness-90"
+          className="w-full h-full object-cover opacity-20 filter brightness-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-stone-950/90 via-stone-950/70 to-stone-950/90 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-stone-100/90 via-stone-100/70 to-stone-100/90 z-10" />
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-20 text-center space-y-6">
@@ -32,7 +32,7 @@ export function OfferBanner() {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-xs font-bold text-red-500 dark:text-amber-400 uppercase tracking-[0.3em] block font-sans"
+          className="text-xs font-bold text-red-600 uppercase tracking-[0.3em] block font-sans"
         >
           {settings.offerBannerSubtitle || "LIMITED TIME"}
         </motion.span>
@@ -42,7 +42,7 @@ export function OfferBanner() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white font-serif leading-tight"
+          className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-zinc-900 font-serif leading-tight"
         >
           {settings.offerBannerTitle || "Up to 30% off the Fall Collection"}
         </motion.h2>
