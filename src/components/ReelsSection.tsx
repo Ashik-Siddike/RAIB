@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSettings, ReelType } from "@/lib/settingsStore";
+import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
 import { useApp } from "@/lib/store";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import { Play, Volume2, VolumeX, X, ShoppingCart, ArrowRight, ChevronDown } from "lucide-react";
@@ -19,7 +19,13 @@ export function ReelsSection() {
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  if (!settings.showReels || !settings.reels || settings.reels.length === 0) {
+  // Guarantee fallback so Video Reels section NEVER disappears even if DB document is missing array
+  const reelsList =
+    settings.reels && settings.reels.length > 0 ? settings.reels : DEFAULT_SETTINGS.reels;
+
+  const showReelsSection = settings.showReels ?? true;
+
+  if (!showReelsSection || !reelsList || reelsList.length === 0) {
     return null;
   }
 
@@ -53,33 +59,34 @@ export function ReelsSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-white text-zinc-900 border-b border-stone-200 overflow-hidden transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <section className="py-16 sm:py-24 bg-white text-zinc-900 border-b border-stone-200 overflow-hidden transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         
         {/* Section Header */}
-        <div className="text-center space-y-1">
+        <div className="text-center space-y-2">
           <span className="text-xs font-bold text-red-600 uppercase tracking-widest block font-sans">
             {settings.reelsBadge || "CLIENT STORIES"}
           </span>
-          <h2 className="text-xl sm:text-3xl font-extrabold tracking-widest uppercase font-serif text-zinc-900">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight uppercase font-serif text-zinc-900">
             {settings.reelsTitle || "STORIES THAT LEAD"}
           </h2>
-          <p className="text-xs text-zinc-600 font-sans">
+          <p className="text-xs sm:text-sm text-zinc-600 font-sans max-w-xl mx-auto">
             {settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion"}
           </p>
         </div>
 
-        {/* 9:16 Video Cards Carousel / Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 overflow-x-auto pb-4">
-          {settings.reels.map((reel) => {
+        {/* Larger 9:16 Video Cards Grid (4 columns on desktop, 2 on mobile) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {reelsList.map((reel) => {
             const linkedProduct =
               SAMPLE_PRODUCTS.find((p) => p.id === reel.productId) || SAMPLE_PRODUCTS[0];
 
             return (
               <motion.div
                 key={reel.id}
-                whileHover={{ y: -5 }}
-                className="group relative aspect-[9/16] w-full rounded-2xl overflow-hidden bg-white border border-stone-200 shadow-md cursor-pointer flex flex-col justify-between"
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+                className="group relative aspect-[9/16] min-h-[380px] sm:min-h-[440px] lg:min-h-[480px] w-full rounded-3xl overflow-hidden bg-zinc-950 border border-stone-200 shadow-xl cursor-pointer flex flex-col justify-between"
                 onClick={() => handleOpenReel(reel)}
               >
                 {/* Background Video Preview / Poster */}
@@ -105,17 +112,20 @@ export function ReelsSection() {
                 {/* Dark Gradient Overlays for Video Contrast */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
 
-                {/* Top Play Indicator */}
-                <div className="relative p-3 flex items-center justify-end">
-                  <span className="p-2 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 group-hover:scale-110 transition">
-                    <Play className="w-3.5 h-3.5 fill-current" />
+                {/* Top Play Indicator Badge */}
+                <div className="relative p-4 flex items-center justify-between z-10">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/90 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                    Client Story
+                  </span>
+                  <span className="p-3 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 group-hover:scale-110 transition shadow-lg">
+                    <Play className="w-4 h-4 fill-current" />
                   </span>
                 </div>
 
                 {/* Bottom Product Info & Add To Cart Button */}
-                <div className="relative p-3 space-y-2.5 z-10">
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-white/30 flex-shrink-0 bg-zinc-950">
+                <div className="relative p-4 sm:p-5 space-y-3.5 z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-white/30 flex-shrink-0 bg-zinc-950 shadow-md">
                       <Image
                         src={reel.poster || linkedProduct.image}
                         alt={reel.title}
@@ -125,29 +135,30 @@ export function ReelsSection() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-[11px] font-bold text-white line-clamp-1 font-serif leading-snug">
+                      <h4 className="text-xs sm:text-sm font-bold text-white line-clamp-1 font-serif leading-snug drop-shadow">
                         {reel.title}
                       </h4>
-                      <p className="text-[10px] font-bold text-amber-400 font-mono">
+                      <p className="text-xs sm:text-sm font-extrabold text-amber-400 font-mono drop-shadow">
                         ৳{reel.price ? reel.price.toLocaleString() : linkedProduct.price.toLocaleString()}
                       </p>
                     </div>
                   </div>
 
                   {/* Add To Cart Bar */}
-                  <div className="flex items-center bg-black text-white rounded-lg overflow-hidden border border-zinc-700 text-[11px] font-bold">
+                  <div className="flex items-center bg-black/90 text-white rounded-xl overflow-hidden border border-zinc-700 text-xs font-bold shadow-lg">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(linkedProduct);
                         showToast("Added to bag!");
                       }}
-                      className="flex-1 py-1.5 px-2 hover:bg-zinc-800 transition flex items-center justify-center gap-1"
+                      className="flex-1 py-2.5 px-3 hover:bg-zinc-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
                     >
+                      <ShoppingCart className="w-3.5 h-3.5 text-red-500" />
                       <span>Add To Cart</span>
                     </button>
-                    <div className="p-1.5 border-l border-zinc-700 bg-zinc-900 text-zinc-400">
-                      <ChevronDown className="w-3 h-3" />
+                    <div className="p-2.5 border-l border-zinc-700 bg-zinc-900 text-zinc-400">
+                      <ChevronDown className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </div>
