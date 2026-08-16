@@ -26,36 +26,39 @@ export function Hero() {
         />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6 sm:space-y-8 py-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6 sm:space-y-8 py-20 flex flex-col items-center justify-center">
         
         {/* Gold Accent Subtitle Badge */}
         <motion.span
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-red-600 font-sans block drop-shadow"
+          className="text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-red-600 font-sans block drop-shadow text-center"
         >
           {settings.heroBadge || "STYLED FOR THE MODERN WOMAN"}
         </motion.span>
 
-        {/* Hero Logo Graphic */}
+        {/* Hero Unified Centered Logo Graphic Container */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="flex items-center justify-center gap-3 sm:gap-5 py-2"
+          className="w-full flex items-center justify-center gap-3 sm:gap-5 py-2 mx-auto"
         >
-          <div className="flex items-center gap-3 sm:gap-5 drop-shadow-md">
-            <div className="relative h-14 sm:h-24 lg:h-28 w-14 sm:w-24 lg:w-28 flex-shrink-0">
+          <div className="flex items-center justify-center gap-3 sm:gap-5 drop-shadow-md mx-auto">
+            {/* Emblem Logo */}
+            <div className="relative h-12 sm:h-20 lg:h-24 w-12 sm:w-20 lg:w-24 flex-shrink-0">
               <Image
                 src="/main-logo.png"
-                alt="RAIB Main Logo"
+                alt="RAIB Main Emblem Logo"
                 fill
                 priority
                 className="object-contain"
               />
             </div>
-            <div className="relative h-14 sm:h-24 lg:h-28 w-48 sm:w-76 lg:w-84 flex-shrink-0">
+
+            {/* Letter Wordmark Logo */}
+            <div className="relative h-12 sm:h-20 lg:h-24 w-44 sm:w-72 lg:w-80 flex-shrink-0">
               <Image
                 src="/raib leter logo.png"
                 alt="RAIB Letter Logo"
@@ -72,7 +75,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-sm sm:text-lg text-zinc-900 max-w-2xl mx-auto font-sans leading-relaxed font-bold pt-2 drop-shadow-sm"
+          className="text-sm sm:text-lg text-zinc-900 max-w-2xl mx-auto font-sans leading-relaxed font-bold pt-2 drop-shadow-sm text-center"
         >
           {settings.heroSubtitle ||
             (lang === "bn"
@@ -85,7 +88,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="pt-2"
+          className="pt-2 text-center"
         >
           <Link
             href="/shop"
