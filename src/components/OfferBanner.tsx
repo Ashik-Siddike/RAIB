@@ -14,16 +14,16 @@ export function OfferBanner() {
   }
 
   return (
-    <section className="relative overflow-hidden py-20 sm:py-28 bg-zinc-950 text-white border-b border-zinc-900">
+    <section className="relative overflow-hidden py-24 sm:py-32 bg-zinc-950 text-white border-b border-zinc-900">
       
-      {/* Background Image / Gradient */}
+      {/* Background Image Overlay matching Image 2 */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-zinc-950/90 z-10" />
         <img
           src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=1600&auto=format&fit=crop&q=80"
-          alt="Fall Collection Banner"
-          className="w-full h-full object-cover opacity-40 filter grayscale"
+          alt="Fall Collection Offer Banner"
+          className="w-full h-full object-cover opacity-50 filter brightness-90"
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/70 to-zinc-950/90 z-10" />
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-20 text-center space-y-6">
@@ -32,9 +32,9 @@ export function OfferBanner() {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-xs font-bold text-red-500 uppercase tracking-widest block font-sans"
+          className="text-xs font-bold text-amber-400 uppercase tracking-[0.3em] block font-sans"
         >
-          {settings.offerBannerSubtitle || "LIMITED TIME OFFER"}
+          {settings.offerBannerSubtitle || "LIMITED TIME"}
         </motion.span>
 
         <motion.h2

@@ -18,7 +18,7 @@ export function Header() {
   return (
     <>
       {/* Top Announcement Bar */}
-      <div className="bg-stone-900 dark:bg-zinc-950 text-stone-200 dark:text-zinc-300 text-[10px] sm:text-xs py-1.5 px-3 sm:px-6 border-b border-red-900/30">
+      <div className="bg-zinc-950 text-zinc-300 text-[10px] sm:text-xs py-1.5 px-4 sm:px-8 border-b border-zinc-800/80">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
             <span className="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
@@ -28,29 +28,29 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Dark / Light Theme Toggle Button */}
+            {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-stone-800 dark:bg-zinc-900 border border-stone-700/60 dark:border-zinc-700/60 text-stone-100 dark:text-zinc-200 hover:border-red-500 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-semibold"
+              className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-700/60 text-zinc-200 hover:border-red-500 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-semibold"
               title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {theme === "dark" ? (
                 <>
                   <Sun className="w-3 h-3 text-amber-400" />
-                  <span>Light Mode</span>
+                  <span>Light</span>
                 </>
               ) : (
                 <>
                   <Moon className="w-3 h-3 text-indigo-400" />
-                  <span>Dark Mode</span>
+                  <span>Dark</span>
                 </>
               )}
             </button>
 
-            {/* Language Switcher Button */}
+            {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-stone-800 dark:bg-zinc-900 border border-stone-700/60 dark:border-zinc-700/60 text-stone-100 dark:text-zinc-200 hover:border-red-500 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-semibold"
+              className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-700/60 text-zinc-200 hover:border-red-500 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-semibold"
               title="Switch Language"
             >
               <Globe className="w-3 h-3 text-red-500" />
@@ -61,36 +61,37 @@ export function Header() {
       </div>
 
       {/* Sticky Header */}
-      <header className="sticky top-0 z-40 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-stone-200 dark:border-zinc-800/80 shadow-sm dark:shadow-2xl transition-all">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+      <header className="sticky top-0 z-40 bg-zinc-950/95 dark:bg-zinc-950/95 light:bg-stone-50/95 backdrop-blur-xl border-b border-zinc-800/80 dark:border-zinc-800/80 light:border-stone-200 shadow-lg transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
           
-          {/* Left: Mobile Trigger & Navigation */}
+          {/* Left: Navigation or Mobile Trigger */}
           <div className="flex items-center gap-2 sm:gap-6">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-1.5 text-zinc-700 dark:text-zinc-300 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-xl transition"
+              className="lg:hidden p-1.5 text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-white hover:bg-zinc-900 rounded-xl transition"
               aria-label="Toggle Mobile Menu"
             >
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Menu className="w-6 h-6" />
             </button>
 
-            <nav className="hidden lg:flex items-center gap-8 font-sans text-xs tracking-wider uppercase font-bold">
-              <Link href="/" className="text-zinc-800 dark:text-zinc-300 hover:text-red-600 transition-colors relative py-1 group">
+            <nav className="hidden lg:flex items-center gap-8 font-sans text-xs tracking-widest uppercase font-semibold">
+              <Link href="/" className="text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-red-500 transition-colors py-1">
                 {t("navHome")}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/shop" className="text-zinc-800 dark:text-zinc-300 hover:text-red-600 transition-colors relative py-1 group">
+              <Link href="/shop" className="text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-red-500 transition-colors py-1">
                 {t("navShop")}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/shop?category=Best Sellers" className="text-zinc-800 dark:text-zinc-300 hover:text-red-600 transition-colors relative py-1 group flex items-center gap-1.5">
+              <Link href="/shop?category=Best Sellers" className="text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-red-500 transition-colors py-1 flex items-center gap-1.5">
                 {t("navBestSellers")}
-                <span className="bg-red-600/10 text-red-600 dark:bg-red-600/20 dark:text-red-400 text-[10px] px-1.5 py-0.2 rounded-full font-bold border border-red-500/30 uppercase">HOT</span>
+                <span className="bg-red-600/20 text-red-400 text-[9px] px-1.5 py-0.2 rounded-full font-bold border border-red-500/30 uppercase">HOT</span>
+              </Link>
+              <Link href="/faq" className="text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-red-500 transition-colors py-1">
+                FAQ
               </Link>
             </nav>
           </div>
 
-          {/* Center Brand Logo: Emblem + Natural Rectangle Wordmark (/lgo2.png) */}
+          {/* Center Brand Logo: Emblem (/logo.png) + Natural Rectangle Wordmark (/lgo2.png) */}
           <Link href="/" className="flex items-center gap-3 group py-1">
             {/* Emblem /logo.png */}
             <div className="relative h-7 sm:h-9 w-7 sm:w-9 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
@@ -115,31 +116,22 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Right Action Icons & Auth */}
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          {/* Right Action Icons & Cart */}
+          <div className="flex items-center gap-2 sm:gap-4">
             
-            {/* Theme Switcher Quick Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-1.5 sm:p-2 text-zinc-700 dark:text-zinc-300 hover:text-amber-500 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-full transition-colors relative cursor-pointer"
-              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {theme === "dark" ? <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />}
-            </button>
-
             {/* Search Trigger */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-1.5 sm:p-2 text-zinc-700 dark:text-zinc-300 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-full transition-colors relative cursor-pointer"
+              className="p-2 text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-red-500 hover:bg-zinc-900 rounded-full transition cursor-pointer"
               title="Search Bags"
             >
-              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+              <Search className="w-5 h-5" />
             </button>
 
             {/* Wishlist Button */}
             <Link
               href="/shop?wishlist=true"
-              className="hidden sm:flex p-2 text-zinc-700 dark:text-zinc-300 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-full transition-colors relative"
+              className="hidden sm:flex p-2 text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-red-500 hover:bg-zinc-900 rounded-full transition relative"
               title="Wishlist"
             >
               <Heart className="w-5 h-5" />
@@ -153,22 +145,22 @@ export function Header() {
             {/* User Account / Auth Trigger */}
             <button
               onClick={() => setIsAuthOpen(true)}
-              className="p-1.5 sm:p-2 text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-full transition-colors cursor-pointer"
+              className="p-2 text-zinc-300 dark:text-zinc-300 light:text-zinc-800 hover:text-white hover:bg-zinc-900 rounded-full transition cursor-pointer"
               title="Sign In / Account"
             >
-              <User className="w-4 h-4 sm:w-5 sm:h-5" />
+              <User className="w-5 h-5" />
             </button>
 
-            {/* Cart Drawer Solid Red Button */}
+            {/* Cart Drawer Trigger Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-300 shadow-md shadow-red-950/20 hover:scale-105 group cursor-pointer"
+              className="flex items-center gap-2 px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition duration-300 shadow-md shadow-red-950/50 hover:scale-105 group cursor-pointer"
             >
-              <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover:rotate-12 transition-transform" />
-              <span className="hidden md:inline font-sans text-xs font-bold uppercase tracking-wider">
+              <ShoppingBag className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
+              <span className="hidden sm:inline font-sans text-xs font-bold uppercase tracking-wider">
                 {t("mobNavCart")}
               </span>
-              <span className="w-4 h-4 sm:w-5 sm:h-5 bg-white text-red-900 text-[10px] sm:text-xs font-black rounded-full flex items-center justify-center shadow-inner">
+              <span className="w-5 h-5 bg-white text-red-900 text-xs font-black rounded-full flex items-center justify-center shadow-inner">
                 {cartCount}
               </span>
             </button>
@@ -186,17 +178,17 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 lg:hidden"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 lg:hidden"
             />
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 bottom-0 w-4/5 max-w-xs bg-white dark:bg-zinc-950 border-r border-stone-200 dark:border-zinc-800 p-6 z-50 flex flex-col justify-between overflow-y-auto lg:hidden"
+              className="fixed top-0 left-0 bottom-0 w-4/5 max-w-xs bg-zinc-950 border-r border-zinc-800 p-6 z-50 flex flex-col justify-between overflow-y-auto lg:hidden text-white"
             >
               <div>
-                <div className="flex items-center justify-between pb-6 border-b border-stone-200 dark:border-zinc-800">
+                <div className="flex items-center justify-between pb-6 border-b border-zinc-800">
                   <div className="flex items-center gap-2.5">
                     <div className="relative h-7 w-7 flex-shrink-0">
                       <Image src="/logo.png" alt="RAIB Logo" fill className="object-contain" />
@@ -207,67 +199,74 @@ export function Header() {
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                    className="p-2 text-zinc-400 hover:text-white"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
-                <div className="py-6 space-y-2">
+                <div className="py-6 space-y-2 font-sans text-sm font-semibold uppercase tracking-wider">
                   <Link
                     href="/"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-bold text-zinc-800 dark:text-zinc-200 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-xl transition"
+                    className="block px-4 py-3 text-zinc-200 hover:text-red-400 hover:bg-zinc-900 rounded-xl transition"
                   >
                     {t("navHome")}
                   </Link>
                   <Link
                     href="/shop"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-bold text-zinc-800 dark:text-zinc-200 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-xl transition"
+                    className="block px-4 py-3 text-zinc-200 hover:text-red-400 hover:bg-zinc-900 rounded-xl transition"
                   >
                     {t("navShop")}
                   </Link>
                   <Link
                     href="/shop?category=Best Sellers"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-bold text-zinc-800 dark:text-zinc-200 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-xl transition"
+                    className="block px-4 py-3 text-zinc-200 hover:text-red-400 hover:bg-zinc-900 rounded-xl transition"
                   >
                     {t("navBestSellers")}
                   </Link>
                   <Link
-                    href="/checkout"
+                    href="/faq"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-base font-bold text-zinc-800 dark:text-zinc-200 hover:text-red-600 hover:bg-stone-100 dark:hover:bg-zinc-900 rounded-xl transition"
+                    className="block px-4 py-3 text-zinc-200 hover:text-red-400 hover:bg-zinc-900 rounded-xl transition"
                   >
-                    {t("checkoutTitle")}
+                    FAQ & Policies
+                  </Link>
+                  <Link
+                    href="/track-order"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-4 py-3 text-zinc-200 hover:text-red-400 hover:bg-zinc-900 rounded-xl transition"
+                  >
+                    Track Order
                   </Link>
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-stone-200 dark:border-zinc-800 space-y-3">
+              <div className="pt-6 border-t border-zinc-800 space-y-3">
                 <button
                   onClick={toggleTheme}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-stone-100 dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs font-bold cursor-pointer"
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs font-medium cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
-                    {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+                    {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
                     Theme Mode
                   </span>
-                  <span className="text-[10px] font-bold text-red-600 bg-red-50 dark:bg-red-950/60 px-2 py-0.5 rounded border border-red-200 dark:border-red-800">
+                  <span className="text-[10px] font-bold text-red-400 bg-red-950/60 px-2 py-0.5 rounded border border-red-800">
                     {theme === "dark" ? "Light Mode" : "Dark Mode"}
                   </span>
                 </button>
 
                 <button
                   onClick={toggleLanguage}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-stone-100 dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs font-bold cursor-pointer"
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs font-medium cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
                     <Globe className="w-4 h-4 text-red-500" />
                     Language / ভাষা
                   </span>
-                  <span className="text-[10px] font-bold text-red-600 bg-red-50 dark:bg-red-950/60 px-2 py-0.5 rounded border border-red-200 dark:border-red-800">
+                  <span className="text-[10px] font-bold text-red-400 bg-red-950/60 px-2 py-0.5 rounded border border-red-800">
                     {lang === "en" ? "বাংলা করুন" : "English"}
                   </span>
                 </button>
