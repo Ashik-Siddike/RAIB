@@ -69,9 +69,9 @@ export function Header() {
             </nav>
           </div>
 
-          {/* Center Brand Logo (Icon + Cropped Wordmark Graphic) */}
-          <Link href="/" className="flex items-center gap-2 group py-1">
-            <div className="relative w-7 h-7 sm:w-9 sm:h-9 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+          {/* Center Brand Logo (Emblem + Wordmark Graphic) */}
+          <Link href="/" className="flex items-center gap-2.5 group py-1">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <Image
                 src="/logo.png"
                 alt="RAIB Emblem"
@@ -81,7 +81,7 @@ export function Header() {
               />
             </div>
             
-            <div className="relative w-16 h-6 sm:w-22 sm:h-8 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+            <div className="relative w-20 h-7 sm:w-28 sm:h-9 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <Image
                 src="/lgo2.png"
                 alt="RAIB"
