@@ -91,24 +91,24 @@ export function Header() {
             </nav>
           </div>
 
-          {/* Center Brand Logo: Emblem (/logo.png) + Natural Rectangle Wordmark (/lgo2.png) */}
+          {/* Center Brand Logo: Emblem (/main-logo.png) + Styled Letter Logo (/raib leter logo.png) */}
           <Link href="/" className="flex items-center gap-3 group py-1">
-            {/* Emblem /logo.png */}
+            {/* Main Emblem /main-logo.png */}
             <div className="relative h-7 sm:h-9 w-7 sm:w-9 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="/logo.png"
-                alt="RAIB Emblem"
+                src="/main-logo.png"
+                alt="RAIB Main Logo"
                 fill
                 className="object-contain"
                 priority
               />
             </div>
             
-            {/* Wordmark /lgo2.png in Natural Rectangle Shape matching main logo height */}
+            {/* Styled Letter Logo /raib leter logo.png */}
             <div className="relative h-7 sm:h-9 w-28 sm:w-36 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="/lgo2.png"
-                alt="RAIB Wordmark"
+                src="/raib leter logo.png"
+                alt="RAIB Letter Logo"
                 fill
                 className="object-contain object-left"
                 priority
@@ -191,10 +191,10 @@ export function Header() {
                 <div className="flex items-center justify-between pb-6 border-b border-stone-200">
                   <div className="flex items-center gap-2.5">
                     <div className="relative h-7 w-7 flex-shrink-0">
-                      <Image src="/logo.png" alt="RAIB Logo" fill className="object-contain" />
+                      <Image src="/main-logo.png" alt="RAIB Main Logo" fill className="object-contain" />
                     </div>
                     <div className="relative h-7 w-28 flex-shrink-0">
-                      <Image src="/lgo2.png" alt="RAIB Wordmark" fill className="object-contain object-left" />
+                      <Image src="/raib leter logo.png" alt="RAIB Letter Logo" fill className="object-contain object-left" />
                     </div>
                   </div>
                   <button

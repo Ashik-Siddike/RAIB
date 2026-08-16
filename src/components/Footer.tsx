@@ -21,17 +21,17 @@ export function Footer() {
     <footer className="bg-stone-900 text-stone-300 font-sans border-t border-stone-800 pt-16 pb-12 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Main 4-Column Footer Grid matching Image 1 */}
+        {/* Main 4-Column Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
           
-          {/* Column 1: Brand Info (Lg 4 cols) */}
+          {/* Column 1: Brand Info */}
           <div className="lg:col-span-4 space-y-4">
             <Link href="/" className="flex items-center gap-3">
               <div className="relative h-7 w-7 flex-shrink-0">
-                <Image src="/logo.png" alt="RAIB Logo" fill className="object-contain" />
+                <Image src="/main-logo.png" alt="RAIB Main Logo" fill className="object-contain" />
               </div>
               <div className="relative h-7 w-28 flex-shrink-0">
-                <Image src="/lgo2.png" alt="RAIB Wordmark" fill className="object-contain object-left" />
+                <Image src="/raib leter logo.png" alt="RAIB Letter Logo" fill className="object-contain object-left" />
               </div>
             </Link>
 
@@ -42,7 +42,7 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Column 2: SHOP Links (Lg 2 cols) */}
+          {/* Column 2: SHOP Links */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-widest font-serif">SHOP</h4>
             <ul className="space-y-2 text-xs text-stone-400">
@@ -61,7 +61,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: COMPANY Links (Lg 2 cols) */}
+          {/* Column 3: COMPANY Links */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-widest font-serif">COMPANY</h4>
             <ul className="space-y-2 text-xs text-stone-400">
@@ -80,7 +80,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: NEWSLETTER (Lg 4 cols) */}
+          {/* Column 4: NEWSLETTER */}
           <div className="lg:col-span-4 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-widest font-serif">NEWSLETTER</h4>
             <p className="text-xs text-stone-400">Get 10% off your first order & stay updated.</p>
@@ -106,7 +106,7 @@ export function Footer() {
 
         </div>
 
-        {/* Bottom Copyright & Social Bar matching Image 1 */}
+        {/* Bottom Copyright & Social Bar */}
         <div className="pt-8 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
           <p>© 2026 RAIB Bags. All rights reserved.</p>
 

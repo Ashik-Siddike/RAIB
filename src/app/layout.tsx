@@ -27,7 +27,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#FAFAF9",
+  themeColor: "#FFFFFF",
 };
 
 export const metadata: Metadata = {
@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: "/main-logo.png",
+    shortcut: "/main-logo.png",
+    apple: "/main-logo.png",
   },
   openGraph: {
     title: "RAIB | Genuine Italian Leather Ladies Bags in Bangladesh",
@@ -114,7 +114,7 @@ export default function RootLayout({
     "@type": "Organization",
     "name": "RAIB Luxury Leather Goods",
     "url": "https://raib.site",
-    "logo": "https://raib.site/logo.png",
+    "logo": "https://raib.site/main-logo.png",
     "sameAs": [
       "https://facebook.com/raib.official",
       "https://instagram.com/raib.official"
@@ -133,7 +133,7 @@ export default function RootLayout({
     "@type": "OnlineStore",
     "name": "RAIB",
     "url": "https://raib.site",
-    "logo": "https://raib.site/logo.png",
+    "logo": "https://raib.site/main-logo.png",
     "image": "https://raib.site/tote_bag_red_1786395433017.jpg",
     "description": "Contemporary luxury handcrafted Italian leather tote bags, shoulder bags, and clutches in Bangladesh.",
     "telephone": "+8801700000000",
@@ -159,7 +159,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="light scroll-smooth">
       <head>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" href="/main-logo.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(googleWebSiteLd) }}
@@ -173,7 +173,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(googleStoreLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${cinzel.variable} ${cormorant.variable} font-sans bg-stone-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col justify-between overflow-x-hidden transition-colors duration-300`}>
+      <body className={`${inter.variable} ${cinzel.variable} ${cormorant.variable} font-sans bg-white text-zinc-900 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col justify-between overflow-x-hidden transition-colors duration-300`}>
         <SettingsProvider>
           <AppProvider>
             <AnalyticsTracker />
