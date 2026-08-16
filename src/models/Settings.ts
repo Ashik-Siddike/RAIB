@@ -88,7 +88,7 @@ const SettingsSchema = new Schema<ISettings>(
     heroTitle: { type: String, default: "RAIB" },
     heroSubtitle: { type: String, default: "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes." },
     heroCtaText: { type: String, default: "SHOP COLLECTION" },
-    heroImage: { type: String, default: "/tote_bag_red_1786395433017.jpg" },
+    heroImage: { type: String, default: "/hero-luxury-bg.jpg" },
 
     bestsellersBadge: { type: String, default: "FEATURED TODAY" },
     bestsellersTitle: { type: String, default: "Bestsellers" },

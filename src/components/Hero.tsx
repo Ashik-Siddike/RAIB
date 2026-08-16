@@ -12,7 +12,7 @@ export function Hero() {
   const { lang } = useApp();
   const { settings } = useSettings();
 
-  const heroBgImage = settings.heroImage || "/tote_bag_red_1786395433017.jpg";
+  const heroBgImage = settings.heroImage || "/hero-luxury-bg.jpg";
 
   return (
     <section className="relative overflow-hidden bg-white text-zinc-900 min-h-[75vh] flex items-center justify-center border-b border-stone-200 transition-colors">
@@ -21,8 +21,8 @@ export function Hero() {
       <div className="absolute inset-0 z-0">
         <img
           src={heroBgImage}
-          alt="RAIB Luxury Bag Collection"
-          className="w-full h-full object-cover opacity-20 filter brightness-105"
+          alt="RAIB Luxury Studio Background"
+          className="w-full h-full object-cover opacity-25 filter brightness-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/40" />
       </div>
@@ -39,7 +39,7 @@ export function Hero() {
           {settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN"}
         </motion.span>
 
-        {/* Hero Logo Graphic (Clean rendering directly without separate dark box wrapper) */}
+        {/* Hero Logo Graphic */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

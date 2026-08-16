@@ -73,7 +73,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   heroTitle: "RAIB",
   heroSubtitle: "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.",
   heroCtaText: "SHOP COLLECTION",
-  heroImage: "/tote_bag_red_1786395433017.jpg",
+  heroImage: "/hero-luxury-bg.jpg",
 
   bestsellersBadge: "FEATURED TODAY",
   bestsellersTitle: "Bestsellers",
