@@ -53,15 +53,15 @@ export function ReelsSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-zinc-950 text-white border-b border-zinc-900 overflow-hidden">
+    <section className="py-12 sm:py-16 bg-stone-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border-b border-stone-200 dark:border-zinc-900 overflow-hidden transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Section Header */}
         <div className="text-center space-y-1">
-          <h2 className="text-xl sm:text-3xl font-extrabold tracking-widest uppercase font-serif text-white">
+          <h2 className="text-xl sm:text-3xl font-extrabold tracking-widest uppercase font-serif text-zinc-900 dark:text-white">
             STORIES THAT LEAD
           </h2>
-          <p className="text-xs text-zinc-400 font-sans">
+          <p className="text-xs text-zinc-600 dark:text-zinc-400 font-sans">
             Real clients showcasing RAIB genuine Italian leather bags in motion
           </p>
         </div>
@@ -76,7 +76,7 @@ export function ReelsSection() {
               <motion.div
                 key={reel.id}
                 whileHover={{ y: -5 }}
-                className="group relative aspect-[9/16] w-full rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 shadow-xl cursor-pointer flex flex-col justify-between"
+                className="group relative aspect-[9/16] w-full rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 shadow-lg cursor-pointer flex flex-col justify-between"
                 onClick={() => handleOpenReel(reel)}
               >
                 {/* Background Video Preview / Poster */}
@@ -100,11 +100,11 @@ export function ReelsSection() {
                 )}
 
                 {/* Dark Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none" />
 
                 {/* Top Play Indicator */}
                 <div className="relative p-3 flex items-center justify-end">
-                  <span className="p-2 rounded-full bg-black/50 backdrop-blur-md text-white border border-white/20 group-hover:scale-110 transition">
+                  <span className="p-2 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 group-hover:scale-110 transition">
                     <Play className="w-3.5 h-3.5 fill-current" />
                   </span>
                 </div>
@@ -125,7 +125,7 @@ export function ReelsSection() {
                       <h4 className="text-[11px] font-bold text-white line-clamp-1 font-serif leading-snug">
                         {reel.title}
                       </h4>
-                      <p className="text-[10px] font-bold text-zinc-300 font-mono">
+                      <p className="text-[10px] font-bold text-amber-400 font-mono">
                         ৳{reel.price ? reel.price.toLocaleString() : linkedProduct.price.toLocaleString()}
                       </p>
                     </div>

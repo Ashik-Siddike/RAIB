@@ -27,7 +27,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#09090b",
+  themeColor: "#FAFAF9",
 };
 
 export const metadata: Metadata = {
@@ -157,7 +157,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="light scroll-smooth">
       <head>
         <link rel="icon" href="/logo.png" />
         <script
@@ -173,7 +173,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(googleStoreLd) }}
         />
       </head>
-      <body className={`${inter.variable} ${cinzel.variable} ${cormorant.variable} font-sans bg-zinc-950 text-zinc-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col justify-between overflow-x-hidden`}>
+      <body className={`${inter.variable} ${cinzel.variable} ${cormorant.variable} font-sans bg-stone-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col justify-between overflow-x-hidden transition-colors duration-300`}>
         <SettingsProvider>
           <AppProvider>
             <AnalyticsTracker />
