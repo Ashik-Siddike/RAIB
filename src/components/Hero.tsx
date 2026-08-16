@@ -10,16 +10,16 @@ export function Hero() {
   const { lang } = useApp();
 
   return (
-    <section className="relative overflow-hidden bg-stone-100 dark:bg-zinc-950 text-zinc-900 dark:text-white min-h-[75vh] flex items-center justify-center border-b border-stone-200 dark:border-zinc-900 transition-colors">
+    <section className="relative overflow-hidden bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white min-h-[75vh] flex items-center justify-center border-b border-stone-200 dark:border-zinc-900 transition-colors">
       
       {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <img
           src="/tote_bag_red_1786395433017.jpg"
           alt="RAIB Luxury Bag Collection"
-          className="w-full h-full object-cover opacity-20 dark:opacity-40 filter brightness-95"
+          className="w-full h-full object-cover opacity-15 dark:opacity-40 filter brightness-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-100 via-stone-100/70 to-stone-100/40 dark:from-zinc-950 dark:via-zinc-950/70 dark:to-zinc-950/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/50 dark:from-zinc-950 dark:via-zinc-950/70 dark:to-zinc-950/40" />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6 sm:space-y-8 py-20">
@@ -49,7 +49,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-sm sm:text-lg text-zinc-700 dark:text-zinc-300 max-w-2xl mx-auto font-sans leading-relaxed font-normal"
+          className="text-sm sm:text-lg text-zinc-700 dark:text-zinc-300 max-w-2xl mx-auto font-sans leading-relaxed font-semibold"
         >
           {lang === "bn"
             ? "আধুনিক নারীদের আত্মবিশ্বাস আর অভিজাত রুচির সেরা স্মারক — বোর্ডরুম মিটিং থেকে উইকেন্ড ভ্রমণ পর্যন্ত।"

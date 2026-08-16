@@ -75,12 +75,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Load saved state from localStorage
+  // Default to light theme & clear any previous dark theme override on mount
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem("raib_theme") as ThemeMode;
-      if (savedTheme === "dark" || savedTheme === "light") {
+      if (savedTheme === "light" || savedTheme === "dark") {
         setThemeState(savedTheme);
+      } else {
+        setThemeState('light');
       }
 
       const savedLang = localStorage.getItem("raib_lang") as Language;

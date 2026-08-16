@@ -2,26 +2,26 @@
 
 @layer base {
   :root {
-    --background: #FAFAF9;
-    --foreground: #18181B;
+    --background: #FFFFFF;
+    --foreground: #09090b;
   }
 
   html, body {
-    background-color: #FAFAF9;
-    color: #18181B;
+    background-color: #FFFFFF !important;
+    color: #09090b !important;
     font-family: var(--font-sans), system-ui, sans-serif;
     overflow-x: hidden;
     max-width: 100vw;
   }
 
+  html.light, body.light {
+    background-color: #FFFFFF !important;
+    color: #09090b !important;
+  }
+
   html.dark, body.dark {
     background-color: #09090b;
     color: #FAFAFA;
-  }
-
-  html.light, body.light {
-    background-color: #FAFAF9;
-    color: #18181B;
   }
 
   .font-cinzel {
@@ -39,11 +39,11 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #FAFAF9;
+    background: #FFFFFF;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #D6D3D1;
+    background: #E4E4E7;
     border-radius: 9999px;
   }
 
@@ -54,8 +54,8 @@
 
 /* Glassmorphic Ambient Glow Effect */
 .glass-glow {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
