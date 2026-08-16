@@ -58,11 +58,14 @@ export function ReelsSection() {
         
         {/* Section Header */}
         <div className="text-center space-y-1">
+          <span className="text-xs font-bold text-red-600 uppercase tracking-widest block font-sans">
+            {settings.reelsBadge || "CLIENT STORIES"}
+          </span>
           <h2 className="text-xl sm:text-3xl font-extrabold tracking-widest uppercase font-serif text-zinc-900">
-            STORIES THAT LEAD
+            {settings.reelsTitle || "STORIES THAT LEAD"}
           </h2>
           <p className="text-xs text-zinc-600 font-sans">
-            Real clients showcasing RAIB genuine Italian leather bags in motion
+            {settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion"}
           </p>
         </div>
 

@@ -27,7 +27,8 @@ import {
   Video,
   Sliders,
   Sparkles,
-  Tag
+  Tag,
+  Type
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -48,13 +49,13 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Form State for Settings & Section Toggles
-  const [bkash, setBkash] = useState(settings.bkashNumber);
-  const [nagad, setNagad] = useState(settings.nagadNumber);
-  const [rocket, setRocket] = useState(settings.rocketNumber);
-  const [fbPixel, setFbPixel] = useState(settings.facebookPixelId);
-  const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber);
-  const [messenger, setMessenger] = useState(settings.messengerPageId);
-  const [delCharge, setDelCharge] = useState(settings.deliveryCharge);
+  const [bkash, setBkash] = useState(settings.bkashNumber || "01700-000000");
+  const [nagad, setNagad] = useState(settings.nagadNumber || "01800-000000");
+  const [rocket, setRocket] = useState(settings.rocketNumber || "01900-000000");
+  const [fbPixel, setFbPixel] = useState(settings.facebookPixelId || "");
+  const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber || "+8801700000000");
+  const [messenger, setMessenger] = useState(settings.messengerPageId || "raib.official");
+  const [delCharge, setDelCharge] = useState(settings.deliveryCharge || 120);
   const [newAdminPassword, setNewAdminPassword] = useState("");
 
   // Section Toggles State
@@ -63,6 +64,24 @@ export default function AdminPage() {
   const [showReels, setShowReels] = useState(settings.showReels ?? true);
   const [showNewArrivals, setShowNewArrivals] = useState(settings.showNewArrivals ?? true);
   const [showOfferBanner, setShowOfferBanner] = useState(settings.showOfferBanner ?? true);
+
+  // Section Titles, Subtitles, Badges State
+  const [heroBadge, setHeroBadge] = useState(settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN");
+  const [heroTitle, setHeroTitle] = useState(settings.heroTitle || "RAIB");
+  const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
+  const [heroCtaText, setHeroCtaText] = useState(settings.heroCtaText || "SHOP COLLECTION");
+
+  const [bestsellersBadge, setBestsellersBadge] = useState(settings.bestsellersBadge || "FEATURED TODAY");
+  const [bestsellersTitle, setBestsellersTitle] = useState(settings.bestsellersTitle || "Bestsellers");
+  const [bestsellersSubtitle, setBestsellersSubtitle] = useState(settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women.");
+
+  const [reelsBadge, setReelsBadge] = useState(settings.reelsBadge || "CLIENT STORIES");
+  const [reelsTitle, setReelsTitle] = useState(settings.reelsTitle || "STORIES THAT LEAD");
+  const [reelsSubtitle, setReelsSubtitle] = useState(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion");
+
+  const [newArrivalsBadge, setNewArrivalsBadge] = useState(settings.newArrivalsBadge || "JUST ARRIVED");
+  const [newArrivalsTitle, setNewArrivalsTitle] = useState(settings.newArrivalsTitle || "New Arrivals");
+  const [newArrivalsSubtitle, setNewArrivalsSubtitle] = useState(settings.newArrivalsSubtitle || "Freshly launched seasonal additions to our signature collection.");
 
   // Offer Banner State
   const [offerTitle, setOfferTitle] = useState(settings.offerBannerTitle || "Up to 30% off the Fall Collection");
@@ -98,19 +117,36 @@ export default function AdminPage() {
 
   // Sync settings when loaded
   useEffect(() => {
-    setBkash(settings.bkashNumber);
-    setNagad(settings.nagadNumber);
-    setRocket(settings.rocketNumber);
-    setFbPixel(settings.facebookPixelId);
-    setWhatsapp(settings.whatsappNumber);
-    setMessenger(settings.messengerPageId);
-    setDelCharge(settings.deliveryCharge);
+    setBkash(settings.bkashNumber || "01700-000000");
+    setNagad(settings.nagadNumber || "01800-000000");
+    setRocket(settings.rocketNumber || "01900-000000");
+    setFbPixel(settings.facebookPixelId || "");
+    setWhatsapp(settings.whatsappNumber || "+8801700000000");
+    setMessenger(settings.messengerPageId || "raib.official");
+    setDelCharge(settings.deliveryCharge || 120);
 
     setShowHero(settings.showHero ?? true);
     setShowBestsellers(settings.showBestsellers ?? true);
     setShowReels(settings.showReels ?? true);
     setShowNewArrivals(settings.showNewArrivals ?? true);
     setShowOfferBanner(settings.showOfferBanner ?? true);
+
+    setHeroBadge(settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN");
+    setHeroTitle(settings.heroTitle || "RAIB");
+    setHeroSubtitle(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
+    setHeroCtaText(settings.heroCtaText || "SHOP COLLECTION");
+
+    setBestsellersBadge(settings.bestsellersBadge || "FEATURED TODAY");
+    setBestsellersTitle(settings.bestsellersTitle || "Bestsellers");
+    setBestsellersSubtitle(settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women.");
+
+    setReelsBadge(settings.reelsBadge || "CLIENT STORIES");
+    setReelsTitle(settings.reelsTitle || "STORIES THAT LEAD");
+    setReelsSubtitle(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion");
+
+    setNewArrivalsBadge(settings.newArrivalsBadge || "JUST ARRIVED");
+    setNewArrivalsTitle(settings.newArrivalsTitle || "New Arrivals");
+    setNewArrivalsSubtitle(settings.newArrivalsSubtitle || "Freshly launched seasonal additions to our signature collection.");
 
     setOfferTitle(settings.offerBannerTitle || "Up to 30% off the Fall Collection");
     setOfferSubtitle(settings.offerBannerSubtitle || "LIMITED TIME OFFER");
@@ -197,6 +233,23 @@ export default function AdminPage() {
       showNewArrivals,
       showOfferBanner,
 
+      heroBadge,
+      heroTitle,
+      heroSubtitle,
+      heroCtaText,
+
+      bestsellersBadge,
+      bestsellersTitle,
+      bestsellersSubtitle,
+
+      reelsBadge,
+      reelsTitle,
+      reelsSubtitle,
+
+      newArrivalsBadge,
+      newArrivalsTitle,
+      newArrivalsSubtitle,
+
       offerBannerTitle: offerTitle,
       offerBannerSubtitle: offerSubtitle,
       offerBannerButtonText: offerBtnText,
@@ -210,7 +263,7 @@ export default function AdminPage() {
     }
 
     await updateSettings(updatePayload);
-    showToast("All Admin Settings, Section Toggles & Offer Banner Updated in MongoDB!");
+    showToast("All Admin Settings, Section Titles & Toggles Updated in MongoDB!");
     setNewAdminPassword("");
   };
 
@@ -526,7 +579,7 @@ export default function AdminPage() {
             }`}
           >
             <Settings className="w-4 h-4" />
-            <span>Settings & Toggles</span>
+            <span>Titles, Toggles & Settings</span>
           </button>
         </div>
       </div>
@@ -1101,10 +1154,10 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 7: Settings, Section Toggles, Offer Banner & Change Admin Password */}
+      {/* Tab 7: Settings, Section Titles, Toggles, Offer Banner & Change Admin Password */}
       {activeTab === "settings" && (
-        <div className="max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-8">
-          <h3 className="text-xl font-bold text-white font-serif">Website Settings, Homepage Toggles & Offer Banner</h3>
+        <div className="max-w-4xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-8">
+          <h3 className="text-xl font-bold text-white font-serif">Section Titles, Subtitles, Show/Hide Toggles & Settings</h3>
 
           <form onSubmit={handleUpdateSettings} className="space-y-6 text-xs">
             
@@ -1114,9 +1167,6 @@ export default function AdminPage() {
                 <Sliders className="w-4 h-4 text-red-500" />
                 Homepage Section Show/Hide Toggles (সেকশন অন/অফ)
               </h4>
-              <p className="text-[11px] text-zinc-400">
-                কন্ট্রোল করুন কোন কোন সেকশন ওয়েবসাইটে দেখাবে এবং কোনটি হাইড থাকবে।
-              </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer">
@@ -1171,7 +1221,163 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 2. Offer Banner Customization */}
+            {/* 2. Section Titles & Subtitles Editor */}
+            <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
+                <Type className="w-4 h-4 text-red-500" />
+                Section-wise Title & Subtitle Customizer (টাইটেল ও ডেসক্রিপশন এডিটর)
+              </h4>
+
+              <div className="space-y-4">
+                {/* Hero Controls */}
+                <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
+                  <h5 className="font-bold text-amber-400 text-xs">Hero Section</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Badge Tag</label>
+                      <input
+                        type="text"
+                        value={heroBadge}
+                        onChange={(e) => setHeroBadge(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Hero Title</label>
+                      <input
+                        type="text"
+                        value={heroTitle}
+                        onChange={(e) => setHeroTitle(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Hero Subtitle</label>
+                    <textarea
+                      rows={2}
+                      value={heroSubtitle}
+                      onChange={(e) => setHeroSubtitle(e.target.value)}
+                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Hero CTA Button Text</label>
+                    <input
+                      type="text"
+                      value={heroCtaText}
+                      onChange={(e) => setHeroCtaText(e.target.value)}
+                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Bestsellers Controls */}
+                <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
+                  <h5 className="font-bold text-amber-400 text-xs">Bestsellers Section</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Badge Tag</label>
+                      <input
+                        type="text"
+                        value={bestsellersBadge}
+                        onChange={(e) => setBestsellersBadge(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Section Title</label>
+                      <input
+                        type="text"
+                        value={bestsellersTitle}
+                        onChange={(e) => setBestsellersTitle(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Section Subtitle</label>
+                    <input
+                      type="text"
+                      value={bestsellersSubtitle}
+                      onChange={(e) => setBestsellersSubtitle(e.target.value)}
+                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Reels Controls */}
+                <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
+                  <h5 className="font-bold text-amber-400 text-xs">Video Reels Section ("STORIES THAT LEAD")</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Badge Tag</label>
+                      <input
+                        type="text"
+                        value={reelsBadge}
+                        onChange={(e) => setReelsBadge(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Section Title</label>
+                      <input
+                        type="text"
+                        value={reelsTitle}
+                        onChange={(e) => setReelsTitle(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Section Subtitle</label>
+                    <input
+                      type="text"
+                      value={reelsSubtitle}
+                      onChange={(e) => setReelsSubtitle(e.target.value)}
+                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                    />
+                  </div>
+                </div>
+
+                {/* New Arrivals Controls */}
+                <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
+                  <h5 className="font-bold text-amber-400 text-xs">New Arrivals Section</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Badge Tag</label>
+                      <input
+                        type="text"
+                        value={newArrivalsBadge}
+                        onChange={(e) => setNewArrivalsBadge(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-zinc-400 block mb-1">Section Title</label>
+                      <input
+                        type="text"
+                        value={newArrivalsTitle}
+                        onChange={(e) => setNewArrivalsTitle(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Section Subtitle</label>
+                    <input
+                      type="text"
+                      value={newArrivalsSubtitle}
+                      onChange={(e) => setNewArrivalsSubtitle(e.target.value)}
+                      className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                    />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* 3. Offer Banner Customization */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <Tag className="w-4 h-4 text-red-500" />
@@ -1180,7 +1386,7 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-zinc-400 block mb-1">Banner Title (যেমন: Up to 30% off the Fall Collection)</label>
+                  <label className="text-zinc-400 block mb-1">Banner Title</label>
                   <input
                     type="text"
                     value={offerTitle}
@@ -1190,7 +1396,7 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 block mb-1">Banner Subtitle (যেমন: LIMITED TIME OFFER)</label>
+                  <label className="text-zinc-400 block mb-1">Banner Subtitle</label>
                   <input
                     type="text"
                     value={offerSubtitle}
@@ -1201,7 +1407,7 @@ export default function AdminPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-zinc-400 block mb-1">Button Text (যেমন: SHOP THE SALE)</label>
+                    <label className="text-zinc-400 block mb-1">Button Text</label>
                     <input
                       type="text"
                       value={offerBtnText}
@@ -1211,7 +1417,7 @@ export default function AdminPage() {
                   </div>
 
                   <div>
-                    <label className="text-zinc-400 block mb-1">Button Link (যেমন: /shop)</label>
+                    <label className="text-zinc-400 block mb-1">Button Link</label>
                     <input
                       type="text"
                       value={offerLink}
@@ -1223,7 +1429,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 3. Password Change Box */}
+            {/* 4. Password Change Box */}
             <div className="space-y-3 p-5 rounded-2xl bg-zinc-950 border border-red-900/60">
               <h4 className="font-bold text-red-400 uppercase tracking-wider text-[11px] font-serif flex items-center gap-1.5">
                 <Key className="w-4 h-4" />
@@ -1238,7 +1444,7 @@ export default function AdminPage() {
               />
             </div>
 
-            {/* 4. Payment Numbers */}
+            {/* 5. Payment Numbers & Delivery */}
             <div className="space-y-3 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif">
                 Send Money Numbers & Delivery Fee
@@ -1291,7 +1497,7 @@ export default function AdminPage() {
               type="submit"
               className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
             >
-              Save All Settings & Toggles to MongoDB
+              Save All Settings & Titles to MongoDB
             </button>
           </form>
         </div>

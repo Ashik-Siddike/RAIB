@@ -14,22 +14,11 @@ export async function GET() {
     return NextResponse.json({ success: true, settings });
   } catch (error: any) {
     console.error("MongoDB GET Settings Error:", error);
-    return NextResponse.json({
-      success: true,
-      settings: {
-        bkashNumber: "01700-000000",
-        nagadNumber: "01800-000000",
-        rocketNumber: "01900-000000",
-        facebookPixelId: "",
-        whatsappNumber: "+8801700000000",
-        messengerPageId: "raib.official",
-        deliveryCharge: 120,
-      },
-    });
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
 
-export async function PUT(request: Request) {
+export async function POST(request: Request) {
   try {
     await connectToDatabase();
     const body = await request.json();
@@ -43,7 +32,11 @@ export async function PUT(request: Request) {
 
     return NextResponse.json({ success: true, settings });
   } catch (error: any) {
-    console.error("MongoDB PUT Settings Error:", error);
+    console.error("MongoDB POST Settings Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
+}
+
+export async function PUT(request: Request) {
+  return POST(request);
 }

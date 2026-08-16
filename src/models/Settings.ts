@@ -2,14 +2,15 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IReel {
   id: string;
-  title: string;
   videoUrl: string;
   poster: string;
-  productId: string;
+  title: string;
   price: number;
+  productId: string;
 }
 
 export interface ISettings extends Document {
+  // Payment & Courier Numbers
   bkashNumber: string;
   nagadNumber: string;
   rocketNumber: string;
@@ -17,34 +18,55 @@ export interface ISettings extends Document {
   whatsappNumber: string;
   messengerPageId: string;
   deliveryCharge: number;
-  
-  // Section Toggles
+  adminPassword?: string;
+
+  // Visibility Toggles
   showHero: boolean;
   showBestsellers: boolean;
   showReels: boolean;
   showNewArrivals: boolean;
   showOfferBanner: boolean;
-  
-  // Offer Banner Settings
+
+  // Hero Section Customizer
+  heroBadge: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroCtaText: string;
+
+  // Bestsellers Customizer
+  bestsellersBadge: string;
+  bestsellersTitle: string;
+  bestsellersSubtitle: string;
+
+  // Video Reels Customizer
+  reelsBadge: string;
+  reelsTitle: string;
+  reelsSubtitle: string;
+  reels: IReel[];
+
+  // New Arrivals Customizer
+  newArrivalsBadge: string;
+  newArrivalsTitle: string;
+  newArrivalsSubtitle: string;
+
+  // Offer Banner Customizer
+  offerBannerBadge: string;
   offerBannerTitle: string;
   offerBannerSubtitle: string;
   offerBannerButtonText: string;
   offerBannerLink: string;
-
-  // Video Reels
-  reels: IReel[];
 }
 
-const ReelSchema = new Schema({
+const ReelSchema = new Schema<IReel>({
   id: { type: String, required: true },
-  title: { type: String, default: "RAIB Luxury Bag" },
-  videoUrl: { type: String, required: true },
+  videoUrl: { type: String, default: "" },
   poster: { type: String, default: "" },
-  productId: { type: String, default: "raib-tote-01" },
-  price: { type: Number, default: 3500 },
+  title: { type: String, required: true },
+  price: { type: Number, required: true },
+  productId: { type: String, required: true },
 });
 
-const SettingsSchema: Schema = new Schema(
+const SettingsSchema = new Schema<ISettings>(
   {
     bkashNumber: { type: String, default: "01700-000000" },
     nagadNumber: { type: String, default: "01800-000000" },
@@ -53,66 +75,37 @@ const SettingsSchema: Schema = new Schema(
     whatsappNumber: { type: String, default: "+8801700000000" },
     messengerPageId: { type: String, default: "raib.official" },
     deliveryCharge: { type: Number, default: 120 },
+    adminPassword: { type: String, default: "admin" },
 
-    // Section Toggles
     showHero: { type: Boolean, default: true },
     showBestsellers: { type: Boolean, default: true },
     showReels: { type: Boolean, default: true },
     showNewArrivals: { type: Boolean, default: true },
     showOfferBanner: { type: Boolean, default: true },
 
-    // Offer Banner
+    heroBadge: { type: String, default: "CRAFTED FOR THE MODERN WOMAN" },
+    heroTitle: { type: String, default: "RAIB" },
+    heroSubtitle: { type: String, default: "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes." },
+    heroCtaText: { type: String, default: "SHOP COLLECTION" },
+
+    bestsellersBadge: { type: String, default: "FEATURED TODAY" },
+    bestsellersTitle: { type: String, default: "Bestsellers" },
+    bestsellersSubtitle: { type: String, default: "Handcrafted Italian leather favorites loved by modern women." },
+
+    reelsBadge: { type: String, default: "CLIENT STORIES" },
+    reelsTitle: { type: String, default: "STORIES THAT LEAD" },
+    reelsSubtitle: { type: String, default: "Real clients showcasing RAIB genuine Italian leather bags in motion" },
+    reels: [ReelSchema],
+
+    newArrivalsBadge: { type: String, default: "JUST ARRIVED" },
+    newArrivalsTitle: { type: String, default: "New Arrivals" },
+    newArrivalsSubtitle: { type: String, default: "Freshly launched seasonal additions to our signature collection." },
+
+    offerBannerBadge: { type: String, default: "LIMITED TIME" },
     offerBannerTitle: { type: String, default: "Up to 30% off the Fall Collection" },
     offerBannerSubtitle: { type: String, default: "LIMITED TIME OFFER" },
     offerBannerButtonText: { type: String, default: "SHOP THE SALE" },
     offerBannerLink: { type: String, default: "/shop" },
-
-    // Video Reels
-    reels: {
-      type: [ReelSchema],
-      default: [
-        {
-          id: "reel-1",
-          title: "New Style Large Capacity Shoulder Bag",
-          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-fashion-model-showing-a-handbag-42848-large.mp4",
-          poster: "/tote_bag_red_1786395433017.jpg",
-          productId: "raib-tote-01",
-          price: 4850,
-        },
-        {
-          id: "reel-2",
-          title: "Trendy Oxford Cloth Men's Outdoor Messenger Bag",
-          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-holding-a-leather-bag-42850-large.mp4",
-          poster: "/crossbody_black_1786395824801.jpg",
-          productId: "raib-crossbody-02",
-          price: 3950,
-        },
-        {
-          id: "reel-3",
-          title: "High-End Retro Commuter Shoulder Bag",
-          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-model-posing-with-a-leather-bag-42849-large.mp4",
-          poster: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop&q=80",
-          productId: "raib-shoulder-03",
-          price: 5200,
-        },
-        {
-          id: "reel-4",
-          title: "Luxury Crocodile Pattern Genuine Leather Kelly Handbag",
-          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-stylish-black-handbag-42851-large.mp4",
-          poster: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80",
-          productId: "raib-clutch-04",
-          price: 6800,
-        },
-        {
-          id: "reel-5",
-          title: "Butterfly Design Shoulder Bag",
-          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-with-a-handbag-42852-large.mp4",
-          poster: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&auto=format&fit=crop&q=80",
-          productId: "raib-tote-01",
-          price: 3700,
-        },
-      ],
-    },
   },
   { timestamps: true }
 );

@@ -49,11 +49,16 @@ export default function Home() {
             
             <div className="text-center space-y-2">
               <span className="text-xs font-bold text-red-600 uppercase tracking-widest block font-sans">
-                FEATURED TODAY
+                {settings.bestsellersBadge || "FEATURED TODAY"}
               </span>
               <h2 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 font-serif tracking-tight">
-                Bestsellers
+                {settings.bestsellersTitle || "Bestsellers"}
               </h2>
+              {settings.bestsellersSubtitle && (
+                <p className="text-xs text-zinc-500 font-sans max-w-xl mx-auto">
+                  {settings.bestsellersSubtitle}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -86,11 +91,16 @@ export default function Home() {
             
             <div className="text-center space-y-2">
               <span className="text-xs font-bold text-red-600 uppercase tracking-widest block font-sans">
-                JUST ARRIVED
+                {settings.newArrivalsBadge || "JUST ARRIVED"}
               </span>
               <h2 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 font-serif tracking-tight">
-                New Arrivals
+                {settings.newArrivalsTitle || "New Arrivals"}
               </h2>
+              {settings.newArrivalsSubtitle && (
+                <p className="text-xs text-zinc-500 font-sans max-w-xl mx-auto">
+                  {settings.newArrivalsSubtitle}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
