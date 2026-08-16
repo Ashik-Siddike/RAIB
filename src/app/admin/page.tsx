@@ -67,11 +67,11 @@ export default function AdminPage() {
   const [showOfferBanner, setShowOfferBanner] = useState(settings.showOfferBanner ?? true);
 
   // Section Titles, Subtitles, Badges & Hero Image State
-  const [heroBadge, setHeroBadge] = useState(settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN");
+  const [heroBadge, setHeroBadge] = useState(settings.heroBadge || "STYLED FOR THE MODERN WOMAN");
   const [heroTitle, setHeroTitle] = useState(settings.heroTitle || "RAIB");
   const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
   const [heroCtaText, setHeroCtaText] = useState(settings.heroCtaText || "SHOP COLLECTION");
-  const [heroImage, setHeroImage] = useState(settings.heroImage || "/tote_bag_red_1786395433017.jpg");
+  const [heroImage, setHeroImage] = useState(settings.heroImage || "/hero-luxury-bg.jpg");
 
   const [bestsellersBadge, setBestsellersBadge] = useState(settings.bestsellersBadge || "FEATURED TODAY");
   const [bestsellersTitle, setBestsellersTitle] = useState(settings.bestsellersTitle || "Bestsellers");
@@ -133,11 +133,11 @@ export default function AdminPage() {
     setShowNewArrivals(settings.showNewArrivals ?? true);
     setShowOfferBanner(settings.showOfferBanner ?? true);
 
-    setHeroBadge(settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN");
+    setHeroBadge(settings.heroBadge || "STYLED FOR THE MODERN WOMAN");
     setHeroTitle(settings.heroTitle || "RAIB");
     setHeroSubtitle(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
     setHeroCtaText(settings.heroCtaText || "SHOP COLLECTION");
-    setHeroImage(settings.heroImage || "/tote_bag_red_1786395433017.jpg");
+    setHeroImage(settings.heroImage || "/hero-luxury-bg.jpg");
 
     setBestsellersBadge(settings.bestsellersBadge || "FEATURED TODAY");
     setBestsellersTitle(settings.bestsellersTitle || "Bestsellers");
@@ -1239,14 +1239,14 @@ export default function AdminPage() {
                     type="text"
                     value={heroImage}
                     onChange={(e) => setHeroImage(e.target.value)}
-                    placeholder="/tote_bag_red_1786395433017.jpg"
+                    placeholder="/hero-luxury-bg.jpg"
                     className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-zinc-400 block mb-1">Hero Badge Tag</label>
+                    <label className="text-zinc-400 block mb-1">Hero Slogan / Badge Tag</label>
                     <input
                       type="text"
                       value={heroBadge}

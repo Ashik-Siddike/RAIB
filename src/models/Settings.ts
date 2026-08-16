@@ -84,7 +84,7 @@ const SettingsSchema = new Schema<ISettings>(
     showNewArrivals: { type: Boolean, default: true },
     showOfferBanner: { type: Boolean, default: true },
 
-    heroBadge: { type: String, default: "CRAFTED FOR THE MODERN WOMAN" },
+    heroBadge: { type: String, default: "STYLED FOR THE MODERN WOMAN" },
     heroTitle: { type: String, default: "RAIB" },
     heroSubtitle: { type: String, default: "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes." },
     heroCtaText: { type: String, default: "SHOP COLLECTION" },

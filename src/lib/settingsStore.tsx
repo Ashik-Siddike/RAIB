@@ -69,7 +69,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   showNewArrivals: true,
   showOfferBanner: true,
 
-  heroBadge: "CRAFTED FOR THE MODERN WOMAN",
+  heroBadge: "STYLED FOR THE MODERN WOMAN",
   heroTitle: "RAIB",
   heroSubtitle: "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.",
   heroCtaText: "SHOP COLLECTION",

@@ -35,7 +35,7 @@ export function Hero() {
           transition={{ duration: 0.6 }}
           className="text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-red-600 font-sans block drop-shadow"
         >
-          {settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN"}
+          {settings.heroBadge || "STYLED FOR THE MODERN WOMAN"}
         </motion.span>
 
         {/* Hero Logo Graphic */}
