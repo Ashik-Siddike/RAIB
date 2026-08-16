@@ -30,7 +30,10 @@ import {
   Tag,
   Type,
   ImageIcon,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Megaphone,
+  ShieldCheck,
+  Layout
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -60,37 +63,64 @@ export default function AdminPage() {
   const [delCharge, setDelCharge] = useState(settings.deliveryCharge || 120);
   const [newAdminPassword, setNewAdminPassword] = useState("");
 
+  // Announcement Bar State
+  const [showAnnouncementBar, setShowAnnouncementBar] = useState(settings.showAnnouncementBar ?? true);
+  const [announcementText, setAnnouncementText] = useState(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+
   // Section Toggles State
   const [showHero, setShowHero] = useState(settings.showHero ?? true);
   const [showBestsellers, setShowBestsellers] = useState(settings.showBestsellers ?? true);
   const [showReels, setShowReels] = useState(settings.showReels ?? true);
   const [showNewArrivals, setShowNewArrivals] = useState(settings.showNewArrivals ?? true);
   const [showOfferBanner, setShowOfferBanner] = useState(settings.showOfferBanner ?? true);
+  const [showTrustBadges, setShowTrustBadges] = useState(settings.showTrustBadges ?? true);
 
-  // Section Titles, Subtitles, Badges & Hero Image State
+  // Hero Section State
   const [heroBadge, setHeroBadge] = useState(settings.heroBadge || "STYLED FOR THE MODERN WOMAN");
   const [heroTitle, setHeroTitle] = useState(settings.heroTitle || "RAIB");
   const [heroSubtitle, setHeroSubtitle] = useState(settings.heroSubtitle || "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes.");
   const [heroCtaText, setHeroCtaText] = useState(settings.heroCtaText || "SHOP COLLECTION");
   const [heroImage, setHeroImage] = useState(settings.heroImage || "/hero-luxury-bg.jpg");
 
+  // Bestsellers State
   const [bestsellersBadge, setBestsellersBadge] = useState(settings.bestsellersBadge || "FEATURED TODAY");
   const [bestsellersTitle, setBestsellersTitle] = useState(settings.bestsellersTitle || "Bestsellers");
   const [bestsellersSubtitle, setBestsellersSubtitle] = useState(settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women.");
+  const [bestsellersCtaText, setBestsellersCtaText] = useState(settings.bestsellersCtaText || "VIEW ALL BESTSELLERS");
 
+  // Video Reels State
   const [reelsBadge, setReelsBadge] = useState(settings.reelsBadge || "CLIENT STORIES");
   const [reelsTitle, setReelsTitle] = useState(settings.reelsTitle || "STORIES THAT LEAD");
   const [reelsSubtitle, setReelsSubtitle] = useState(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion");
 
+  // New Arrivals State
   const [newArrivalsBadge, setNewArrivalsBadge] = useState(settings.newArrivalsBadge || "JUST ARRIVED");
   const [newArrivalsTitle, setNewArrivalsTitle] = useState(settings.newArrivalsTitle || "New Arrivals");
   const [newArrivalsSubtitle, setNewArrivalsSubtitle] = useState(settings.newArrivalsSubtitle || "Freshly launched seasonal additions to our signature collection.");
+  const [newArrivalsCtaText, setNewArrivalsCtaText] = useState(settings.newArrivalsCtaText || "EXPLORE ALL BAGS");
 
   // Offer Banner State
   const [offerTitle, setOfferTitle] = useState(settings.offerBannerTitle || "Up to 30% off the Fall Collection");
   const [offerSubtitle, setOfferSubtitle] = useState(settings.offerBannerSubtitle || "LIMITED TIME OFFER");
   const [offerBtnText, setOfferBtnText] = useState(settings.offerBannerButtonText || "SHOP THE SALE");
   const [offerLink, setOfferLink] = useState(settings.offerBannerLink || "/shop");
+
+  // Trust Badges State
+  const [tb1Title, setTb1Title] = useState(settings.trustBadge1Title || "100% Genuine Italian Leather");
+  const [tb1Sub, setTb1Sub] = useState(settings.trustBadge1Subtitle || "Handcrafted by master artisans");
+  const [tb2Title, setTb2Title] = useState(settings.trustBadge2Title || "Cash on Delivery");
+  const [tb2Sub, setTb2Sub] = useState(settings.trustBadge2Subtitle || "Fast home delivery across BD");
+  const [tb3Title, setTb3Title] = useState(settings.trustBadge3Title || "7-Day Easy Exchange");
+  const [tb3Sub, setTb3Sub] = useState(settings.trustBadge3Subtitle || "Guaranteed replacement protection");
+  const [tb4Title, setTb4Title] = useState(settings.trustBadge4Title || "18K Gold-Plated Hardware");
+  const [tb4Sub, setTb4Sub] = useState(settings.trustBadge4Subtitle || "Rust & tarnish resistant");
+
+  // Footer State
+  const [footerTagline, setFooterTagline] = useState(settings.footerTagline || "Timeless luxury ladies bags designed to carry your story with elegance.");
+  const [footerPhone, setFooterPhone] = useState(settings.footerPhone || "+880 1700-000000");
+  const [footerEmail, setFooterEmail] = useState(settings.footerEmail || "support@raib.site");
+  const [footerAddress, setFooterAddress] = useState(settings.footerAddress || "House 42, Road 11, Block D, Banani, Dhaka-1213, Bangladesh");
+  const [footerCopyright, setFooterCopyright] = useState(settings.footerCopyright || "© 2026 RAIB Leather. All rights reserved.");
 
   // 5 Explicit Numbered Slots State for Video Reels
   const [slot1, setSlot1] = useState<ReelType>(DEFAULT_SETTINGS.reels[0]);
@@ -127,11 +157,15 @@ export default function AdminPage() {
     setMessenger(settings.messengerPageId || "raib.official");
     setDelCharge(settings.deliveryCharge || 120);
 
+    setShowAnnouncementBar(settings.showAnnouncementBar ?? true);
+    setAnnouncementText(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+
     setShowHero(settings.showHero ?? true);
     setShowBestsellers(settings.showBestsellers ?? true);
     setShowReels(settings.showReels ?? true);
     setShowNewArrivals(settings.showNewArrivals ?? true);
     setShowOfferBanner(settings.showOfferBanner ?? true);
+    setShowTrustBadges(settings.showTrustBadges ?? true);
 
     setHeroBadge(settings.heroBadge || "STYLED FOR THE MODERN WOMAN");
     setHeroTitle(settings.heroTitle || "RAIB");
@@ -142,6 +176,7 @@ export default function AdminPage() {
     setBestsellersBadge(settings.bestsellersBadge || "FEATURED TODAY");
     setBestsellersTitle(settings.bestsellersTitle || "Bestsellers");
     setBestsellersSubtitle(settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women.");
+    setBestsellersCtaText(settings.bestsellersCtaText || "VIEW ALL BESTSELLERS");
 
     setReelsBadge(settings.reelsBadge || "CLIENT STORIES");
     setReelsTitle(settings.reelsTitle || "STORIES THAT LEAD");
@@ -150,11 +185,27 @@ export default function AdminPage() {
     setNewArrivalsBadge(settings.newArrivalsBadge || "JUST ARRIVED");
     setNewArrivalsTitle(settings.newArrivalsTitle || "New Arrivals");
     setNewArrivalsSubtitle(settings.newArrivalsSubtitle || "Freshly launched seasonal additions to our signature collection.");
+    setNewArrivalsCtaText(settings.newArrivalsCtaText || "EXPLORE ALL BAGS");
 
     setOfferTitle(settings.offerBannerTitle || "Up to 30% off the Fall Collection");
     setOfferSubtitle(settings.offerBannerSubtitle || "LIMITED TIME OFFER");
     setOfferBtnText(settings.offerBannerButtonText || "SHOP THE SALE");
     setOfferLink(settings.offerBannerLink || "/shop");
+
+    setTb1Title(settings.trustBadge1Title || "100% Genuine Italian Leather");
+    setTb1Sub(settings.trustBadge1Subtitle || "Handcrafted by master artisans");
+    setTb2Title(settings.trustBadge2Title || "Cash on Delivery");
+    setTb2Sub(settings.trustBadge2Subtitle || "Fast home delivery across BD");
+    setTb3Title(settings.trustBadge3Title || "7-Day Easy Exchange");
+    setTb3Sub(settings.trustBadge3Subtitle || "Guaranteed replacement protection");
+    setTb4Title(settings.trustBadge4Title || "18K Gold-Plated Hardware");
+    setTb4Sub(settings.trustBadge4Subtitle || "Rust & tarnish resistant");
+
+    setFooterTagline(settings.footerTagline || "Timeless luxury ladies bags designed to carry your story with elegance.");
+    setFooterPhone(settings.footerPhone || "+880 1700-000000");
+    setFooterEmail(settings.footerEmail || "support@raib.site");
+    setFooterAddress(settings.footerAddress || "House 42, Road 11, Block D, Banani, Dhaka-1213, Bangladesh");
+    setFooterCopyright(settings.footerCopyright || "© 2026 RAIB Leather. All rights reserved.");
 
     // Initialize 5 numbered slots
     const rList = (settings.reels && settings.reels.length >= 5) ? settings.reels : DEFAULT_SETTINGS.reels;
@@ -243,11 +294,15 @@ export default function AdminPage() {
       messengerPageId: messenger,
       deliveryCharge: Number(delCharge),
 
+      showAnnouncementBar,
+      announcementText,
+
       showHero,
       showBestsellers,
       showReels,
       showNewArrivals,
       showOfferBanner,
+      showTrustBadges,
 
       heroBadge,
       heroTitle,
@@ -258,6 +313,7 @@ export default function AdminPage() {
       bestsellersBadge,
       bestsellersTitle,
       bestsellersSubtitle,
+      bestsellersCtaText,
 
       reelsBadge,
       reelsTitle,
@@ -266,11 +322,27 @@ export default function AdminPage() {
       newArrivalsBadge,
       newArrivalsTitle,
       newArrivalsSubtitle,
+      newArrivalsCtaText,
 
       offerBannerTitle: offerTitle,
       offerBannerSubtitle: offerSubtitle,
       offerBannerButtonText: offerBtnText,
       offerBannerLink: offerLink,
+
+      trustBadge1Title: tb1Title,
+      trustBadge1Subtitle: tb1Sub,
+      trustBadge2Title: tb2Title,
+      trustBadge2Subtitle: tb2Sub,
+      trustBadge3Title: tb3Title,
+      trustBadge3Subtitle: tb3Sub,
+      trustBadge4Title: tb4Title,
+      trustBadge4Subtitle: tb4Sub,
+
+      footerTagline,
+      footerPhone,
+      footerEmail,
+      footerAddress,
+      footerCopyright,
 
       reels: [slot1, slot2, slot3, slot4, slot5],
     };
@@ -280,7 +352,7 @@ export default function AdminPage() {
     }
 
     await updateSettings(updatePayload);
-    showToast("All Admin Settings, Hero Background & Section Titles Saved to MongoDB!");
+    showToast("All Section Titles, Badges, Footer & Settings Saved to MongoDB!");
     setNewAdminPassword("");
   };
 
@@ -561,7 +633,7 @@ export default function AdminPage() {
             }`}
           >
             <Settings className="w-4 h-4" />
-            <span>Titles, Toggles & Settings</span>
+            <span>Section Titles, Toggles & Settings</span>
           </button>
         </div>
       </div>
@@ -771,7 +843,7 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 2: 5 Numbered Video Reels Slots Manager (Instagram Reel Link Support) */}
+      {/* Tab 2: 5 Numbered Video Reels Slots Manager */}
       {activeTab === "reels" && (
         <div className="space-y-8">
           <div className="flex items-center justify-between">
@@ -1326,18 +1398,48 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 7: Settings, Section Titles, Toggles, Offer Banner & Change Admin Password */}
+      {/* Tab 7: 100% Section-by-Section Titles, Subtitles, Toggles & Full Settings Editor */}
       {activeTab === "settings" && (
         <div className="max-w-4xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-8">
-          <h3 className="text-xl font-bold text-white font-serif">Section Titles, Subtitles, Show/Hide Toggles & Settings</h3>
+          <h3 className="text-xl font-bold text-white font-serif">100% Section-by-Section Dynamic Controls & Settings</h3>
 
           <form onSubmit={handleUpdateSettings} className="space-y-6 text-xs">
             
-            {/* 1. Homepage Section Visibility Toggles (অন / অফ বাটন) */}
+            {/* 1. Top Announcement Bar Controls */}
+            <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
+                <Megaphone className="w-4 h-4 text-red-500" />
+                1. Top Announcement Bar (টপ অ্যানাউন্সমেন্ট বার)
+              </h4>
+
+              <div className="space-y-3">
+                <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer">
+                  <span className="font-bold text-white">Show Announcement Bar</span>
+                  <input
+                    type="checkbox"
+                    checked={showAnnouncementBar}
+                    onChange={(e) => setShowAnnouncementBar(e.target.checked)}
+                    className="w-4 h-4 accent-red-600 cursor-pointer"
+                  />
+                </label>
+
+                <div>
+                  <label className="text-zinc-400 block mb-1">Announcement Text</label>
+                  <input
+                    type="text"
+                    value={announcementText}
+                    onChange={(e) => setAnnouncementText(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Homepage Section Show/Hide Toggles */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-red-500" />
-                Homepage Section Show/Hide Toggles (সেকশন অন/অফ)
+                2. Homepage Section Show/Hide Toggles (সেকশন অন/অফ)
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -1381,8 +1483,8 @@ export default function AdminPage() {
                   />
                 </label>
 
-                <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer sm:col-span-2">
-                  <span className="font-bold text-white">Promotional Offer Banner ("Up to 30% off")</span>
+                <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer">
+                  <span className="font-bold text-white">Promotional Offer Banner</span>
                   <input
                     type="checkbox"
                     checked={showOfferBanner}
@@ -1390,19 +1492,29 @@ export default function AdminPage() {
                     className="w-4 h-4 accent-red-600 cursor-pointer"
                   />
                 </label>
+
+                <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer">
+                  <span className="font-bold text-white">Trust Badges Section</span>
+                  <input
+                    type="checkbox"
+                    checked={showTrustBadges}
+                    onChange={(e) => setShowTrustBadges(e.target.checked)}
+                    className="w-4 h-4 accent-red-600 cursor-pointer"
+                  />
+                </label>
               </div>
             </div>
 
-            {/* 2. Hero Background Image & Titles Customizer */}
+            {/* 3. Hero Section Customizer */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <ImageIcon className="w-4 h-4 text-red-500" />
-                Hero Background Image & Text Customizer (হিরো ব্যাকগ্রাউন্ড ও টেক্সট কন্ট্রোল)
+                3. Hero Banner Section Customizer (হিরো ব্যাকগ্রাউন্ড ও টেক্সট)
               </h4>
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-zinc-400 block mb-1">Hero Background Image URL (হিরো ব্যাকগ্রাউন্ড পিকচার URL)</label>
+                  <label className="text-zinc-400 block mb-1">Hero Background Image URL</label>
                   <input
                     type="text"
                     value={heroImage}
@@ -1414,7 +1526,7 @@ export default function AdminPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-zinc-400 block mb-1">Hero Slogan / Badge Tag</label>
+                    <label className="text-zinc-400 block mb-1">Hero Badge Slogan</label>
                     <input
                       type="text"
                       value={heroBadge}
@@ -1445,18 +1557,18 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 3. Section Titles & Subtitles Editor */}
+            {/* 4. Section-wise Titles, Subtitles & CTA Button Texts */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <Type className="w-4 h-4 text-red-500" />
-                Section-wise Title & Subtitle Customizer (টাইটেল ও ডেসক্রিপশন এডিটর)
+                4. Section Titles, Subtitles & Button Text Customizer
               </h4>
 
               <div className="space-y-4">
                 {/* Bestsellers Controls */}
                 <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
                   <h5 className="font-bold text-amber-400 text-xs">Bestsellers Section</h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                       <label className="text-zinc-400 block mb-1">Badge Tag</label>
                       <input
@@ -1473,6 +1585,15 @@ export default function AdminPage() {
                         value={bestsellersTitle}
                         onChange={(e) => setBestsellersTitle(e.target.value)}
                         className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-zinc-400 block mb-1">CTA Button Text</label>
+                      <input
+                        type="text"
+                        value={bestsellersCtaText}
+                        onChange={(e) => setBestsellersCtaText(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
                       />
                     </div>
                   </div>
@@ -1524,7 +1645,7 @@ export default function AdminPage() {
                 {/* New Arrivals Controls */}
                 <div className="p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 space-y-3">
                   <h5 className="font-bold text-amber-400 text-xs">New Arrivals Section</h5>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                       <label className="text-zinc-400 block mb-1">Badge Tag</label>
                       <input
@@ -1543,6 +1664,15 @@ export default function AdminPage() {
                         className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500 font-serif"
                       />
                     </div>
+                    <div>
+                      <label className="text-zinc-400 block mb-1">CTA Button Text</label>
+                      <input
+                        type="text"
+                        value={newArrivalsCtaText}
+                        onChange={(e) => setNewArrivalsCtaText(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white outline-none focus:border-red-500"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="text-zinc-400 block mb-1">Section Subtitle</label>
@@ -1558,11 +1688,11 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 4. Offer Banner Customization */}
+            {/* 5. Offer Banner Customization */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <Tag className="w-4 h-4 text-red-500" />
-                Promotional Offer Banner Settings (অফার ব্যানার কন্ট্রোল)
+                5. Promotional Offer Banner Settings (অফার ব্যানার কন্ট্রোল)
               </h4>
 
               <div className="space-y-3">
@@ -1610,7 +1740,151 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 5. Password Change Box */}
+            {/* 6. Trust Badges Section Customizer */}
+            <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-red-500" />
+                6. Trust Badges Section (৪টি ট্রাস্ট সার্ভিস ব্যাজ)
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2">
+                  <h5 className="font-bold text-white text-[11px]">Badge 1</h5>
+                  <input
+                    type="text"
+                    value={tb1Title}
+                    onChange={(e) => setTb1Title(e.target.value)}
+                    placeholder="Title"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs"
+                  />
+                  <input
+                    type="text"
+                    value={tb1Sub}
+                    onChange={(e) => setTb1Sub(e.target.value)}
+                    placeholder="Subtitle"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 text-xs"
+                  />
+                </div>
+
+                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2">
+                  <h5 className="font-bold text-white text-[11px]">Badge 2</h5>
+                  <input
+                    type="text"
+                    value={tb2Title}
+                    onChange={(e) => setTb2Title(e.target.value)}
+                    placeholder="Title"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs"
+                  />
+                  <input
+                    type="text"
+                    value={tb2Sub}
+                    onChange={(e) => setTb2Sub(e.target.value)}
+                    placeholder="Subtitle"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 text-xs"
+                  />
+                </div>
+
+                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2">
+                  <h5 className="font-bold text-white text-[11px]">Badge 3</h5>
+                  <input
+                    type="text"
+                    value={tb3Title}
+                    onChange={(e) => setTb3Title(e.target.value)}
+                    placeholder="Title"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs"
+                  />
+                  <input
+                    type="text"
+                    value={tb3Sub}
+                    onChange={(e) => setTb3Sub(e.target.value)}
+                    placeholder="Subtitle"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 text-xs"
+                  />
+                </div>
+
+                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 space-y-2">
+                  <h5 className="font-bold text-white text-[11px]">Badge 4</h5>
+                  <input
+                    type="text"
+                    value={tb4Title}
+                    onChange={(e) => setTb4Title(e.target.value)}
+                    placeholder="Title"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs"
+                  />
+                  <input
+                    type="text"
+                    value={tb4Sub}
+                    onChange={(e) => setTb4Sub(e.target.value)}
+                    placeholder="Subtitle"
+                    className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 7. Footer Tagline, Contact Info & Copyright */}
+            <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
+                <Layout className="w-4 h-4 text-red-500" />
+                7. Footer Tagline, Contact Info & Copyright (ফুটার টেক্সট কন্ট্রোল)
+              </h4>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Footer Tagline Statement</label>
+                  <input
+                    type="text"
+                    value={footerTagline}
+                    onChange={(e) => setFooterTagline(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Footer Support Phone</label>
+                    <input
+                      type="text"
+                      value={footerPhone}
+                      onChange={(e) => setFooterPhone(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Footer Support Email</label>
+                    <input
+                      type="text"
+                      value={footerEmail}
+                      onChange={(e) => setFooterEmail(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 block mb-1">Footer Physical Address</label>
+                  <input
+                    type="text"
+                    value={footerAddress}
+                    onChange={(e) => setFooterAddress(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 block mb-1">Footer Copyright Text</label>
+                  <input
+                    type="text"
+                    value={footerCopyright}
+                    onChange={(e) => setFooterCopyright(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 8. Password Change Box */}
             <div className="space-y-3 p-5 rounded-2xl bg-zinc-950 border border-red-900/60">
               <h4 className="font-bold text-red-400 uppercase tracking-wider text-[11px] font-serif flex items-center gap-1.5">
                 <Key className="w-4 h-4" />
@@ -1625,7 +1899,7 @@ export default function AdminPage() {
               />
             </div>
 
-            {/* 6. Payment Numbers & Delivery */}
+            {/* 9. Payment Numbers & Delivery */}
             <div className="space-y-3 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif">
                 Send Money Numbers & Delivery Fee
@@ -1678,7 +1952,7 @@ export default function AdminPage() {
               type="submit"
               className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
             >
-              Save All Settings & Titles to MongoDB
+              Save All Section Titles, Subtitles, Badges & Settings to MongoDB
             </button>
           </form>
         </div>

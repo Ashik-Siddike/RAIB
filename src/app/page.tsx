@@ -36,6 +36,8 @@ export default function Home() {
   const bestSellers = products.slice(0, 6);
   const newArrivals = products.slice(0, 8);
 
+  const showTrust = settings.showTrustBadges ?? true;
+
   return (
     <div className="space-y-0 w-full overflow-x-hidden bg-white text-zinc-900 transition-colors">
       
@@ -72,7 +74,7 @@ export default function Home() {
                 href="/shop?category=Best Sellers"
                 className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition group"
               >
-                <span>VIEW ALL BESTSELLERS</span>
+                <span>{settings.bestsellersCtaText || "VIEW ALL BESTSELLERS"}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-red-600" />
               </Link>
             </div>
@@ -114,7 +116,7 @@ export default function Home() {
                 href="/shop"
                 className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition group"
               >
-                <span>EXPLORE ALL BAGS</span>
+                <span>{settings.newArrivalsCtaText || "EXPLORE ALL BAGS"}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-red-600" />
               </Link>
             </div>
@@ -126,36 +128,54 @@ export default function Home() {
       {/* 5. Promotional Offer Banner */}
       {settings.showOfferBanner && <OfferBanner />}
 
-      {/* Trust Badges */}
-      <section className="py-12 bg-stone-50 border-b border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div className="p-4 space-y-2">
-              <Award className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">100% Genuine Italian Leather</h4>
-              <p className="text-[11px] text-zinc-500">Handcrafted by master artisans</p>
-            </div>
+      {/* Trust Badges Section */}
+      {showTrust && (
+        <section className="py-12 bg-stone-50 border-b border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+              <div className="p-4 space-y-2">
+                <Award className="w-6 h-6 text-red-600 mx-auto" />
+                <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">
+                  {settings.trustBadge1Title || "100% Genuine Italian Leather"}
+                </h4>
+                <p className="text-[11px] text-zinc-500">
+                  {settings.trustBadge1Subtitle || "Handcrafted by master artisans"}
+                </p>
+              </div>
 
-            <div className="p-4 space-y-2">
-              <Truck className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">Cash on Delivery</h4>
-              <p className="text-[11px] text-zinc-500">Fast home delivery across BD</p>
-            </div>
+              <div className="p-4 space-y-2">
+                <Truck className="w-6 h-6 text-red-600 mx-auto" />
+                <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">
+                  {settings.trustBadge2Title || "Cash on Delivery"}
+                </h4>
+                <p className="text-[11px] text-zinc-500">
+                  {settings.trustBadge2Subtitle || "Fast home delivery across BD"}
+                </p>
+              </div>
 
-            <div className="p-4 space-y-2">
-              <RotateCcw className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">7-Day Easy Exchange</h4>
-              <p className="text-[11px] text-zinc-500">Guaranteed replacement protection</p>
-            </div>
+              <div className="p-4 space-y-2">
+                <RotateCcw className="w-6 h-6 text-red-600 mx-auto" />
+                <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">
+                  {settings.trustBadge3Title || "7-Day Easy Exchange"}
+                </h4>
+                <p className="text-[11px] text-zinc-500">
+                  {settings.trustBadge3Subtitle || "Guaranteed replacement protection"}
+                </p>
+              </div>
 
-            <div className="p-4 space-y-2">
-              <ShieldCheck className="w-6 h-6 text-red-600 mx-auto" />
-              <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">18K Gold-Plated Hardware</h4>
-              <p className="text-[11px] text-zinc-500">Rust & tarnish resistant</p>
+              <div className="p-4 space-y-2">
+                <ShieldCheck className="w-6 h-6 text-red-600 mx-auto" />
+                <h4 className="text-xs font-bold text-zinc-900 uppercase font-serif">
+                  {settings.trustBadge4Title || "18K Gold-Plated Hardware"}
+                </h4>
+                <p className="text-[11px] text-zinc-500">
+                  {settings.trustBadge4Subtitle || "Rust & tarnish resistant"}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
     </div>
   );

@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useApp } from "@/lib/store";
-import { ArrowRight } from "lucide-react";
+import { useSettings } from "@/lib/settingsStore";
+import { ArrowRight, Phone, Mail, MapPin } from "lucide-react";
 
 export function Footer() {
   const { lang, showToast } = useApp();
+  const { settings } = useSettings();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e: React.FormEvent) => {
@@ -36,10 +38,32 @@ export function Footer() {
             </Link>
 
             <p className="text-xs text-stone-400 leading-relaxed font-sans max-w-sm">
-              {lang === "bn"
-                ? "আধুনিক নারীদের জন্য ইতালিয়ান চামড়ার হাতে সেলাই করা অভিজাত ব্যাগ।"
-                : "Timeless bags designed to carry your story — from boardroom meetings to weekend escapes."}
+              {settings.footerTagline ||
+                (lang === "bn"
+                  ? "আধুনিক নারীদের জন্য ইতালিয়ান চামড়ার হাতে সেলাই করা অভিজাত ব্যাগ।"
+                  : "Timeless luxury ladies bags designed to carry your story with elegance.")}
             </p>
+
+            <div className="pt-2 space-y-1.5 text-xs text-stone-400 font-mono">
+              {settings.footerPhone && (
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-red-500" />
+                  <span>{settings.footerPhone}</span>
+                </div>
+              )}
+              {settings.footerEmail && (
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-red-500" />
+                  <span>{settings.footerEmail}</span>
+                </div>
+              )}
+              {settings.footerAddress && (
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-3.5 h-3.5 text-red-500 mt-0.5 flex-shrink-0" />
+                  <span className="leading-snug">{settings.footerAddress}</span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Column 2: SHOP Links */}
@@ -108,7 +132,7 @@ export function Footer() {
 
         {/* Bottom Copyright & Social Bar */}
         <div className="pt-8 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <p>© 2026 RAIB Bags. All rights reserved.</p>
+          <p>{settings.footerCopyright || "© 2026 RAIB Bags. All rights reserved."}</p>
 
           <div className="flex items-center gap-4">
             <a href="https://instagram.com" target="_blank" rel="noreferrer" className="p-2 bg-stone-800 hover:bg-stone-700 rounded-full text-stone-400 hover:text-white transition">

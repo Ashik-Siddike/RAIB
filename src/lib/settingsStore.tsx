@@ -21,11 +21,15 @@ export interface SettingsType {
   deliveryCharge: number;
   adminPassword?: string;
 
+  showAnnouncementBar: boolean;
+  announcementText: string;
+
   showHero: boolean;
   showBestsellers: boolean;
   showReels: boolean;
   showNewArrivals: boolean;
   showOfferBanner: boolean;
+  showTrustBadges: boolean;
 
   heroBadge: string;
   heroTitle: string;
@@ -36,6 +40,7 @@ export interface SettingsType {
   bestsellersBadge: string;
   bestsellersTitle: string;
   bestsellersSubtitle: string;
+  bestsellersCtaText: string;
 
   reelsBadge: string;
   reelsTitle: string;
@@ -45,12 +50,28 @@ export interface SettingsType {
   newArrivalsBadge: string;
   newArrivalsTitle: string;
   newArrivalsSubtitle: string;
+  newArrivalsCtaText: string;
 
   offerBannerBadge: string;
   offerBannerTitle: string;
   offerBannerSubtitle: string;
   offerBannerButtonText: string;
   offerBannerLink: string;
+
+  trustBadge1Title: string;
+  trustBadge1Subtitle: string;
+  trustBadge2Title: string;
+  trustBadge2Subtitle: string;
+  trustBadge3Title: string;
+  trustBadge3Subtitle: string;
+  trustBadge4Title: string;
+  trustBadge4Subtitle: string;
+
+  footerTagline: string;
+  footerPhone: string;
+  footerEmail: string;
+  footerAddress: string;
+  footerCopyright: string;
 }
 
 export const DEFAULT_SETTINGS: SettingsType = {
@@ -63,11 +84,15 @@ export const DEFAULT_SETTINGS: SettingsType = {
   deliveryCharge: 120,
   adminPassword: "admin",
 
+  showAnnouncementBar: true,
+  announcementText: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER",
+
   showHero: true,
   showBestsellers: true,
   showReels: true,
   showNewArrivals: true,
   showOfferBanner: true,
+  showTrustBadges: true,
 
   heroBadge: "STYLED FOR THE MODERN WOMAN",
   heroTitle: "RAIB",
@@ -78,6 +103,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   bestsellersBadge: "FEATURED TODAY",
   bestsellersTitle: "Bestsellers",
   bestsellersSubtitle: "Handcrafted Italian leather favorites loved by modern women.",
+  bestsellersCtaText: "VIEW ALL BESTSELLERS",
 
   reelsBadge: "CLIENT STORIES",
   reelsTitle: "STORIES THAT LEAD",
@@ -128,12 +154,28 @@ export const DEFAULT_SETTINGS: SettingsType = {
   newArrivalsBadge: "JUST ARRIVED",
   newArrivalsTitle: "New Arrivals",
   newArrivalsSubtitle: "Freshly launched seasonal additions to our signature collection.",
+  newArrivalsCtaText: "EXPLORE ALL BAGS",
 
   offerBannerBadge: "LIMITED TIME",
   offerBannerTitle: "Up to 30% off the Fall Collection",
   offerBannerSubtitle: "LIMITED TIME OFFER",
   offerBannerButtonText: "SHOP THE SALE",
   offerBannerLink: "/shop",
+
+  trustBadge1Title: "100% Genuine Italian Leather",
+  trustBadge1Subtitle: "Handcrafted by master artisans",
+  trustBadge2Title: "Cash on Delivery",
+  trustBadge2Subtitle: "Fast home delivery across BD",
+  trustBadge3Title: "7-Day Easy Exchange",
+  trustBadge3Subtitle: "Guaranteed replacement protection",
+  trustBadge4Title: "18K Gold-Plated Hardware",
+  trustBadge4Subtitle: "Rust & tarnish resistant",
+
+  footerTagline: "Timeless luxury ladies bags designed to carry your story with elegance.",
+  footerPhone: "+880 1700-000000",
+  footerEmail: "support@raib.site",
+  footerAddress: "House 42, Road 11, Block D, Banani, Dhaka-1213, Bangladesh",
+  footerCopyright: "© 2026 RAIB Leather. All rights reserved.",
 };
 
 interface SettingsContextType {

@@ -20,12 +20,17 @@ export interface ISettings extends Document {
   deliveryCharge: number;
   adminPassword?: string;
 
+  // Announcement Bar
+  showAnnouncementBar: boolean;
+  announcementText: string;
+
   // Visibility Toggles
   showHero: boolean;
   showBestsellers: boolean;
   showReels: boolean;
   showNewArrivals: boolean;
   showOfferBanner: boolean;
+  showTrustBadges: boolean;
 
   // Hero Section Customizer
   heroBadge: string;
@@ -38,6 +43,7 @@ export interface ISettings extends Document {
   bestsellersBadge: string;
   bestsellersTitle: string;
   bestsellersSubtitle: string;
+  bestsellersCtaText: string;
 
   // Video Reels Customizer
   reelsBadge: string;
@@ -49,6 +55,7 @@ export interface ISettings extends Document {
   newArrivalsBadge: string;
   newArrivalsTitle: string;
   newArrivalsSubtitle: string;
+  newArrivalsCtaText: string;
 
   // Offer Banner Customizer
   offerBannerBadge: string;
@@ -56,6 +63,23 @@ export interface ISettings extends Document {
   offerBannerSubtitle: string;
   offerBannerButtonText: string;
   offerBannerLink: string;
+
+  // Trust Badges Customizer
+  trustBadge1Title: string;
+  trustBadge1Subtitle: string;
+  trustBadge2Title: string;
+  trustBadge2Subtitle: string;
+  trustBadge3Title: string;
+  trustBadge3Subtitle: string;
+  trustBadge4Title: string;
+  trustBadge4Subtitle: string;
+
+  // Footer Customizer
+  footerTagline: string;
+  footerPhone: string;
+  footerEmail: string;
+  footerAddress: string;
+  footerCopyright: string;
 }
 
 const ReelSchema = new Schema<IReel>({
@@ -78,11 +102,15 @@ const SettingsSchema = new Schema<ISettings>(
     deliveryCharge: { type: Number, default: 120 },
     adminPassword: { type: String, default: "admin" },
 
+    showAnnouncementBar: { type: Boolean, default: true },
+    announcementText: { type: String, default: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER" },
+
     showHero: { type: Boolean, default: true },
     showBestsellers: { type: Boolean, default: true },
     showReels: { type: Boolean, default: true },
     showNewArrivals: { type: Boolean, default: true },
     showOfferBanner: { type: Boolean, default: true },
+    showTrustBadges: { type: Boolean, default: true },
 
     heroBadge: { type: String, default: "STYLED FOR THE MODERN WOMAN" },
     heroTitle: { type: String, default: "RAIB" },
@@ -93,6 +121,7 @@ const SettingsSchema = new Schema<ISettings>(
     bestsellersBadge: { type: String, default: "FEATURED TODAY" },
     bestsellersTitle: { type: String, default: "Bestsellers" },
     bestsellersSubtitle: { type: String, default: "Handcrafted Italian leather favorites loved by modern women." },
+    bestsellersCtaText: { type: String, default: "VIEW ALL BESTSELLERS" },
 
     reelsBadge: { type: String, default: "CLIENT STORIES" },
     reelsTitle: { type: String, default: "STORIES THAT LEAD" },
@@ -102,12 +131,28 @@ const SettingsSchema = new Schema<ISettings>(
     newArrivalsBadge: { type: String, default: "JUST ARRIVED" },
     newArrivalsTitle: { type: String, default: "New Arrivals" },
     newArrivalsSubtitle: { type: String, default: "Freshly launched seasonal additions to our signature collection." },
+    newArrivalsCtaText: { type: String, default: "EXPLORE ALL BAGS" },
 
     offerBannerBadge: { type: String, default: "LIMITED TIME" },
     offerBannerTitle: { type: String, default: "Up to 30% off the Fall Collection" },
     offerBannerSubtitle: { type: String, default: "LIMITED TIME OFFER" },
     offerBannerButtonText: { type: String, default: "SHOP THE SALE" },
     offerBannerLink: { type: String, default: "/shop" },
+
+    trustBadge1Title: { type: String, default: "100% Genuine Italian Leather" },
+    trustBadge1Subtitle: { type: String, default: "Handcrafted by master artisans" },
+    trustBadge2Title: { type: String, default: "Cash on Delivery" },
+    trustBadge2Subtitle: { type: String, default: "Fast home delivery across BD" },
+    trustBadge3Title: { type: String, default: "7-Day Easy Exchange" },
+    trustBadge3Subtitle: { type: String, default: "Guaranteed replacement protection" },
+    trustBadge4Title: { type: String, default: "18K Gold-Plated Hardware" },
+    trustBadge4Subtitle: { type: String, default: "Rust & tarnish resistant" },
+
+    footerTagline: { type: String, default: "Timeless luxury ladies bags designed to carry your story with elegance." },
+    footerPhone: { type: String, default: "+880 1700-000000" },
+    footerEmail: { type: String, default: "support@raib.site" },
+    footerAddress: { type: String, default: "House 42, Road 11, Block D, Banani, Dhaka-1213, Bangladesh" },
+    footerCopyright: { type: String, default: "© 2026 RAIB Leather. All rights reserved." },
   },
   { timestamps: true }
 );

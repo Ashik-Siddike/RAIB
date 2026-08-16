@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/lib/store";
+import { useSettings } from "@/lib/settingsStore";
 import {
   ShoppingBag,
   Search,
@@ -20,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export function Header() {
   const pathname = usePathname();
   const { cart, isCartOpen, setIsCartOpen, setIsSearchOpen, setIsAuthOpen, lang, setLang } = useApp();
+  const { settings } = useSettings();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -32,14 +34,17 @@ export function Header() {
     { name: "Best Sellers", bnName: "বেস্ট সেলার", href: "/shop?category=Best Sellers" },
   ];
 
+  const showBar = settings.showAnnouncementBar ?? true;
+  const barText = settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER";
+
   return (
     <>
-      {/* Top Announcement Bar */}
-      <div className="bg-red-600 text-white text-[11px] font-bold py-2 px-4 text-center tracking-widest font-sans uppercase flex items-center justify-center gap-2 shadow-md">
-        <span>FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000</span>
-        <span className="hidden sm:inline opacity-75">|</span>
-        <span className="hidden sm:inline text-amber-200">100% GENUINE ITALIAN LEATHER</span>
-      </div>
+      {/* Dynamic Top Announcement Bar */}
+      {showBar && (
+        <div className="bg-red-600 text-white text-[11px] font-bold py-2 px-4 text-center tracking-widest font-sans uppercase flex items-center justify-center gap-2 shadow-md">
+          <span>{barText}</span>
+        </div>
+      )}
 
       {/* Main Dark Translucent Gradient Header */}
       <header className="sticky top-0 z-40 bg-gradient-to-r from-zinc-950/95 via-zinc-900/95 to-zinc-950/95 backdrop-blur-md border-b border-zinc-800/80 text-white shadow-xl transition-all duration-300">
@@ -232,8 +237,8 @@ export function Header() {
                 </div>
 
                 <div className="text-[11px] text-zinc-500 space-y-1">
-                  <p>Customer Support: +880 1700-000000</p>
-                  <p>House 42, Gulshan Avenue, Dhaka</p>
+                  <p>Customer Support: {settings.footerPhone || "+880 1700-000000"}</p>
+                  <p>{settings.footerAddress || "House 42, Gulshan Avenue, Dhaka"}</p>
                 </div>
               </div>
 
