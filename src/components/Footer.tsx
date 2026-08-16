@@ -24,9 +24,12 @@ export function Footer() {
         {/* Main 4-Column Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
           
-          {/* Column 1: Brand Info */}
+          {/* Column 1: Brand Info with Dark Translucent Backdrop Container */}
           <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 p-2 rounded-2xl bg-zinc-950/85 border border-zinc-800/80 shadow-inner"
+            >
               <div className="relative h-7 w-7 flex-shrink-0">
                 <Image src="/main-logo.png" alt="RAIB Main Logo" fill className="object-contain" />
               </div>

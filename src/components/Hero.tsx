@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
@@ -36,22 +37,41 @@ export function Hero() {
           {settings.heroBadge || "CRAFTED FOR THE MODERN WOMAN"}
         </motion.span>
 
-        {/* Huge Brand Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+        {/* Hero Styled Logo Graphic (Replacing Plain Text "RAIB") */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-5xl sm:text-8xl lg:text-9xl font-extrabold tracking-widest font-serif text-zinc-900 uppercase"
+          className="flex items-center justify-center gap-3 sm:gap-5 py-2"
         >
-          {settings.heroTitle || "RAIB"}
-        </motion.h1>
+          <div className="relative p-3 sm:p-4 rounded-3xl bg-zinc-950/90 border border-zinc-800 shadow-2xl backdrop-blur-md flex items-center gap-3 sm:gap-5">
+            <div className="relative h-12 sm:h-20 lg:h-24 w-12 sm:w-20 lg:w-24 flex-shrink-0">
+              <Image
+                src="/main-logo.png"
+                alt="RAIB Main Logo"
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
+            <div className="relative h-12 sm:h-20 lg:h-24 w-44 sm:w-72 lg:w-80 flex-shrink-0">
+              <Image
+                src="/raib leter logo.png"
+                alt="RAIB Letter Logo"
+                fill
+                priority
+                className="object-contain object-left"
+              />
+            </div>
+          </div>
+        </motion.div>
 
         {/* Subtitle Statement */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-sm sm:text-lg text-zinc-700 max-w-2xl mx-auto font-sans leading-relaxed font-semibold"
+          className="text-sm sm:text-lg text-zinc-700 max-w-2xl mx-auto font-sans leading-relaxed font-semibold pt-2"
         >
           {settings.heroSubtitle ||
             (lang === "bn"
@@ -64,7 +84,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="pt-4"
+          className="pt-2"
         >
           <Link
             href="/shop"

@@ -1,290 +1,244 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useApp } from "@/lib/store";
-import { Search, ShoppingBag, Heart, Menu, X, User, Globe, ArrowRight, Sun, Moon } from "lucide-react";
+import {
+  ShoppingBag,
+  Search,
+  User,
+  Menu,
+  X,
+  PhoneCall,
+  SlidersHorizontal,
+  ChevronRight,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Header() {
-  const { lang, setLang, theme, toggleTheme, t, cartCount, wishlist, setIsCartOpen, setIsAuthOpen, setIsSearchOpen } = useApp();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { cart, isCartOpen, setIsCartOpen, setIsSearchOpen, setIsAuthOpen, lang, setLang } = useApp();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const toggleLanguage = () => {
-    setLang(lang === "en" ? "bn" : "en");
-  };
+  const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const categories = [
+    { name: "Tote Bags", bnName: "টোট ব্যাগ", href: "/shop?category=Tote Bags" },
+    { name: "Crossbody Bags", bnName: "ক্রসবডি ব্যাগ", href: "/shop?category=Crossbody Bags" },
+    { name: "Shoulder Bags", bnName: "শোল্ডার ব্যাগ", href: "/shop?category=Shoulder Bags" },
+    { name: "Clutches & Evening", bnName: "ক্লাচ ব্যাগ", href: "/shop?category=Clutches & Evening" },
+    { name: "Best Sellers", bnName: "বেস্ট সেলার", href: "/shop?category=Best Sellers" },
+  ];
 
   return (
     <>
       {/* Top Announcement Bar */}
-      <div className="bg-stone-100 text-zinc-900 text-[10px] sm:text-xs py-2 px-4 sm:px-8 border-b border-stone-200">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
-            <span className="inline-block w-2 h-2 rounded-full bg-red-600 animate-pulse flex-shrink-0"></span>
-            <span className="font-bold tracking-wide truncate text-zinc-900">
-              {lang === "en" ? "FREE Delivery in BD over ৳3,000 | Cash on Delivery" : "৳৩,০০০ টাকার অর্ডারে ফ্রি ডেলিভারি | ক্যাশ অন ডেলিভারি"}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-stone-300 text-zinc-900 hover:border-red-600 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-bold shadow-sm"
-              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {theme === "dark" ? (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Light Mode</span>
-                </>
-              ) : (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Dark Mode</span>
-                </>
-              )}
-            </button>
-
-            {/* Language Switcher */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-stone-300 text-zinc-900 hover:border-red-600 transition-all cursor-pointer font-sans text-[10px] sm:text-xs font-bold shadow-sm"
-              title="Switch Language"
-            >
-              <Globe className="w-3.5 h-3.5 text-red-600" />
-              <span>{lang === "en" ? "বাংলা" : "English"}</span>
-            </button>
-          </div>
-        </div>
+      <div className="bg-red-600 text-white text-[11px] font-bold py-2 px-4 text-center tracking-widest font-sans uppercase flex items-center justify-center gap-2 shadow-md">
+        <span>FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000</span>
+        <span className="hidden sm:inline opacity-75">|</span>
+        <span className="hidden sm:inline text-amber-200">100% GENUINE ITALIAN LEATHER</span>
       </div>
 
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-stone-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-          
-          {/* Left: Navigation or Mobile Trigger */}
-          <div className="flex items-center gap-2 sm:gap-6">
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-1.5 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-xl transition"
-              aria-label="Toggle Mobile Menu"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-
-            <nav className="hidden lg:flex items-center gap-8 font-sans text-xs tracking-widest uppercase font-bold">
-              <Link href="/" className="text-zinc-900 hover:text-red-600 transition-colors py-1">
-                {t("navHome")}
-              </Link>
-              <Link href="/shop" className="text-zinc-900 hover:text-red-600 transition-colors py-1">
-                {t("navShop")}
-              </Link>
-              <Link href="/shop?category=Best Sellers" className="text-zinc-900 hover:text-red-600 transition-colors py-1 flex items-center gap-1.5">
-                {t("navBestSellers")}
-                <span className="bg-red-600/10 text-red-600 text-[9px] px-1.5 py-0.2 rounded-full font-bold border border-red-500/30 uppercase">HOT</span>
-              </Link>
-              <Link href="/faq" className="text-zinc-900 hover:text-red-600 transition-colors py-1">
-                FAQ
-              </Link>
-            </nav>
-          </div>
-
-          {/* Center Brand Logo: Emblem (/main-logo.png) + Styled Letter Logo (/raib leter logo.png) */}
-          <Link href="/" className="flex items-center gap-3 group py-1">
-            {/* Main Emblem /main-logo.png */}
-            <div className="relative h-7 sm:h-9 w-7 sm:w-9 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
-              <Image
-                src="/main-logo.png"
-                alt="RAIB Main Logo"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
+      {/* Main Dark Translucent Gradient Header */}
+      <header className="sticky top-0 z-40 bg-gradient-to-r from-zinc-950/95 via-zinc-900/95 to-zinc-950/95 backdrop-blur-md border-b border-zinc-800/80 text-white shadow-xl transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
             
-            {/* Styled Letter Logo /raib leter logo.png */}
-            <div className="relative h-7 sm:h-9 w-28 sm:w-36 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
-              <Image
-                src="/raib leter logo.png"
-                alt="RAIB Letter Logo"
-                fill
-                className="object-contain object-left"
-                priority
-              />
+            {/* Left: Mobile Hamburger & Search */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="lg:hidden p-2 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl transition cursor-pointer"
+                aria-label="Open Navigation Drawer"
+              >
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl transition cursor-pointer flex items-center gap-2"
+                aria-label="Search Handbags"
+              >
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
+                <span className="hidden md:inline text-xs font-medium text-zinc-400">Search products...</span>
+              </button>
             </div>
-          </Link>
 
-          {/* Right Action Icons & Cart */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            
-            {/* Search Trigger */}
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="p-2 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-full transition cursor-pointer"
-              title="Search Bags"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-
-            {/* Wishlist Button */}
+            {/* Center: Brand Logo Area with Dark Translucent Backdrop Container */}
             <Link
-              href="/shop?wishlist=true"
-              className="hidden sm:flex p-2 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-full transition relative"
-              title="Wishlist"
+              href="/"
+              className="group relative flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-2xl bg-zinc-950/85 border border-zinc-800/80 backdrop-blur-md shadow-inner hover:border-zinc-700 transition cursor-pointer"
             >
-              <Heart className="w-5 h-5" />
-              {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce">
-                  {wishlist.length}
-                </span>
-              )}
+              {/* Main emblem logo */}
+              <div className="relative h-7 sm:h-9 w-7 sm:w-9 flex-shrink-0">
+                <Image
+                  src="/main-logo.png"
+                  alt="RAIB Emblem Logo"
+                  fill
+                  priority
+                  className="object-contain"
+                />
+              </div>
+
+              {/* Styled letter logo */}
+              <div className="relative h-7 sm:h-9 w-28 sm:w-36 flex-shrink-0">
+                <Image
+                  src="/raib leter logo.png"
+                  alt="RAIB Letter Logo"
+                  fill
+                  priority
+                  className="object-contain object-left"
+                />
+              </div>
             </Link>
 
-            {/* User Account / Auth Trigger */}
-            <button
-              onClick={() => setIsAuthOpen(true)}
-              className="p-2 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-full transition cursor-pointer"
-              title="Sign In / Account"
-            >
-              <User className="w-5 h-5" />
-            </button>
+            {/* Right: Language Switcher, Account, Cart */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              
+              {/* Language Switcher */}
+              <button
+                onClick={() => setLang(lang === "en" ? "bn" : "en")}
+                className="hidden sm:flex px-2.5 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-[11px] font-bold text-zinc-300 hover:text-white transition cursor-pointer"
+              >
+                {lang === "en" ? "বাংলা" : "ENG"}
+              </button>
 
-            {/* Cart Drawer Trigger Button */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-2 px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition duration-300 shadow-md hover:scale-105 group cursor-pointer"
-            >
-              <ShoppingBag className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
-              <span className="hidden sm:inline font-sans text-xs font-bold uppercase tracking-wider">
-                {t("mobNavCart")}
-              </span>
-              <span className="w-5 h-5 bg-white text-red-900 text-xs font-black rounded-full flex items-center justify-center shadow-inner">
-                {cartCount}
-              </span>
-            </button>
+              {/* Account Button */}
+              <button
+                onClick={() => setIsAuthOpen(true)}
+                className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-xl transition cursor-pointer"
+                aria-label="User Account"
+              >
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+
+              {/* Shopping Bag Trigger */}
+              <button
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                className="relative p-2 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-lg transition flex items-center justify-center cursor-pointer group"
+                aria-label="Open Shopping Bag"
+              >
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+                {totalCartCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-white text-zinc-950 font-extrabold text-[10px] flex items-center justify-center shadow-md font-mono border border-zinc-300">
+                    {totalCartCount}
+                  </span>
+                )}
+              </button>
+            </div>
 
           </div>
         </div>
+
+        {/* Desktop Navigation Links Category Bar */}
+        <nav className="hidden lg:block border-t border-zinc-800/60 bg-zinc-950/70">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center space-x-8 h-10 text-xs font-bold uppercase tracking-wider">
+              {categories.map((cat) => {
+                const isActive = pathname === cat.href;
+                return (
+                  <Link
+                    key={cat.name}
+                    href={cat.href}
+                    className={`transition-colors py-2 border-b-2 ${
+                      isActive
+                        ? "text-red-500 border-red-500 font-extrabold"
+                        : "text-zinc-300 hover:text-white border-transparent"
+                    }`}
+                  >
+                    {lang === "bn" ? cat.bnName : cat.name}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </nav>
       </header>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Drawer Navigation Menu */}
       <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             />
+
+            {/* Slide-out Drawer */}
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 bottom-0 w-4/5 max-w-xs bg-white border-r border-stone-200 p-6 z-50 flex flex-col justify-between overflow-y-auto lg:hidden text-zinc-900"
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 w-4/5 max-w-sm bg-zinc-950 text-white shadow-2xl flex flex-col justify-between border-r border-zinc-800 p-6 font-sans z-10"
             >
-              <div>
-                <div className="flex items-center justify-between pb-6 border-b border-stone-200">
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative h-7 w-7 flex-shrink-0">
-                      <Image src="/main-logo.png" alt="RAIB Main Logo" fill className="object-contain" />
+              <div className="space-y-6">
+                
+                {/* Header inside drawer */}
+                <div className="flex items-center justify-between pb-4 border-b border-zinc-900">
+                  <div className="flex items-center gap-2 p-1.5 rounded-xl bg-zinc-900 border border-zinc-800">
+                    <div className="relative h-6 w-6 flex-shrink-0">
+                      <Image src="/main-logo.png" alt="RAIB Logo" fill className="object-contain" />
                     </div>
-                    <div className="relative h-7 w-28 flex-shrink-0">
-                      <Image src="/raib leter logo.png" alt="RAIB Letter Logo" fill className="object-contain object-left" />
+                    <div className="relative h-6 w-24 flex-shrink-0">
+                      <Image src="/raib leter logo.png" alt="RAIB Wordmark" fill className="object-contain object-left" />
                     </div>
                   </div>
                   <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 text-zinc-500 hover:text-zinc-900"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 text-zinc-400 hover:text-white rounded-full bg-zinc-900 border border-zinc-800"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
-                <div className="py-6 space-y-2 font-sans text-sm font-bold uppercase tracking-wider">
-                  <Link
-                    href="/"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-xl transition"
+                {/* Mobile Navigation Links */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-red-500 block mb-2 font-serif">
+                    Categories
+                  </span>
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat.name}
+                      href={cat.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between py-3 px-4 rounded-xl bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800 text-sm font-bold text-zinc-200 hover:text-white transition"
+                    >
+                      <span>{lang === "bn" ? cat.bnName : cat.name}</span>
+                      <ChevronRight className="w-4 h-4 text-zinc-500" />
+                    </Link>
+                  ))}
+                </div>
+
+              </div>
+
+              {/* Footer info inside Drawer */}
+              <div className="pt-6 border-t border-zinc-900 space-y-4">
+                <div className="flex items-center justify-between text-xs text-zinc-400">
+                  <span>Language</span>
+                  <button
+                    onClick={() => setLang(lang === "en" ? "bn" : "en")}
+                    className="px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white font-bold"
                   >
-                    {t("navHome")}
-                  </Link>
-                  <Link
-                    href="/shop"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-xl transition"
-                  >
-                    {t("navShop")}
-                  </Link>
-                  <Link
-                    href="/shop?category=Best Sellers"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-xl transition"
-                  >
-                    {t("navBestSellers")}
-                  </Link>
-                  <Link
-                    href="/faq"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-xl transition"
-                  >
-                    FAQ & Policies
-                  </Link>
-                  <Link
-                    href="/track-order"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-zinc-900 hover:text-red-600 hover:bg-stone-100 rounded-xl transition"
-                  >
-                    Track Order
-                  </Link>
+                    {lang === "en" ? "বাংলায় দেখুন" : "English"}
+                  </button>
+                </div>
+
+                <div className="text-[11px] text-zinc-500 space-y-1">
+                  <p>Customer Support: +880 1700-000000</p>
+                  <p>House 42, Gulshan Avenue, Dhaka</p>
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-stone-200 space-y-3">
-                <button
-                  onClick={toggleTheme}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-stone-100 border border-stone-200 text-zinc-900 text-xs font-bold cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    {theme === "dark" ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-600" />}
-                    Theme Mode
-                  </span>
-                  <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200">
-                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                  </span>
-                </button>
-
-                <button
-                  onClick={toggleLanguage}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-stone-100 border border-stone-200 text-zinc-900 text-xs font-bold cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-red-600" />
-                    Language / ভাষা
-                  </span>
-                  <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200">
-                    {lang === "en" ? "বাংলা করুন" : "English"}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    setIsAuthOpen(true);
-                  }}
-                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg cursor-pointer"
-                >
-                  <User className="w-4 h-4" />
-                  {t("loginBtn")}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
     </>
