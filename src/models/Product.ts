@@ -1,5 +1,12 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+export interface IColorVariant {
+  colorName: string;
+  colorHex?: string;
+  image: string;
+  isDefault?: boolean;
+}
+
 export interface IProduct extends Document {
   id: string;
   name: string;
@@ -12,6 +19,7 @@ export interface IProduct extends Document {
   image: string;
   secondaryImage?: string;
   images?: string[];
+  colorVariants?: IColorVariant[];
   description: string;
   descriptionBn?: string;
   rating: number;
@@ -20,6 +28,13 @@ export interface IProduct extends Document {
   isBestSeller?: boolean;
   dimensions?: string;
 }
+
+const ColorVariantSchema: Schema = new Schema({
+  colorName: { type: String, required: true },
+  colorHex: { type: String, default: "#DC2626" },
+  image: { type: String, required: true },
+  isDefault: { type: Boolean, default: false },
+});
 
 const ProductSchema: Schema = new Schema(
   {
@@ -34,6 +49,7 @@ const ProductSchema: Schema = new Schema(
     image: { type: String, required: true },
     secondaryImage: { type: String },
     images: { type: [String], default: [] },
+    colorVariants: { type: [ColorVariantSchema], default: [] },
     description: { type: String, required: true },
     descriptionBn: { type: String },
     rating: { type: Number, default: 5 },

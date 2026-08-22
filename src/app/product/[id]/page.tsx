@@ -3,7 +3,7 @@
 import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ProductType, useApp } from "@/lib/store";
+import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import { ProductCard } from "@/components/ProductCard";
@@ -24,7 +24,8 @@ import {
   Award,
   CheckCircle2,
   ThumbsUp,
-  MessageCircle
+  MessageCircle,
+  Palette
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -60,7 +61,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       location: "Gulshan, Dhaka",
       rating: 5,
       date: "2 days ago",
-      comment: "ব্যাগটার ফিনিশিং ও ইতালিয়ান চামড়ার ফিনিশিং চমৎকার! গোল্ড মেটালের চেইন ও হার্ডওয়্যার খুব কোয়ালিটিফুল। দাম হিসেবে ১০০০% স্যাটিসফাইড!",
+      comment: "ব্যাগটার ফিনিishing ও ইতালিয়ান চামড়ার ফিনিশিং চমৎকার! গোল্ড মেটালের চেইন ও হার্ডওয়্যার খুব কোয়ালিটিফুল। দাম হিসেবে ১০০০% স্যাটিসফাইড!",
       verified: true,
       helpful: 24,
     },
@@ -97,22 +98,27 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       try {
         const res = await fetch(`/api/products?id=${productId}`);
         const data = await res.json();
-        if (data.success && data.product) {
-          setProduct(data.product);
-          setActiveImage(data.product.image);
-          setSelectedColor(data.product.color || "Default");
+        const prodData: ProductType = (data.success && data.product) ? data.product : (SAMPLE_PRODUCTS.find((p) => p.id === productId) || SAMPLE_PRODUCTS[0]);
+        
+        setProduct(prodData);
+
+        // Check if there's a default color variant set by admin
+        const colorVars = prodData.colorVariants || [];
+        const defaultVar = colorVars.find((cv) => cv.isDefault) || colorVars[0];
+
+        if (defaultVar) {
+          setSelectedColor(defaultVar.colorName);
+          setActiveImage(defaultVar.image || prodData.image);
         } else {
-          const fallback = SAMPLE_PRODUCTS.find((p) => p.id === productId) || SAMPLE_PRODUCTS[0];
-          setProduct(fallback);
-          setActiveImage(fallback.image);
-          setSelectedColor(fallback.color);
+          setSelectedColor(prodData.color || "Default");
+          setActiveImage(prodData.image);
         }
       } catch (err) {
         console.error("Failed to load product by ID:", err);
         const fallback = SAMPLE_PRODUCTS.find((p) => p.id === productId) || SAMPLE_PRODUCTS[0];
         setProduct(fallback);
-        setActiveImage(fallback.image);
         setSelectedColor(fallback.color);
+        setActiveImage(fallback.image);
       } finally {
         setIsLoading(false);
       }
@@ -129,9 +135,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const isWishlisted = wishlist.includes(product.id);
-  
+  const colorVariants: ColorVariant[] = product.colorVariants && product.colorVariants.length > 0
+    ? product.colorVariants
+    : [
+        { colorName: product.color || "Default", colorHex: "#DC2626", image: product.image, isDefault: true },
+        { colorName: "Classic Black", colorHex: "#000000", image: product.secondaryImage || product.image, isDefault: false },
+      ];
+
   // Multiple images gallery support
   const galleryImages = [
+    ...colorVariants.map((cv) => cv.image),
     ...(product.images && product.images.length > 0 ? product.images : []),
     product.image,
     product.secondaryImage,
@@ -140,6 +153,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const relatedProducts = SAMPLE_PRODUCTS.filter(
     (p) => p.id !== product.id && p.category === product.category
   ).slice(0, 3);
+
+  // Select Color Variant Trigger
+  const handleSelectColorVariant = (variant: ColorVariant) => {
+    setSelectedColor(variant.colorName);
+    if (variant.image) {
+      setActiveImage(variant.image);
+    }
+  };
+
+  // Select Image Thumbnail Trigger
+  const handleSelectImageThumbnail = (img: string) => {
+    setActiveImage(img);
+    // If thumbnail matches a color variant, update selected color accordingly
+    const matchingVar = colorVariants.find((cv) => cv.image === img);
+    if (matchingVar) {
+      setSelectedColor(matchingVar.colorName);
+    }
+  };
 
   // Direct WhatsApp Order Trigger with Product Image & Details
   const handleWhatsAppOrder = () => {
@@ -154,7 +185,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 🆔 Serial/ID: ${product.id}
 🎨 Color: ${selectedColor}
 💰 Price: ৳${product.price.toLocaleString()}
-🖼️ Product Image: ${absoluteImgUrl}
+🖼️ Selected Color Bag Image: ${absoluteImgUrl}
 
 Please confirm availability & delivery details!`;
 
@@ -174,7 +205,7 @@ Please confirm availability & delivery details!`;
 🆔 Serial/ID: ${product.id}
 🎨 Color: ${selectedColor}
 💰 Price: ৳${product.price.toLocaleString()}
-🖼️ Image: ${absoluteImgUrl}`;
+🖼️ Selected Color Bag Image: ${absoluteImgUrl}`;
 
     window.open(`https://m.me/${pageId}?text=${encodeURIComponent(messageText)}`, "_blank");
   };
@@ -324,7 +355,7 @@ Please confirm availability & delivery details!`;
               {galleryImages.map((img, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setActiveImage(img)}
+                  onClick={() => handleSelectImageThumbnail(img)}
                   className={`relative w-20 h-20 rounded-2xl overflow-hidden bg-zinc-900 border-2 transition flex-shrink-0 cursor-pointer ${
                     activeImage === img ? "border-red-600 shadow-md scale-105" : "border-zinc-800 opacity-60 hover:opacity-100"
                   }`}
@@ -336,7 +367,7 @@ Please confirm availability & delivery details!`;
           )}
         </div>
 
-        {/* Right Column: Pricing, WhatsApp Ordering & Controls */}
+        {/* Right Column: Pricing, Color Variants, WhatsApp Ordering & Controls */}
         <div className="lg:col-span-5 space-y-6">
           
           <div className="flex items-center justify-between">
@@ -393,23 +424,45 @@ Please confirm availability & delivery details!`;
             {lang === "bn" && product.descriptionBn ? product.descriptionBn : product.description}
           </p>
 
-          {/* Color Selector */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-zinc-300 uppercase tracking-wider block">
-              Color Option: <span className="text-red-400 font-serif">{selectedColor}</span>
-            </label>
-            <div className="flex gap-2">
-              {[product.color, "Classic Black", "Crimson Red", "Sahara Tan"].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setSelectedColor(c)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold border transition cursor-pointer ${
-                    selectedColor === c ? "bg-red-600 border-red-500 text-white shadow-md" : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
+          {/* Multi-Color Variants Selector with Auto-Image Matching */}
+          <div className="space-y-3 p-4 rounded-2xl bg-zinc-900/60 border border-zinc-800">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5 font-serif">
+                <Palette className="w-4 h-4 text-red-500" />
+                <span>Select Color Variant:</span>
+              </label>
+              <span className="text-xs font-bold text-red-400 font-serif bg-red-950/60 px-2.5 py-0.5 rounded-full border border-red-900/60">
+                {selectedColor}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2.5 pt-1">
+              {colorVariants.map((cv, idx) => {
+                const isSelected = selectedColor === cv.colorName;
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleSelectColorVariant(cv)}
+                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition cursor-pointer ${
+                      isSelected
+                        ? "bg-red-600 border-red-500 text-white shadow-lg scale-105"
+                        : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700"
+                    }`}
+                  >
+                    <span
+                      className="w-3.5 h-3.5 rounded-full border border-white/20 shadow-sm flex-shrink-0"
+                      style={{ backgroundColor: cv.colorHex || "#DC2626" }}
+                    />
+                    <span>{cv.colorName}</span>
+                    {cv.isDefault && (
+                      <span className="text-[9px] bg-white/20 px-1.5 py-0.2 rounded font-sans">
+                        Default
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -439,7 +492,7 @@ Please confirm availability & delivery details!`;
               className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-lg transition flex items-center justify-center gap-2.5 cursor-pointer"
             >
               <MessageCircle className="w-5 h-5 fill-current" />
-              <span>Order via WhatsApp (ছবি ও বিবরণসহ হোয়াটসঅ্যাপে অর্ডার করুন)</span>
+              <span>Order via WhatsApp (ছবি ও কালারসহ হোয়াটসঅ্যাপে অর্ডার করুন)</span>
             </button>
 
             <button

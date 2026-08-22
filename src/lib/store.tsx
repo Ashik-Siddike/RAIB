@@ -16,6 +16,13 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface ColorVariant {
+  colorName: string;
+  colorHex?: string;
+  image: string;
+  isDefault?: boolean;
+}
+
 export interface ProductType {
   _id?: string;
   id: string;
@@ -29,6 +36,7 @@ export interface ProductType {
   image: string;
   secondaryImage?: string;
   images?: string[];
+  colorVariants?: ColorVariant[];
   description: string;
   descriptionBn?: string;
   rating: number;

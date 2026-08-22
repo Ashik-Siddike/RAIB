@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ProductType, useApp } from "@/lib/store";
+import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import {
@@ -35,7 +35,9 @@ import {
   ShieldCheck,
   Layout,
   Upload,
-  Image as LucideImage
+  Image as LucideImage,
+  Palette,
+  Check
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -131,7 +133,7 @@ export default function AdminPage() {
   const [slot4, setSlot4] = useState<ReelType>(DEFAULT_SETTINGS.reels[3]);
   const [slot5, setSlot5] = useState<ReelType>(DEFAULT_SETTINGS.reels[4]);
 
-  // New Product Form State & Multiple Images Support
+  // New Product Form State & Multiple Images & Color Variants Support
   const [newTitle, setNewTitle] = useState("");
   const [newTitleBn, setNewTitleBn] = useState("");
   const [newPrice, setNewPrice] = useState("");
@@ -141,6 +143,10 @@ export default function AdminPage() {
   const [newImage, setNewImage] = useState("/tote_bag_red_1786395433017.jpg");
   const [newSecondaryImage, setNewSecondaryImage] = useState("");
   const [newImages, setNewImages] = useState<string[]>([]);
+  const [newColorVariants, setNewColorVariants] = useState<ColorVariant[]>([
+    { colorName: "Crimson Red", colorHex: "#DC2626", image: "/tote_bag_red_1786395433017.jpg", isDefault: true },
+    { colorName: "Classic Black", colorHex: "#000000", image: "/crossbody_black_1786395824801.jpg", isDefault: false },
+  ]);
   const [newDesc, setNewDesc] = useState("");
   const [newDescBn, setNewDescBn] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -470,7 +476,10 @@ export default function AdminPage() {
       return;
     }
 
-    const allImages = [newImage, newSecondaryImage, ...newImages].filter(Boolean);
+    // Default image fallback from color variants
+    const defaultColorVar = newColorVariants.find((cv) => cv.isDefault) || newColorVariants[0];
+    const mainCover = defaultColorVar?.image || newImage;
+    const allImages = [mainCover, newSecondaryImage, ...newColorVariants.map((cv) => cv.image), ...newImages].filter(Boolean);
 
     const productPayload = {
       id: "raib-custom-" + Date.now(),
@@ -479,11 +488,12 @@ export default function AdminPage() {
       price: Number(newPrice),
       originalPrice: Number(newPrice) * 1.2,
       category: newCategory,
-      color: newColor,
+      color: defaultColorVar?.colorName || newColor,
       material: newMaterial,
-      image: newImage,
+      image: mainCover,
       secondaryImage: newSecondaryImage || undefined,
       images: allImages,
+      colorVariants: newColorVariants,
       description: newDesc || "Luxury handcrafted RAIB leather bag.",
       descriptionBn: newDescBn || newDesc || "বিলাসবহুল খাঁটি চামড়ার ব্যাগ।",
       rating: 5.0,
@@ -500,7 +510,7 @@ export default function AdminPage() {
       const data = await res.json();
       if (data.success) {
         setProducts([data.product, ...products]);
-        showToast("New Product Published to MongoDB Atlas!");
+        showToast("New Product & Color Variants Published to MongoDB Atlas!");
         setNewTitle("");
         setNewPrice("");
         setNewImages([]);
@@ -664,7 +674,7 @@ export default function AdminPage() {
             }`}
           >
             <Plus className="w-4 h-4" />
-            <span>Add Bag & Images</span>
+            <span>Add Bag & Color Variants</span>
           </button>
 
           <button
@@ -1314,7 +1324,7 @@ export default function AdminPage() {
               className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Add New Bag & Images</span>
+              <span>Add New Bag & Color Variants</span>
             </button>
           </div>
           
@@ -1328,13 +1338,13 @@ export default function AdminPage() {
                   <div className="space-y-1">
                     <h4 className="text-xs font-bold text-white line-clamp-1 font-serif">{p.name}</h4>
                     <p className="text-[10px] text-zinc-400">{p.category} • ৳{p.price?.toLocaleString()}</p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
                         In Stock
                       </span>
-                      {p.images && p.images.length > 0 && (
-                        <span className="text-[9px] text-amber-400 font-bold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">
-                          {p.images.length} Images
+                      {p.colorVariants && p.colorVariants.length > 0 && (
+                        <span className="text-[9px] text-purple-400 font-bold bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800">
+                          {p.colorVariants.length} Colors
                         </span>
                       )}
                     </div>
@@ -1354,13 +1364,13 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 6: Add New Product Form with Direct File Upload & Multiple Images */}
+      {/* Tab 6: Add New Product Form with Color Variants & File Upload */}
       {activeTab === "add" && (
         <div className="max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6">
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
             <h3 className="text-xl font-bold text-white font-serif flex items-center gap-2">
               <Upload className="w-5 h-5 text-red-500" />
-              Create & Publish Handbag Product (ডাইরেক্ট ফটো আপলোড ও মাল্টিপল ইমেজ)
+              Create & Publish Handbag Product (ডাইরেক্ট ফটো আপলোড ও মাল্টি-কালার ভ্যারিয়েন্ট)
             </h3>
           </div>
 
@@ -1420,107 +1430,166 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="text-zinc-400 block mb-1">Color</label>
+                <label className="text-zinc-400 block mb-1">Material</label>
                 <input
                   type="text"
-                  value={newColor}
-                  onChange={(e) => setNewColor(e.target.value)}
-                  placeholder="Ruby Red"
+                  value={newMaterial}
+                  onChange={(e) => setNewMaterial(e.target.value)}
+                  placeholder="Italian Leather"
                   className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
                 />
               </div>
             </div>
 
-            {/* Direct Main Image File Upload Box */}
-            <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
-              <label className="font-bold text-white block">Main Product Cover Image *</label>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                {newImage && (
-                  <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
-                    <Image src={newImage} alt="Main Preview" fill className="object-cover" />
-                  </div>
-                )}
-
-                <div className="flex-1 space-y-2 w-full">
-                  <div className="flex items-center gap-2">
-                    <label className="px-4 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl cursor-pointer transition flex items-center gap-2">
-                      <Upload className="w-4 h-4" />
-                      <span>{isUploading ? "Uploading..." : "Upload Image File"}</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const url = await uploadImageFile(file);
-                            if (url) setNewImage(url);
-                          }
-                        }}
-                      />
-                    </label>
-                    <span className="text-[10px] text-zinc-500">or enter image URL directly</span>
-                  </div>
-
-                  <input
-                    type="text"
-                    value={newImage}
-                    onChange={(e) => setNewImage(e.target.value)}
-                    placeholder="https://... or data:image/..."
-                    className="w-full px-3.5 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Multiple Additional Gallery Images Upload Box */}
+            {/* Color Variants Manager Box */}
             <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-bold text-amber-400 text-xs flex items-center gap-1.5 font-serif">
-                    <LucideImage className="w-4 h-4" />
-                    Multiple Product Images (প্রোডাক্টের একাধিক ছবি যোগ করুন)
+                    <Palette className="w-4 h-4 text-red-500" />
+                    Product Color Variants & Specific Bag Photos (কালার ভ্যারিয়েন্ট)
                   </h4>
-                  <p className="text-[11px] text-zinc-400">Add multiple high-resolution photos for the product gallery slider</p>
+                  <p className="text-[11px] text-zinc-400">Add multiple colors and assign a photo for each color. Mark 1 color as Default.</p>
                 </div>
 
-                <label className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl cursor-pointer transition flex items-center gap-1 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setNewColorVariants([
+                      ...newColorVariants,
+                      { colorName: "Emerald Green", colorHex: "#059669", image: "/tote_bag_red_1786395433017.jpg", isDefault: false },
+                    ])
+                  }
+                  className="px-3.5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition flex items-center gap-1 text-[11px] cursor-pointer"
+                >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>Add Photo File</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const url = await uploadImageFile(file);
-                        if (url) setNewImages([...newImages, url]);
-                      }
-                    }}
-                  />
-                </label>
+                  <span>Add Color Variant</span>
+                </button>
               </div>
 
-              {/* Thumbnails Gallery List */}
-              {newImages.length > 0 && (
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 pt-2">
-                  {newImages.map((img, idx) => (
-                    <div key={idx} className="relative group w-full aspect-square rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800">
-                      <Image src={img} alt={`Gallery ${idx + 1}`} fill className="object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => setNewImages(newImages.filter((_, i) => i !== idx))}
-                        className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full opacity-90 hover:opacity-100 transition cursor-pointer"
-                        title="Remove Image"
-                      >
-                        <XCircle className="w-3.5 h-3.5" />
-                      </button>
+              <div className="space-y-3">
+                {newColorVariants.map((variant, idx) => (
+                  <div key={idx} className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-white text-xs font-mono">Color Variant #{idx + 1}</span>
+
+                      <div className="flex items-center gap-3">
+                        <label className="flex items-center gap-1 text-[11px] text-zinc-300 font-bold cursor-pointer">
+                          <input
+                            type="radio"
+                            name="defaultColorVariant"
+                            checked={!!variant.isDefault}
+                            onChange={() => {
+                              setNewColorVariants(
+                                newColorVariants.map((cv, i) => ({
+                                  ...cv,
+                                  isDefault: i === idx,
+                                }))
+                              );
+                            }}
+                            className="accent-red-600"
+                          />
+                          <span>Default Color (ডিফল্ট কালার)</span>
+                        </label>
+
+                        {newColorVariants.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => setNewColorVariants(newColorVariants.filter((_, i) => i !== idx))}
+                            className="p-1 text-zinc-500 hover:text-red-400 transition cursor-pointer"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-zinc-400 block mb-1">Color Name *</label>
+                        <input
+                          type="text"
+                          required
+                          value={variant.colorName}
+                          onChange={(e) => {
+                            const updated = [...newColorVariants];
+                            updated[idx].colorName = e.target.value;
+                            setNewColorVariants(updated);
+                          }}
+                          placeholder="e.g. Crimson Red"
+                          className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs outline-none focus:border-red-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-zinc-400 block mb-1">Color Picker / Hex Code</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={variant.colorHex || "#DC2626"}
+                            onChange={(e) => {
+                              const updated = [...newColorVariants];
+                              updated[idx].colorHex = e.target.value;
+                              setNewColorVariants(updated);
+                            }}
+                            className="w-8 h-8 rounded border-none bg-transparent cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={variant.colorHex || "#DC2626"}
+                            onChange={(e) => {
+                              const updated = [...newColorVariants];
+                              updated[idx].colorHex = e.target.value;
+                              setNewColorVariants(updated);
+                            }}
+                            className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs font-mono outline-none focus:border-red-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-zinc-400 block mb-1">Bag Image for this Color</label>
+                        <div className="flex items-center gap-2">
+                          <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-lg cursor-pointer text-[10px] flex items-center gap-1">
+                            <Upload className="w-3 h-3" />
+                            <span>Upload</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const url = await uploadImageFile(file);
+                                  if (url) {
+                                    const updated = [...newColorVariants];
+                                    updated[idx].image = url;
+                                    setNewColorVariants(updated);
+                                  }
+                                }
+                              }}
+                            />
+                          </label>
+
+                          <input
+                            type="text"
+                            required
+                            value={variant.image}
+                            onChange={(e) => {
+                              const updated = [...newColorVariants];
+                              updated[idx].image = e.target.value;
+                              setNewColorVariants(updated);
+                            }}
+                            placeholder="Image URL..."
+                            className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs font-mono outline-none focus:border-red-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>
@@ -1539,7 +1608,7 @@ export default function AdminPage() {
               disabled={isUploading}
               className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
             >
-              Publish Bag to MongoDB
+              Publish Bag & Color Variants to MongoDB
             </button>
           </form>
         </div>

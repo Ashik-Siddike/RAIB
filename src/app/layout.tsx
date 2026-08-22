@@ -159,7 +159,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="light scroll-smooth">
       <head>
-        <link rel="icon" href="/main-logo.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/main-logo.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/main-logo.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/main-logo.png" />
+        <link rel="shortcut icon" href="/main-logo.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(googleWebSiteLd) }}
