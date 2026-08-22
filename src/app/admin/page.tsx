@@ -49,7 +49,7 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState("");
   const [authError, setAuthError] = useState("");
 
-  const [products, setProducts] = useState<ProductType[]>(SAMPLE_PRODUCTS);
+  const [products, setProducts] = useState<ProductType[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState({ totalViews: 0, todayViews: 0 });
   const [activeTab, setActiveTab] = useState<"orders" | "accounting" | "pos" | "products" | "add" | "reels" | "settings">("orders");

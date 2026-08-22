@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Settings from "@/models/Settings";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 
 export async function GET(request: Request) {
@@ -10,8 +11,25 @@ export async function GET(request: Request) {
     const category = searchParams.get("category");
     const id = searchParams.get("id");
 
+    // Check if initial seeding has been executed
+    let systemSettings = await Settings.findOne();
+    if (!systemSettings) {
+      systemSettings = await Settings.create({ hasSeededProducts: false });
+    }
+
+    // Auto-seed SAMPLE_PRODUCTS into MongoDB ONLY ONCE on initial deployment if never seeded before
+    if (!systemSettings.hasSeededProducts) {
+      const count = await Product.countDocuments();
+      if (count === 0) {
+        await Product.insertMany(SAMPLE_PRODUCTS);
+        await Settings.updateOne({ _id: systemSettings._id }, { $set: { hasSeededProducts: true } });
+      } else {
+        await Settings.updateOne({ _id: systemSettings._id }, { $set: { hasSeededProducts: true } });
+      }
+    }
+
     if (id) {
-      const product = await Product.findOne({ id }) || SAMPLE_PRODUCTS.find(p => p.id === id);
+      const product = await Product.findOne({ id });
       return NextResponse.json({ success: true, product });
     }
 
@@ -24,16 +42,13 @@ export async function GET(request: Request) {
       }
     }
 
-    let products = await Product.find(query).sort({ createdAt: -1 });
-
-    if (products.length === 0) {
-      return NextResponse.json({ success: true, products: SAMPLE_PRODUCTS, source: "fallback" });
-    }
+    // Always fetch directly from MongoDB database
+    const products = await Product.find(query).sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, products, source: "mongodb" });
   } catch (error: any) {
     console.error("MongoDB GET Products Error:", error);
-    return NextResponse.json({ success: true, products: SAMPLE_PRODUCTS, source: "fallback" });
+    return NextResponse.json({ success: false, error: error.message, products: [] }, { status: 500 });
   }
 }
 
@@ -53,6 +68,8 @@ export async function POST(request: Request) {
       material: body.material || "Italian Leather",
       image: body.image || "/tote_bag_red_1786395433017.jpg",
       secondaryImage: body.secondaryImage || body.image,
+      images: body.images || [body.image],
+      colorVariants: body.colorVariants || [],
       description: body.description || "Handcrafted luxury leather bag.",
       descriptionBn: body.descriptionBn || body.description,
       rating: body.rating || 5.0,
@@ -98,8 +115,12 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, error: "Product ID required" }, { status: 400 });
     }
 
-    await Product.deleteOne({ id });
-    return NextResponse.json({ success: true, message: `Product ${id} deleted` });
+    const deleteResult = await Product.deleteOne({ id });
+    return NextResponse.json({
+      success: true,
+      deletedCount: deleteResult.deletedCount,
+      message: `Product ${id} permanently deleted from MongoDB`,
+    });
   } catch (error: any) {
     console.error("MongoDB DELETE Product Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

@@ -11,6 +11,7 @@ export interface IReel {
 
 export interface ISettings extends Document {
   // Payment & Courier Numbers
+  hasSeededProducts?: boolean;
   bkashNumber: string;
   nagadNumber: string;
   rocketNumber: string;
@@ -93,6 +94,7 @@ const ReelSchema = new Schema<IReel>({
 
 const SettingsSchema = new Schema<ISettings>(
   {
+    hasSeededProducts: { type: Boolean, default: false },
     bkashNumber: { type: String, default: "01700-000000" },
     nagadNumber: { type: String, default: "01800-000000" },
     rocketNumber: { type: String, default: "01900-000000" },
