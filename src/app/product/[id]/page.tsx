@@ -241,7 +241,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       const data = await res.json();
       if (data.success) {
         setExpressSuccess(data.order);
-        showToast("Express Order Submitted Successfully!");
+        showToast("Order Submitted! Redirecting to WhatsApp...");
+
+        const waUrl = createWhatsAppOrderLink({
+          whatsappNumber: settings?.whatsappNumber || "+8801700000000",
+          productName: product.name,
+          productId: product.id,
+          colorName: selectedColor,
+          price: product.price,
+          imageUrl: activeImage,
+          productUrl: typeof window !== "undefined" ? window.location.href : `https://raib.site/product/${product.id}`,
+          customerName: expressName,
+          customerAddress: `${expressAddress}, ${expressDistrict}`,
+        });
+
+        window.open(waUrl, "_blank");
       }
     } catch (err) {
       showToast("Order placement failed.");

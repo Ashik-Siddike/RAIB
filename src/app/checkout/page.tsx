@@ -101,7 +101,37 @@ export default function CheckoutPage() {
       if (data.success) {
         setOrderConfirmed(data.order);
         clearCart();
-        showToast(lang === "en" ? "Order Placed Successfully!" : "অর্ডার সফলভাবে সম্পন্ন হয়েছে!");
+        showToast(lang === "en" ? "Order Placed! Redirecting to WhatsApp..." : "অর্ডার সম্পন্ন হয়েছে! হোয়াটসঅ্যাপে পাঠাতে ওপেন হচ্ছে...");
+
+        let rawPhone = settings?.whatsappNumber || "+8801700000000";
+        let cleanPhone = rawPhone.replace(/\D/g, "");
+        if (cleanPhone.startsWith("01")) cleanPhone = "88" + cleanPhone;
+
+        const itemsSummary = cart
+          .map((item, idx) => {
+            const absoluteImg = item.image.startsWith("http")
+              ? item.image
+              : `https://raib.site${item.image.startsWith("/") ? "" : "/"}${item.image}`;
+            return `${idx + 1}. 👜 *${item.name}*\n   🆔 Code: ${item.id}\n   🎨 Color: ${item.color}\n   🔢 Qty: x${item.quantity}\n   💰 Price: ৳${(item.price * item.quantity).toLocaleString()}\n   🖼️ Photo: ${absoluteImg}`;
+          })
+          .join("\n\n");
+
+        const messageText = `🛍️ *RAIB LUXURY LEATHER - NEW CHECKOUT ORDER*
+
+👤 *Customer Name:* ${customerName}
+📞 *Phone:* ${customerPhone}
+📍 *Delivery Address:* ${address}, ${district} ${thana ? `(${thana})` : ""}
+
+${itemsSummary}
+
+---------------------------
+💰 *Total Payable Amount:* ৳${totalPayable.toLocaleString()}
+📦 *Payment Method:* ${paymentMethod} (COD)
+
+_Please confirm my order & send delivery details!_`;
+
+        const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
+        window.open(waUrl, "_blank");
       }
     } catch (err) {
       console.error("Order submit failed:", err);
