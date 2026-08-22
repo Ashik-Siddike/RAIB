@@ -28,6 +28,7 @@ export interface ProductType {
   material: string;
   image: string;
   secondaryImage?: string;
+  images?: string[];
   description: string;
   descriptionBn?: string;
   rating: number;

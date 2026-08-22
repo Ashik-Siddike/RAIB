@@ -4,11 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useApp } from "@/lib/store";
+import { useSettings } from "@/lib/settingsStore";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Truck, Tag, Sparkles } from "lucide-react";
+import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Truck, Tag, Sparkles, MessageCircle } from "lucide-react";
 
 export function CartDrawer() {
   const { lang, t, cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal, showToast } = useApp();
+  const { settings } = useSettings();
+
   const [promoCode, setPromoCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);
 
@@ -26,6 +29,31 @@ export function CartDrawer() {
   };
 
   const finalTotal = Math.max(0, cartTotal - appliedDiscount);
+
+  const handleWhatsAppOrderCart = () => {
+    if (cart.length === 0) return;
+    const cleanNum = (settings?.whatsappNumber || "+8801700000000").replace(/[^0-9]/g, "");
+
+    const itemsSummary = cart
+      .map((item, idx) => {
+        const absoluteImg = item.image.startsWith("http")
+          ? item.image
+          : `https://raib.site${item.image.startsWith("/") ? "" : "/"}${item.image}`;
+        return `${idx + 1}. 👜 ${item.name} (${item.color}) x${item.quantity} = ৳${(item.price * item.quantity).toLocaleString()}\n   🖼️ Image: ${absoluteImg}`;
+      })
+      .join("\n\n");
+
+    const messageText = `Hi RAIB Team! I want to order all items in my cart via WhatsApp:
+
+${itemsSummary}
+
+---------------------------
+💰 Total Amount: ৳${finalTotal.toLocaleString()}
+
+Please confirm my order & send delivery details!`;
+
+    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(messageText)}`, "_blank");
+  };
 
   return (
     <AnimatePresence>
@@ -56,7 +84,7 @@ export function CartDrawer() {
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition"
+                className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -93,7 +121,7 @@ export function CartDrawer() {
                   <p className="text-zinc-400 text-sm font-medium">{t("cartEmpty")}</p>
                   <button
                     onClick={() => setIsCartOpen(false)}
-                    className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-red-500 transition"
+                    className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-red-500 transition cursor-pointer"
                   >
                     {t("cartStartShopping")}
                   </button>
@@ -121,14 +149,14 @@ export function CartDrawer() {
                         <div className="flex items-center border border-zinc-800 rounded-lg bg-zinc-900 overflow-hidden text-xs">
                           <button
                             onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)}
-                            className="p-1.5 hover:bg-zinc-800 text-zinc-300"
+                            className="p-1.5 hover:bg-zinc-800 text-zinc-300 cursor-pointer"
                           >
                             <Minus className="w-3 h-3" />
                           </button>
                           <span className="px-3 font-bold text-white">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)}
-                            className="p-1.5 hover:bg-zinc-800 text-zinc-300"
+                            className="p-1.5 hover:bg-zinc-800 text-zinc-300 cursor-pointer"
                           >
                             <Plus className="w-3 h-3" />
                           </button>
@@ -136,7 +164,7 @@ export function CartDrawer() {
 
                         <button
                           onClick={() => removeFromCart(item.id, item.color)}
-                          className="p-1 text-zinc-500 hover:text-red-500 transition"
+                          className="p-1 text-zinc-500 hover:text-red-500 transition cursor-pointer"
                           title="Remove"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -166,7 +194,7 @@ export function CartDrawer() {
                   </div>
                   <button
                     onClick={handleApplyPromo}
-                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold rounded-xl transition"
+                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-bold rounded-xl transition cursor-pointer"
                   >
                     {t("apply")}
                   </button>
@@ -190,16 +218,26 @@ export function CartDrawer() {
                   </div>
                 </div>
 
-                {/* Checkout Link */}
-                <Link
-                  href="/checkout"
-                  onClick={() => setIsCartOpen(false)}
-                  className="w-full py-4 bg-gradient-to-r from-red-600 via-red-700 to-zinc-900 hover:from-red-500 hover:to-zinc-800 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-xl shadow-red-950/60 transition-all flex items-center justify-center gap-2 group"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>{t("checkoutButton")}</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                {/* Checkout Link & WhatsApp Order Option */}
+                <div className="space-y-2">
+                  <Link
+                    href="/checkout"
+                    onClick={() => setIsCartOpen(false)}
+                    className="w-full py-4 bg-gradient-to-r from-red-600 via-red-700 to-zinc-900 hover:from-red-500 hover:to-zinc-800 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-xl shadow-red-950/60 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <span>{t("checkoutButton")}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <button
+                    onClick={handleWhatsAppOrderCart}
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-current" />
+                    <span>Order All via WhatsApp (হোয়াটসঅ্যাপে বুক করুন)</span>
+                  </button>
+                </div>
               </div>
             )}
           </motion.div>

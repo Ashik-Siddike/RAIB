@@ -33,7 +33,9 @@ import {
   Link as LinkIcon,
   Megaphone,
   ShieldCheck,
-  Layout
+  Layout,
+  Upload,
+  Image as LucideImage
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -129,7 +131,7 @@ export default function AdminPage() {
   const [slot4, setSlot4] = useState<ReelType>(DEFAULT_SETTINGS.reels[3]);
   const [slot5, setSlot5] = useState<ReelType>(DEFAULT_SETTINGS.reels[4]);
 
-  // New Product Form State
+  // New Product Form State & Multiple Images Support
   const [newTitle, setNewTitle] = useState("");
   const [newTitleBn, setNewTitleBn] = useState("");
   const [newPrice, setNewPrice] = useState("");
@@ -137,7 +139,11 @@ export default function AdminPage() {
   const [newColor, setNewColor] = useState("Black");
   const [newMaterial, setNewMaterial] = useState("Italian Leather");
   const [newImage, setNewImage] = useState("/tote_bag_red_1786395433017.jpg");
+  const [newSecondaryImage, setNewSecondaryImage] = useState("");
+  const [newImages, setNewImages] = useState<string[]>([]);
   const [newDesc, setNewDesc] = useState("");
+  const [newDescBn, setNewDescBn] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   // POS Manual Order Form State
   const [posCustomerName, setPosCustomerName] = useState("");
@@ -146,6 +152,35 @@ export default function AdminPage() {
   const [posSelectedProduct, setPosSelectedProduct] = useState(products[0]?.id || "");
   const [posPaymentMethod, setPosPaymentMethod] = useState("COD");
   const [posTrxId, setPosTrxId] = useState("MANUAL-POS");
+
+  // Direct File Upload Helper Function
+  const uploadImageFile = async (file: File): Promise<string | null> => {
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success && data.url) {
+        showToast("Image Uploaded Successfully!");
+        return data.url;
+      } else {
+        showToast(data.error || "Failed to upload image.");
+        return null;
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      showToast("Error uploading file.");
+      return null;
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // Sync settings when loaded
   useEffect(() => {
@@ -435,6 +470,8 @@ export default function AdminPage() {
       return;
     }
 
+    const allImages = [newImage, newSecondaryImage, ...newImages].filter(Boolean);
+
     const productPayload = {
       id: "raib-custom-" + Date.now(),
       name: newTitle,
@@ -445,7 +482,10 @@ export default function AdminPage() {
       color: newColor,
       material: newMaterial,
       image: newImage,
+      secondaryImage: newSecondaryImage || undefined,
+      images: allImages,
       description: newDesc || "Luxury handcrafted RAIB leather bag.",
+      descriptionBn: newDescBn || newDesc || "বিলাসবহুল খাঁটি চামড়ার ব্যাগ।",
       rating: 5.0,
       reviewCount: 1,
       isNewArrival: true,
@@ -463,6 +503,7 @@ export default function AdminPage() {
         showToast("New Product Published to MongoDB Atlas!");
         setNewTitle("");
         setNewPrice("");
+        setNewImages([]);
         setActiveTab("products");
       }
     } catch (err) {
@@ -593,7 +634,7 @@ export default function AdminPage() {
             }`}
           >
             <Video className="w-4 h-4" />
-            <span>Reels Manager (5 Slots)</span>
+            <span>Reels Manager</span>
           </button>
 
           <button
@@ -623,7 +664,7 @@ export default function AdminPage() {
             }`}
           >
             <Plus className="w-4 h-4" />
-            <span>Add Bag</span>
+            <span>Add Bag & Images</span>
           </button>
 
           <button
@@ -633,7 +674,7 @@ export default function AdminPage() {
             }`}
           >
             <Settings className="w-4 h-4" />
-            <span>Section Titles, Toggles & Settings</span>
+            <span>Settings & Hero Upload</span>
           </button>
         </div>
       </div>
@@ -1273,7 +1314,7 @@ export default function AdminPage() {
               className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Add New Bag</span>
+              <span>Add New Bag & Images</span>
             </button>
           </div>
           
@@ -1287,9 +1328,16 @@ export default function AdminPage() {
                   <div className="space-y-1">
                     <h4 className="text-xs font-bold text-white line-clamp-1 font-serif">{p.name}</h4>
                     <p className="text-[10px] text-zinc-400">{p.category} • ৳{p.price?.toLocaleString()}</p>
-                    <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
-                      In Stock
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                        In Stock
+                      </span>
+                      {p.images && p.images.length > 0 && (
+                        <span className="text-[9px] text-amber-400 font-bold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">
+                          {p.images.length} Images
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1306,12 +1354,17 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 6: Add New Product Form */}
+      {/* Tab 6: Add New Product Form with Direct File Upload & Multiple Images */}
       {activeTab === "add" && (
-        <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6">
-          <h3 className="text-xl font-bold text-white font-serif">Create & Publish Handbag Product</h3>
+        <div className="max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl bg-zinc-900 border border-zinc-800 space-y-6">
+          <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+            <h3 className="text-xl font-bold text-white font-serif flex items-center gap-2">
+              <Upload className="w-5 h-5 text-red-500" />
+              Create & Publish Handbag Product (ডাইরেক্ট ফটো আপলোড ও মাল্টিপল ইমেজ)
+            </h3>
+          </div>
 
-          <form onSubmit={handleAddProduct} className="space-y-4 text-xs">
+          <form onSubmit={handleAddProduct} className="space-y-6 text-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-zinc-400 block mb-1">Title (English) *</label>
@@ -1378,18 +1431,112 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Direct Main Image File Upload Box */}
+            <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
+              <label className="font-bold text-white block">Main Product Cover Image *</label>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                {newImage && (
+                  <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
+                    <Image src={newImage} alt="Main Preview" fill className="object-cover" />
+                  </div>
+                )}
+
+                <div className="flex-1 space-y-2 w-full">
+                  <div className="flex items-center gap-2">
+                    <label className="px-4 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl cursor-pointer transition flex items-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      <span>{isUploading ? "Uploading..." : "Upload Image File"}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const url = await uploadImageFile(file);
+                            if (url) setNewImage(url);
+                          }
+                        }}
+                      />
+                    </label>
+                    <span className="text-[10px] text-zinc-500">or enter image URL directly</span>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    placeholder="https://... or data:image/..."
+                    className="w-full px-3.5 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Multiple Additional Gallery Images Upload Box */}
+            <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-amber-400 text-xs flex items-center gap-1.5 font-serif">
+                    <LucideImage className="w-4 h-4" />
+                    Multiple Product Images (প্রোডাক্টের একাধিক ছবি যোগ করুন)
+                  </h4>
+                  <p className="text-[11px] text-zinc-400">Add multiple high-resolution photos for the product gallery slider</p>
+                </div>
+
+                <label className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl cursor-pointer transition flex items-center gap-1 text-[11px]">
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Photo File</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const url = await uploadImageFile(file);
+                        if (url) setNewImages([...newImages, url]);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+
+              {/* Thumbnails Gallery List */}
+              {newImages.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 pt-2">
+                  {newImages.map((img, idx) => (
+                    <div key={idx} className="relative group w-full aspect-square rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800">
+                      <Image src={img} alt={`Gallery ${idx + 1}`} fill className="object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setNewImages(newImages.filter((_, i) => i !== idx))}
+                        className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full opacity-90 hover:opacity-100 transition cursor-pointer"
+                        title="Remove Image"
+                      >
+                        <XCircle className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div>
-              <label className="text-zinc-400 block mb-1">Image URL</label>
-              <input
-                type="text"
-                value={newImage}
-                onChange={(e) => setNewImage(e.target.value)}
-                className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
+              <label className="text-zinc-400 block mb-1">Product Description (English)</label>
+              <textarea
+                rows={3}
+                value={newDesc}
+                onChange={(e) => setNewDesc(e.target.value)}
+                placeholder="Detailed features, leather finish, dimensions..."
+                className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
               />
             </div>
 
             <button
               type="submit"
+              disabled={isUploading}
               className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
             >
               Publish Bag to MongoDB
@@ -1505,23 +1652,50 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* 3. Hero Section Customizer */}
+            {/* 3. Hero Section Customizer with Direct Image File Upload */}
             <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
               <h4 className="font-bold text-white uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
                 <ImageIcon className="w-4 h-4 text-red-500" />
-                3. Hero Banner Section Customizer (হিরো ব্যাকগ্রাউন্ড ও টেক্সট)
+                3. Hero Banner Section Customizer (হিরো ব্যাকগ্রাউন্ড ফটো আপলোড ও টেক্সট)
               </h4>
 
               <div className="space-y-3">
-                <div>
-                  <label className="text-zinc-400 block mb-1">Hero Background Image URL</label>
-                  <input
-                    type="text"
-                    value={heroImage}
-                    onChange={(e) => setHeroImage(e.target.value)}
-                    placeholder="/hero-luxury-bg.jpg"
-                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono"
-                  />
+                <div className="space-y-2">
+                  <label className="text-zinc-400 block font-bold">Hero Background Image</label>
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    {heroImage && (
+                      <div className="relative w-28 h-20 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
+                        <Image src={heroImage} alt="Hero Preview" fill className="object-cover" />
+                      </div>
+                    )}
+
+                    <div className="flex-1 space-y-2 w-full">
+                      <label className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl cursor-pointer transition inline-flex items-center gap-2 text-xs">
+                        <Upload className="w-4 h-4" />
+                        <span>Upload Hero Image File</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const url = await uploadImageFile(file);
+                              if (url) setHeroImage(url);
+                            }
+                          }}
+                        />
+                      </label>
+
+                      <input
+                        type="text"
+                        value={heroImage}
+                        onChange={(e) => setHeroImage(e.target.value)}
+                        placeholder="/hero-luxury-bg.jpg"
+                        className="w-full px-3.5 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

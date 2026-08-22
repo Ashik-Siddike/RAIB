@@ -11,6 +11,7 @@ export interface IProduct extends Document {
   material: string;
   image: string;
   secondaryImage?: string;
+  images?: string[];
   description: string;
   descriptionBn?: string;
   rating: number;
@@ -32,6 +33,7 @@ const ProductSchema: Schema = new Schema(
     material: { type: String, required: true },
     image: { type: String, required: true },
     secondaryImage: { type: String },
+    images: { type: [String], default: [] },
     description: { type: String, required: true },
     descriptionBn: { type: String },
     rating: { type: Number, default: 5 },

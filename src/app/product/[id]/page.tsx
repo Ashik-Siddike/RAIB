@@ -23,7 +23,8 @@ import {
   MessageSquare,
   Award,
   CheckCircle2,
-  ThumbsUp
+  ThumbsUp,
+  MessageCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -128,16 +129,55 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const isWishlisted = wishlist.includes(product.id);
+  
+  // Multiple images gallery support
   const galleryImages = [
+    ...(product.images && product.images.length > 0 ? product.images : []),
     product.image,
-    product.secondaryImage || product.image,
-    "/tote_bag_red_1786395433017.jpg",
-    "/crossbody_black_1786395824801.jpg",
-  ].filter(Boolean);
+    product.secondaryImage,
+  ].filter((img, index, self) => Boolean(img) && self.indexOf(img) === index) as string[];
 
   const relatedProducts = SAMPLE_PRODUCTS.filter(
     (p) => p.id !== product.id && p.category === product.category
   ).slice(0, 3);
+
+  // Direct WhatsApp Order Trigger with Product Image & Details
+  const handleWhatsAppOrder = () => {
+    const cleanNum = (settings?.whatsappNumber || "+8801700000000").replace(/[^0-9]/g, "");
+    const absoluteImgUrl = activeImage.startsWith("http")
+      ? activeImage
+      : `https://raib.site${activeImage.startsWith("/") ? "" : "/"}${activeImage}`;
+
+    const messageText = `Hi RAIB Team! I would like to order this bag via WhatsApp:
+
+👜 Product: ${product.name}
+🆔 Serial/ID: ${product.id}
+🎨 Color: ${selectedColor}
+💰 Price: ৳${product.price.toLocaleString()}
+🖼️ Product Image: ${absoluteImgUrl}
+
+Please confirm availability & delivery details!`;
+
+    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(messageText)}`, "_blank");
+  };
+
+  // Direct Messenger Order Trigger
+  const handleMessengerOrder = () => {
+    const pageId = settings?.messengerPageId || "raib.official";
+    const absoluteImgUrl = activeImage.startsWith("http")
+      ? activeImage
+      : `https://raib.site${activeImage.startsWith("/") ? "" : "/"}${activeImage}`;
+
+    const messageText = `Hi RAIB Team! I want to order this bag:
+
+👜 Product: ${product.name}
+🆔 Serial/ID: ${product.id}
+🎨 Color: ${selectedColor}
+💰 Price: ৳${product.price.toLocaleString()}
+🖼️ Image: ${absoluteImgUrl}`;
+
+    window.open(`https://m.me/${pageId}?text=${encodeURIComponent(messageText)}`, "_blank");
+  };
 
   // Direct Express Order Submit
   const handleExpressOrder = async (e: React.FormEvent) => {
@@ -249,7 +289,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       {/* 2. Main Product Display Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         
-        {/* Left Column: Image Gallery */}
+        {/* Left Column: Interactive Image Gallery */}
         <div className="lg:col-span-7 space-y-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -278,23 +318,25 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </span>
           </motion.div>
 
-          {/* Thumbnails Selector */}
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {galleryImages.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveImage(img)}
-                className={`relative w-20 h-20 rounded-2xl overflow-hidden bg-zinc-900 border-2 transition flex-shrink-0 cursor-pointer ${
-                  activeImage === img ? "border-red-600 shadow-md scale-105" : "border-zinc-800 opacity-60 hover:opacity-100"
-                }`}
-              >
-                <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-cover" />
-              </button>
-            ))}
-          </div>
+          {/* Interactive Multiple Image Gallery Thumbnails Selector */}
+          {galleryImages.length > 1 && (
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {galleryImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(img)}
+                  className={`relative w-20 h-20 rounded-2xl overflow-hidden bg-zinc-900 border-2 transition flex-shrink-0 cursor-pointer ${
+                    activeImage === img ? "border-red-600 shadow-md scale-105" : "border-zinc-800 opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <Image src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Right Column: Pricing & Purchasing Controls */}
+        {/* Right Column: Pricing, WhatsApp Ordering & Controls */}
         <div className="lg:col-span-5 space-y-6">
           
           <div className="flex items-center justify-between">
@@ -371,7 +413,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
-          {/* Call to Action Solid Color Buttons */}
+          {/* Regular Add to Cart & Express Cash-on-Delivery Order Button */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               onClick={() => addToCart(product, selectedColor, quantity)}
@@ -388,6 +430,25 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               <span>১-ক্লিকে এখনই অর্ডার করুন</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
+          </div>
+
+          {/* Direct WhatsApp Order & Messenger Order Action Buttons */}
+          <div className="space-y-2.5 pt-2 border-t border-zinc-900">
+            <button
+              onClick={handleWhatsAppOrder}
+              className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-lg transition flex items-center justify-center gap-2.5 cursor-pointer"
+            >
+              <MessageCircle className="w-5 h-5 fill-current" />
+              <span>Order via WhatsApp (ছবি ও বিবরণসহ হোয়াটসঅ্যাপে অর্ডার করুন)</span>
+            </button>
+
+            <button
+              onClick={handleMessengerOrder}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded-2xl shadow-md transition flex items-center justify-center gap-2.5 cursor-pointer"
+            >
+              <MessageSquare className="w-4 h-4 fill-current" />
+              <span>Order via Messenger (মেসেঞ্জারে সরাসরি অর্ডার করুন)</span>
+            </button>
           </div>
 
         </div>
