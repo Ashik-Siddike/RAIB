@@ -18,6 +18,8 @@ export interface ISettings extends Document {
   facebookPixelId: string;
   whatsappNumber: string;
   messengerPageId: string;
+  facebookPageUrl?: string;
+  instagramUrl?: string;
   deliveryCharge: number;
   adminPassword?: string;
 
@@ -101,6 +103,8 @@ const SettingsSchema = new Schema<ISettings>(
     facebookPixelId: { type: String, default: "" },
     whatsappNumber: { type: String, default: "+8801700000000" },
     messengerPageId: { type: String, default: "raib.official" },
+    facebookPageUrl: { type: String, default: "https://facebook.com/raib.official" },
+    instagramUrl: { type: String, default: "https://instagram.com/raib.official" },
     deliveryCharge: { type: Number, default: 120 },
     adminPassword: { type: String, default: "admin" },
 

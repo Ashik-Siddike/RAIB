@@ -65,6 +65,8 @@ export default function AdminPage() {
   const [fbPixel, setFbPixel] = useState(settings.facebookPixelId || "");
   const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber || "+8801700000000");
   const [messenger, setMessenger] = useState(settings.messengerPageId || "raib.official");
+  const [fbPageUrl, setFbPageUrl] = useState(settings.facebookPageUrl || "https://facebook.com/raib.official");
+  const [igUrl, setIgUrl] = useState(settings.instagramUrl || "https://instagram.com/raib.official");
   const [delCharge, setDelCharge] = useState(settings.deliveryCharge || 120);
   const [newAdminPassword, setNewAdminPassword] = useState("");
 
@@ -198,6 +200,8 @@ export default function AdminPage() {
     setFbPixel(settings.facebookPixelId || "");
     setWhatsapp(settings.whatsappNumber || "+8801700000000");
     setMessenger(settings.messengerPageId || "raib.official");
+    setFbPageUrl(settings.facebookPageUrl || "https://facebook.com/raib.official");
+    setIgUrl(settings.instagramUrl || "https://instagram.com/raib.official");
     setDelCharge(settings.deliveryCharge || 120);
 
     setShowAnnouncementBar(settings.showAnnouncementBar ?? true);
@@ -335,6 +339,8 @@ export default function AdminPage() {
       facebookPixelId: fbPixel,
       whatsappNumber: whatsapp,
       messengerPageId: messenger,
+      facebookPageUrl: fbPageUrl,
+      instagramUrl: igUrl,
       deliveryCharge: Number(delCharge),
 
       showAnnouncementBar,
@@ -2208,6 +2214,84 @@ export default function AdminPage() {
                     value={footerCopyright}
                     onChange={(e) => setFooterCopyright(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* WhatsApp, Messenger & Social Channels Settings Box */}
+            <div className="space-y-4 p-5 rounded-2xl bg-zinc-950 border-2 border-emerald-900/60 shadow-xl">
+              <h4 className="font-bold text-emerald-400 uppercase tracking-wider text-[11px] font-serif flex items-center gap-2">
+                <Share2 className="w-4 h-4 text-emerald-400" />
+                WhatsApp, Messenger & Social Channels (হোয়াটসঅ্যাপ ও মেসেঞ্জার লিংক সেটিংস)
+              </h4>
+              <p className="text-[11px] text-zinc-400">
+                এখানে আপনার হোয়াটসঅ্যাপ নম্বর ও ফেসবুক মেসেঞ্জার পেজ আইডি বসিয়ে দিন। সাইটের সমস্ত "ORDER VIA WHATSAPP" এবং মেসেঞ্জার বাটন স্বয়ংক্রিয়ভাবে এই নম্বরে সংযোগ করবে।
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-zinc-300 font-bold block mb-1">
+                    WhatsApp Order & Support Number (হোয়াটসঅ্যাপ নম্বর) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    placeholder="+8801700000000 or 01700000000"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-emerald-500 font-mono text-xs"
+                  />
+                  <span className="text-[10px] text-zinc-500 mt-1 block">Example: +8801700000000 or 01700000000</span>
+                </div>
+
+                <div>
+                  <label className="text-zinc-300 font-bold block mb-1">
+                    Facebook Messenger Page ID / Username (মেসেঞ্জার আইডি) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={messenger}
+                    onChange={(e) => setMessenger(e.target.value)}
+                    placeholder="raib.official"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-blue-500 font-mono text-xs"
+                  />
+                  <span className="text-[10px] text-zinc-500 mt-1 block">Example: raib.official (m.me/raib.official)</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div>
+                  <label className="text-zinc-400 block mb-1">Facebook Page URL</label>
+                  <input
+                    type="text"
+                    value={fbPageUrl}
+                    onChange={(e) => setFbPageUrl(e.target.value)}
+                    placeholder="https://facebook.com/raib.official"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 block mb-1">Instagram Profile URL</label>
+                  <input
+                    type="text"
+                    value={igUrl}
+                    onChange={(e) => setIgUrl(e.target.value)}
+                    placeholder="https://instagram.com/raib.official"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 block mb-1">Facebook Meta Pixel ID</label>
+                  <input
+                    type="text"
+                    value={fbPixel}
+                    onChange={(e) => setFbPixel(e.target.value)}
+                    placeholder="e.g. 1234567890"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
                   />
                 </div>
               </div>

@@ -18,6 +18,8 @@ export interface SettingsType {
   facebookPixelId: string;
   whatsappNumber: string;
   messengerPageId: string;
+  facebookPageUrl?: string;
+  instagramUrl?: string;
   deliveryCharge: number;
   adminPassword?: string;
 
@@ -81,6 +83,8 @@ export const DEFAULT_SETTINGS: SettingsType = {
   facebookPixelId: "",
   whatsappNumber: "+8801700000000",
   messengerPageId: "raib.official",
+  facebookPageUrl: "https://facebook.com/raib.official",
+  instagramUrl: "https://instagram.com/raib.official",
   deliveryCharge: 120,
   adminPassword: "admin",
 
