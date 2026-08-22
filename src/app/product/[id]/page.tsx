@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
+import { createWhatsAppOrderLink } from "@/lib/whatsappHelper";
 import { ProductCard } from "@/components/ProductCard";
 import {
   Star,
@@ -174,22 +175,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   // Direct WhatsApp Order Trigger with Product Image & Details
   const handleWhatsAppOrder = () => {
-    const cleanNum = (settings?.whatsappNumber || "+8801700000000").replace(/[^0-9]/g, "");
-    const absoluteImgUrl = activeImage.startsWith("http")
-      ? activeImage
-      : `https://raib.site${activeImage.startsWith("/") ? "" : "/"}${activeImage}`;
+    const waUrl = createWhatsAppOrderLink({
+      whatsappNumber: settings?.whatsappNumber || "+8801700000000",
+      productName: product.name,
+      productId: product.id,
+      colorName: selectedColor,
+      price: product.price,
+      imageUrl: activeImage,
+      productUrl: typeof window !== "undefined" ? window.location.href : `https://raib.site/product/${product.id}`,
+    });
 
-    const messageText = `Hi RAIB Team! I would like to order this bag via WhatsApp:
-
-👜 Product: ${product.name}
-🆔 Serial/ID: ${product.id}
-🎨 Color: ${selectedColor}
-💰 Price: ৳${product.price.toLocaleString()}
-🖼️ Selected Color Bag Image: ${absoluteImgUrl}
-
-Please confirm availability & delivery details!`;
-
-    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(messageText)}`, "_blank");
+    window.open(waUrl, "_blank");
   };
 
   // Direct Messenger Order Trigger

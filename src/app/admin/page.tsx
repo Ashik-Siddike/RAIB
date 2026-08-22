@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
+import { compressImageFile } from "@/lib/imageCompressor";
 import {
   Plus,
   Package,
@@ -159,21 +160,22 @@ export default function AdminPage() {
   const [posPaymentMethod, setPosPaymentMethod] = useState("COD");
   const [posTrxId, setPosTrxId] = useState("MANUAL-POS");
 
-  // Direct File Upload Helper Function
+  // Direct File Upload Helper Function with Client Compression
   const uploadImageFile = async (file: File): Promise<string | null> => {
     try {
       setIsUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
+      showToast("Compressing & uploading photo...");
+      const compressedDataUrl = await compressImageFile(file);
 
       const res = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl: compressedDataUrl, fileName: file.name }),
       });
 
       const data = await res.json();
       if (data.success && data.url) {
-        showToast("Image Uploaded Successfully!");
+        showToast("Photo Uploaded & Saved!");
         return data.url;
       } else {
         showToast(data.error || "Failed to upload image.");
@@ -181,7 +183,7 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error("Upload error:", err);
-      showToast("Error uploading file.");
+      showToast("Error processing photo.");
       return null;
     } finally {
       setIsUploading(false);
@@ -1441,6 +1443,85 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Main Cover Image Upload & Live Preview Block */}
+            <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
+              <h4 className="font-bold text-white text-xs flex items-center gap-1.5 font-serif">
+                <LucideImage className="w-4 h-4 text-red-500" />
+                Main Cover Photo & Hover Gallery (প্রধান কভার ফটো ও গ্যালারি ফটো)
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-zinc-400 block mb-1">Main Cover Bag Image *</label>
+                  <div className="flex items-center gap-3">
+                    {newImage && (
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
+                        <Image src={newImage} alt="Main Preview" fill className="object-cover" />
+                      </div>
+                    )}
+                    <label className="px-3.5 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl cursor-pointer text-xs flex items-center gap-1.5 transition">
+                      <Upload className="w-4 h-4" />
+                      <span>Upload Main Photo</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const url = await uploadImageFile(file);
+                            if (url) setNewImage(url);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    placeholder="Image URL or Base64..."
+                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white font-mono text-xs outline-none focus:border-red-500"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-zinc-400 block mb-1">Secondary Hover Photo (ঐচ্ছিক)</label>
+                  <div className="flex items-center gap-3">
+                    {newSecondaryImage && (
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
+                        <Image src={newSecondaryImage} alt="Secondary Preview" fill className="object-cover" />
+                      </div>
+                    )}
+                    <label className="px-3.5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl cursor-pointer text-xs flex items-center gap-1.5 transition">
+                      <Upload className="w-4 h-4" />
+                      <span>Upload Hover Photo</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const url = await uploadImageFile(file);
+                            if (url) setNewSecondaryImage(url);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    value={newSecondaryImage}
+                    onChange={(e) => setNewSecondaryImage(e.target.value)}
+                    placeholder="Secondary Image URL..."
+                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white font-mono text-xs outline-none focus:border-red-500"
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Color Variants Manager Box */}
             <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
               <div className="flex items-center justify-between">
@@ -1548,10 +1629,15 @@ export default function AdminPage() {
                       </div>
 
                       <div>
-                        <label className="text-zinc-400 block mb-1">Bag Image for this Color</label>
+                        <label className="text-zinc-400 block mb-1">Bag Image for this Color *</label>
                         <div className="flex items-center gap-2">
-                          <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-lg cursor-pointer text-[10px] flex items-center gap-1">
-                            <Upload className="w-3 h-3" />
+                          {variant.image && (
+                            <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0">
+                              <Image src={variant.image} alt={variant.colorName} fill className="object-cover" />
+                            </div>
+                          )}
+                          <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-lg cursor-pointer text-[10px] flex items-center gap-1 flex-shrink-0">
+                            <Upload className="w-3 h-3 text-red-500" />
                             <span>Upload</span>
                             <input
                               type="file"

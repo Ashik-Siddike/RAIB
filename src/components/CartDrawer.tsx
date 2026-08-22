@@ -32,27 +32,30 @@ export function CartDrawer() {
 
   const handleWhatsAppOrderCart = () => {
     if (cart.length === 0) return;
-    const cleanNum = (settings?.whatsappNumber || "+8801700000000").replace(/[^0-9]/g, "");
+    let rawPhone = settings?.whatsappNumber || "+8801700000000";
+    let cleanPhone = rawPhone.replace(/\D/g, "");
+    if (cleanPhone.startsWith("01")) cleanPhone = "88" + cleanPhone;
 
     const itemsSummary = cart
       .map((item, idx) => {
         const absoluteImg = item.image.startsWith("http")
           ? item.image
           : `https://raib.site${item.image.startsWith("/") ? "" : "/"}${item.image}`;
-        return `${idx + 1}. 👜 ${item.name} (${item.color}) x${item.quantity} = ৳${(item.price * item.quantity).toLocaleString()}\n   🖼️ Image: ${absoluteImg}`;
+        return `${idx + 1}. 👜 *${item.name}*\n   🆔 Code: ${item.id}\n   🎨 Color: ${item.color}\n   🔢 Qty: x${item.quantity}\n   💰 Price: ৳${(item.price * item.quantity).toLocaleString()}\n   🖼️ Photo: ${absoluteImg}`;
       })
       .join("\n\n");
 
-    const messageText = `Hi RAIB Team! I want to order all items in my cart via WhatsApp:
+    const messageText = `🛍️ *RAIB LUXURY LEATHER - CART ORDER*
 
 ${itemsSummary}
 
 ---------------------------
-💰 Total Amount: ৳${finalTotal.toLocaleString()}
+💰 *Total Payable:* ৳${finalTotal.toLocaleString()}
+📦 *Delivery:* Cash on Delivery (COD)
 
-Please confirm my order & send delivery details!`;
+_Please confirm my order & send delivery details!_`;
 
-    window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(messageText)}`, "_blank");
+    window.open(`https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`, "_blank");
   };
 
   return (
