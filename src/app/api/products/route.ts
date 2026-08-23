@@ -117,18 +117,44 @@ export async function PUT(request: Request) {
   try {
     await connectToDatabase();
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const { id, ...updateFields } = body;
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: "Product ID required for update" }, { status: 400 });
+    }
+
+    if (updateFields.price) {
+      updateFields.price = Number(updateFields.price);
+    }
+    if (updateFields.originalPrice) {
+      updateFields.originalPrice = Number(updateFields.originalPrice);
+    }
+
+    if (Array.isArray(updateFields.colorVariants)) {
+      updateFields.colorVariants = updateFields.colorVariants
+        .filter((cv: any) => cv && cv.colorName)
+        .map((cv: any, idx: number) => ({
+          colorName: String(cv.colorName).trim() || "Default",
+          colorHex: cv.colorHex || "#DC2626",
+          image: cv.image ? String(cv.image).trim() : updateFields.image || "/tote_bag_red_1786395433017.jpg",
+          isDefault: cv.isDefault ?? idx === 0,
+        }));
+    }
 
     const updatedProduct = await Product.findOneAndUpdate(
       { id },
-      { $set: updateData },
+      { $set: updateFields },
       { new: true }
     );
+
+    if (!updatedProduct) {
+      return NextResponse.json({ success: false, error: "Product not found" }, { status: 404 });
+    }
 
     return NextResponse.json({ success: true, product: updatedProduct });
   } catch (error: any) {
     console.error("MongoDB PUT Product Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message || "Failed to update product" }, { status: 500 });
   }
 }
 

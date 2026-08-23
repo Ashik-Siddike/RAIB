@@ -6,6 +6,7 @@ import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
 import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import { compressImageFile } from "@/lib/imageCompressor";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus,
   Package,
@@ -14,6 +15,7 @@ import {
   Settings,
   Share2,
   Trash2,
+  Edit2,
   XCircle,
   RotateCcw,
   Users,
@@ -154,6 +156,23 @@ export default function AdminPage() {
   const [newDescBn, setNewDescBn] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isPublishingProduct, setIsPublishingProduct] = useState(false);
+
+  // Product Edit Modal State
+  const [editingProduct, setEditingProduct] = useState<ProductType | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editTitleBn, setEditTitleBn] = useState("");
+  const [editPrice, setEditPrice] = useState("");
+  const [editOriginalPrice, setEditOriginalPrice] = useState("");
+  const [editCategory, setEditCategory] = useState("Tote Bags");
+  const [editMaterial, setEditMaterial] = useState("Italian Leather");
+  const [editImage, setEditImage] = useState("");
+  const [editSecondaryImage, setEditSecondaryImage] = useState("");
+  const [editColorVariants, setEditColorVariants] = useState<ColorVariant[]>([]);
+  const [editDesc, setEditDesc] = useState("");
+  const [editDescBn, setEditDescBn] = useState("");
+  const [editIsNewArrival, setEditIsNewArrival] = useState(true);
+  const [editIsBestSeller, setEditIsBestSeller] = useState(false);
+  const [isUpdatingProduct, setIsUpdatingProduct] = useState(false);
 
   // POS Manual Order Form State
   const [posCustomerName, setPosCustomerName] = useState("");
@@ -608,6 +627,101 @@ export default function AdminPage() {
       showToast("Publish Failed: " + (err.message || "Network Error"));
     } finally {
       setIsPublishingProduct(false);
+    }
+  };
+
+  const handleOpenEditModal = (p: any) => {
+    setEditingProduct(p);
+    setEditTitle(p.name || "");
+    setEditTitleBn(p.nameBn || p.name || "");
+    setEditPrice(String(p.price || ""));
+    setEditOriginalPrice(String(p.originalPrice || Math.round(p.price * 1.2) || ""));
+    setEditCategory(p.category || "Tote Bags");
+    setEditMaterial(p.material || "Italian Leather");
+    setEditImage(p.image || "");
+    setEditSecondaryImage(p.secondaryImage || "");
+    setEditColorVariants(
+      p.colorVariants && p.colorVariants.length > 0
+        ? p.colorVariants
+        : [{ colorName: p.color || "Standard", colorHex: "#000000", image: p.image, isDefault: true }]
+    );
+    setEditDesc(p.description || "");
+    setEditDescBn(p.descriptionBn || p.description || "");
+    setEditIsNewArrival(p.isNewArrival ?? true);
+    setEditIsBestSeller(p.isBestSeller ?? false);
+  };
+
+  const handleSaveProductUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct || !editTitle || !editPrice) {
+      showToast("Please enter product title and price.");
+      return;
+    }
+
+    setIsUpdatingProduct(true);
+    showToast("আপডেট প্রসেস করা হচ্ছে...");
+
+    try {
+      const validColorVars = await Promise.all(
+        editColorVariants
+          .filter((cv) => cv && cv.colorName && cv.colorName.trim())
+          .map(async (cv, idx) => ({
+            colorName: cv.colorName.trim(),
+            colorHex: cv.colorHex || "#DC2626",
+            image: cv.image.startsWith("data:image/") ? await compressImageFile(cv.image) : cv.image,
+            isDefault: cv.isDefault ?? idx === 0,
+          }))
+      );
+
+      const compressedMainCover = editImage.startsWith("data:image/")
+        ? await compressImageFile(editImage)
+        : editImage;
+
+      const updatePayload = {
+        id: editingProduct.id,
+        name: editTitle.trim(),
+        nameBn: editTitleBn ? editTitleBn.trim() : editTitle.trim(),
+        price: Number(editPrice),
+        originalPrice: editOriginalPrice ? Number(editOriginalPrice) : Number(editPrice) * 1.2,
+        category: editCategory,
+        material: editMaterial || "Italian Leather",
+        image: compressedMainCover,
+        secondaryImage: editSecondaryImage ? (editSecondaryImage.startsWith("data:image/") ? await compressImageFile(editSecondaryImage) : editSecondaryImage) : compressedMainCover,
+        colorVariants: validColorVars,
+        description: editDesc,
+        descriptionBn: editDescBn,
+        isNewArrival: editIsNewArrival,
+        isBestSeller: editIsBestSeller,
+      };
+
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatePayload),
+      });
+
+      const responseText = await res.text();
+      let data: any;
+
+      try {
+        data = JSON.parse(responseText);
+      } catch (jsonErr) {
+        showToast(`Server Response Error (${res.status}): ${responseText.slice(0, 100)}`);
+        return;
+      }
+
+      if (data.success && data.product) {
+        setProducts(products.map((item) => (item.id === editingProduct.id ? data.product : item)));
+        showToast("Product & Color Variants Updated Successfully!");
+        setEditingProduct(null);
+      } else {
+        showToast("Update Failed: " + (data.error || "Please check input fields."));
+      }
+    } catch (err: any) {
+      console.error("Update exception:", err);
+      showToast("Update Failed: " + (err.message || "Network error"));
+    } finally {
+      setIsUpdatingProduct(false);
     }
   };
 
@@ -1441,13 +1555,24 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleDeleteProduct(p.id)}
-                  className="p-2.5 bg-zinc-950 hover:bg-red-600 text-zinc-400 hover:text-white rounded-xl transition cursor-pointer"
-                  title="Delete Product"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleOpenEditModal(p)}
+                    className="p-2.5 bg-zinc-950 hover:bg-amber-600 text-zinc-400 hover:text-white rounded-xl transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                    title="Edit & Update Product"
+                  >
+                    <Edit2 className="w-4 h-4 text-amber-400" />
+                    <span className="hidden sm:inline">Edit</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleDeleteProduct(p.id)}
+                    className="p-2.5 bg-zinc-950 hover:bg-red-600 text-zinc-400 hover:text-white rounded-xl transition cursor-pointer"
+                    title="Delete Product"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -2459,6 +2584,379 @@ export default function AdminPage() {
           </form>
         </div>
       )}
+
+      {/* Product Edit & Update Modal Dialog */}
+      <AnimatePresence>
+        {editingProduct && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl my-8"
+            >
+              <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-white font-serif flex items-center gap-2">
+                    <Edit2 className="w-5 h-5 text-amber-500" />
+                    Edit & Update Handbag Product (পণ্য তথ্য এডিট ও আপডেট)
+                  </h3>
+                  <span className="text-[11px] text-zinc-400 font-mono">Product ID: {editingProduct.id}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setEditingProduct(null)}
+                  className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition cursor-pointer"
+                >
+                  <XCircle className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveProductUpdate} className="space-y-6 text-xs">
+                {/* Titles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Product Title (English) *</label>
+                    <input
+                      type="text"
+                      required
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Product Title (Bangla)</label>
+                    <input
+                      type="text"
+                      value={editTitleBn}
+                      onChange={(e) => setEditTitleBn(e.target.value)}
+                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Price & Category */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Price (BDT ৳) *</label>
+                    <input
+                      type="number"
+                      required
+                      value={editPrice}
+                      onChange={(e) => setEditPrice(e.target.value)}
+                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Original Price (৳)</label>
+                    <input
+                      type="number"
+                      value={editOriginalPrice}
+                      onChange={(e) => setEditOriginalPrice(e.target.value)}
+                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Category</label>
+                    <select
+                      value={editCategory}
+                      onChange={(e) => setEditCategory(e.target.value)}
+                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 cursor-pointer"
+                    >
+                      <option value="Tote Bags">Tote Bags</option>
+                      <option value="Crossbody Bags">Crossbody Bags</option>
+                      <option value="Shoulder Bags">Shoulder Bags</option>
+                      <option value="Clutches & Evening">Clutches & Evening</option>
+                      <option value="Mini & Micro Bags">Mini & Micro Bags</option>
+                      <option value="Luxury Backpacks">Luxury Backpacks</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 block mb-1">Material</label>
+                    <input
+                      type="text"
+                      value={editMaterial}
+                      onChange={(e) => setEditMaterial(e.target.value)}
+                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Main Cover & Hover Photo */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
+                  <h4 className="font-bold text-white text-xs flex items-center gap-1.5 font-serif">
+                    <LucideImage className="w-4 h-4 text-amber-500" />
+                    Main Cover & Hover Gallery Photos (কভার ও গ্যালারি ফটো)
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-zinc-400 block mb-1">Main Cover Bag Image *</label>
+                      <div className="flex items-center gap-3">
+                        {editImage && (
+                          <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
+                            <Image src={editImage} alt="Edit Main Preview" fill className="object-cover" />
+                          </div>
+                        )}
+                        <label className="px-3.5 py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl cursor-pointer text-xs flex items-center gap-1.5 transition">
+                          <Upload className="w-4 h-4" />
+                          <span>Upload Photo</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const url = await uploadImageFile(file);
+                                if (url) setEditImage(url);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        value={editImage}
+                        onChange={(e) => setEditImage(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white font-mono text-xs outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-zinc-400 block mb-1">Secondary Hover Photo</label>
+                      <div className="flex items-center gap-3">
+                        {editSecondaryImage && (
+                          <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
+                            <Image src={editSecondaryImage} alt="Edit Secondary Preview" fill className="object-cover" />
+                          </div>
+                        )}
+                        <label className="px-3.5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl cursor-pointer text-xs flex items-center gap-1.5 transition">
+                          <Upload className="w-4 h-4" />
+                          <span>Upload Photo</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const url = await uploadImageFile(file);
+                                if (url) setEditSecondaryImage(url);
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={editSecondaryImage}
+                        onChange={(e) => setEditSecondaryImage(e.target.value)}
+                        className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white font-mono text-xs outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Color Variants Manager in Edit Modal */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-bold text-amber-400 text-xs flex items-center gap-1.5 font-serif">
+                        <Palette className="w-4 h-4 text-amber-500" />
+                        Color Variants & Photos (কালার ভ্যারিয়েন্ট ও ছবি)
+                      </h4>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setEditColorVariants([
+                          ...editColorVariants,
+                          { colorName: "New Color", colorHex: "#059669", image: editImage || "/tote_bag_red_1786395433017.jpg", isDefault: false },
+                        ])
+                      }
+                      className="px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition flex items-center gap-1 text-[11px] cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Color</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {editColorVariants.map((variant, idx) => (
+                      <div key={idx} className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-white text-xs font-mono">Color Variant #{idx + 1}</span>
+
+                          <div className="flex items-center gap-3">
+                            <label className="flex items-center gap-1 text-[11px] text-zinc-300 font-bold cursor-pointer">
+                              <input
+                                type="radio"
+                                name="editDefaultColorVariant"
+                                checked={!!variant.isDefault}
+                                onChange={() => {
+                                  setEditColorVariants(
+                                    editColorVariants.map((cv, i) => ({
+                                      ...cv,
+                                      isDefault: i === idx,
+                                    }))
+                                  );
+                                }}
+                                className="accent-amber-500"
+                              />
+                              <span>Default Color</span>
+                            </label>
+
+                            {editColorVariants.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => setEditColorVariants(editColorVariants.filter((_, i) => i !== idx))}
+                                className="p-1 text-zinc-500 hover:text-red-400 transition cursor-pointer"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Color Name *</label>
+                            <input
+                              type="text"
+                              required
+                              value={variant.colorName}
+                              onChange={(e) => {
+                                const updated = [...editColorVariants];
+                                updated[idx].colorName = e.target.value;
+                                setEditColorVariants(updated);
+                              }}
+                              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs outline-none focus:border-amber-500"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Hex Code</label>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="color"
+                                value={variant.colorHex || "#DC2626"}
+                                onChange={(e) => {
+                                  const updated = [...editColorVariants];
+                                  updated[idx].colorHex = e.target.value;
+                                  setEditColorVariants(updated);
+                                }}
+                                className="w-8 h-8 rounded border-none bg-transparent cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={variant.colorHex || "#DC2626"}
+                                onChange={(e) => {
+                                  const updated = [...editColorVariants];
+                                  updated[idx].colorHex = e.target.value;
+                                  setEditColorVariants(updated);
+                                }}
+                                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs font-mono outline-none focus:border-amber-500"
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Bag Image *</label>
+                            <div className="flex items-center gap-2">
+                              {variant.image && (
+                                <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0">
+                                  <Image src={variant.image} alt={variant.colorName} fill className="object-cover" />
+                                </div>
+                              )}
+                              <label className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-lg cursor-pointer text-[10px] flex items-center gap-1 flex-shrink-0">
+                                <Upload className="w-3 h-3 text-amber-500" />
+                                <span>Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      const url = await uploadImageFile(file);
+                                      if (url) {
+                                        const updated = [...editColorVariants];
+                                        updated[idx].image = url;
+                                        setEditColorVariants(updated);
+                                      }
+                                    }
+                                  }}
+                                />
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={variant.image}
+                                onChange={(e) => {
+                                  const updated = [...editColorVariants];
+                                  updated[idx].image = e.target.value;
+                                  setEditColorVariants(updated);
+                                }}
+                                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-xs font-mono outline-none focus:border-amber-500"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="text-zinc-400 block mb-1">Product Description (English)</label>
+                  <textarea
+                    rows={3}
+                    value={editDesc}
+                    onChange={(e) => setEditDesc(e.target.value)}
+                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                {/* Submit & Cancel */}
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={isUploading || isUpdatingProduct}
+                    className="flex-1 py-4 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    {isUpdatingProduct ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Save Changes to MongoDB...</span>
+                      </>
+                    ) : (
+                      <span>Save & Update Product Changes</span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditingProduct(null)}
+                    className="px-6 py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs rounded-xl cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
