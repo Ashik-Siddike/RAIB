@@ -153,6 +153,7 @@ export default function AdminPage() {
   const [newDesc, setNewDesc] = useState("");
   const [newDescBn, setNewDescBn] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isPublishingProduct, setIsPublishingProduct] = useState(false);
 
   // POS Manual Order Form State
   const [posCustomerName, setPosCustomerName] = useState("");
@@ -480,28 +481,48 @@ export default function AdminPage() {
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle || !newPrice) {
-      showToast("Please enter title and price.");
+      showToast("Please enter product title and price.");
       return;
     }
 
-    // Default image fallback from color variants
-    const defaultColorVar = newColorVariants.find((cv) => cv.isDefault) || newColorVariants[0];
-    const mainCover = defaultColorVar?.image || newImage;
-    const allImages = [mainCover, newSecondaryImage, ...newColorVariants.map((cv) => cv.image), ...newImages].filter(Boolean);
+    setIsPublishingProduct(true);
+
+    // Sanitize color variants to ensure valid schema elements
+    const validColorVariants = newColorVariants
+      .filter((cv) => cv && cv.colorName && cv.colorName.trim())
+      .map((cv, idx) => ({
+        colorName: cv.colorName.trim(),
+        colorHex: cv.colorHex || "#DC2626",
+        image: cv.image ? cv.image.trim() : newImage || "/tote_bag_red_1786395433017.jpg",
+        isDefault: cv.isDefault ?? idx === 0,
+      }));
+
+    if (validColorVariants.length === 0) {
+      validColorVariants.push({
+        colorName: newColor || "Standard",
+        colorHex: "#DC2626",
+        image: newImage || "/tote_bag_red_1786395433017.jpg",
+        isDefault: true,
+      });
+    }
+
+    const defaultColorVar = validColorVariants.find((cv) => cv.isDefault) || validColorVariants[0];
+    const mainCover = newImage || defaultColorVar.image;
+    const allImages = [mainCover, newSecondaryImage, ...validColorVariants.map((cv) => cv.image), ...newImages].filter(Boolean);
 
     const productPayload = {
       id: "raib-custom-" + Date.now(),
-      name: newTitle,
-      nameBn: newTitleBn || newTitle,
+      name: newTitle.trim(),
+      nameBn: newTitleBn ? newTitleBn.trim() : newTitle.trim(),
       price: Number(newPrice),
       originalPrice: Number(newPrice) * 1.2,
       category: newCategory,
-      color: defaultColorVar?.colorName || newColor,
-      material: newMaterial,
+      color: defaultColorVar.colorName,
+      material: newMaterial || "Italian Leather",
       image: mainCover,
-      secondaryImage: newSecondaryImage || undefined,
+      secondaryImage: newSecondaryImage || mainCover,
       images: allImages,
-      colorVariants: newColorVariants,
+      colorVariants: validColorVariants,
       description: newDesc || "Luxury handcrafted RAIB leather bag.",
       descriptionBn: newDescBn || newDesc || "বিলাসবহুল খাঁটি চামড়ার ব্যাগ।",
       rating: 5.0,
@@ -515,17 +536,32 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productPayload),
       });
+
       const data = await res.json();
-      if (data.success) {
+      if (data.success && data.product) {
         setProducts([data.product, ...products]);
-        showToast("New Product & Color Variants Published to MongoDB Atlas!");
+        showToast("New Product & Color Variants Published Successfully!");
         setNewTitle("");
+        setNewTitleBn("");
         setNewPrice("");
+        setNewImage("/tote_bag_red_1786395433017.jpg");
+        setNewSecondaryImage("");
         setNewImages([]);
+        setNewDesc("");
+        setNewDescBn("");
+        setNewColorVariants([
+          { colorName: "Crimson Red", colorHex: "#DC2626", image: "/tote_bag_red_1786395433017.jpg", isDefault: true },
+          { colorName: "Classic Black", colorHex: "#000000", image: "/crossbody_black_1786395824801.jpg", isDefault: false },
+        ]);
         setActiveTab("products");
+      } else {
+        showToast("Publish Error: " + (data.error || "Failed to publish product. Please check fields."));
       }
-    } catch (err) {
-      showToast("Failed to publish product");
+    } catch (err: any) {
+      console.error("Publish exception:", err);
+      showToast("Publish Failed: " + (err.message || "Network Error"));
+    } finally {
+      setIsPublishingProduct(false);
     }
   };
 
@@ -1697,10 +1733,17 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              disabled={isUploading}
-              className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
+              disabled={isUploading || isPublishingProduct}
+              className="w-full py-4 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2"
             >
-              Publish Bag & Color Variants to MongoDB
+              {isPublishingProduct ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>পাবলিশ করা হচ্ছে... (Publishing to MongoDB)</span>
+                </>
+              ) : (
+                <span>Publish Bag & Color Variants to MongoDB</span>
+              )}
             </button>
           </form>
         </div>

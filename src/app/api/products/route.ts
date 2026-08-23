@@ -57,21 +57,48 @@ export async function POST(request: Request) {
     await connectToDatabase();
     const body = await request.json();
 
+    if (!body.name || !body.price) {
+      return NextResponse.json({ success: false, error: "Title and price are required." }, { status: 400 });
+    }
+
+    const mainCoverImage = body.image || body.secondaryImage || "/tote_bag_red_1786395433017.jpg";
+
+    // Sanitize color variants to ensure valid schema elements
+    const rawColorVariants = Array.isArray(body.colorVariants) ? body.colorVariants : [];
+    const validColorVariants = rawColorVariants
+      .filter((cv: any) => cv && cv.colorName)
+      .map((cv: any, idx: number) => ({
+        colorName: String(cv.colorName).trim() || "Default",
+        colorHex: cv.colorHex || "#DC2626",
+        image: cv.image ? String(cv.image).trim() : mainCoverImage,
+        isDefault: cv.isDefault ?? idx === 0,
+      }));
+
+    // If no color variants provided, create default fallback variant
+    if (validColorVariants.length === 0) {
+      validColorVariants.push({
+        colorName: body.color || "Standard",
+        colorHex: "#DC2626",
+        image: mainCoverImage,
+        isDefault: true,
+      });
+    }
+
     const newProduct = await Product.create({
       id: body.id || "raib-" + Date.now(),
-      name: body.name,
-      nameBn: body.nameBn || body.name,
+      name: String(body.name).trim(),
+      nameBn: body.nameBn ? String(body.nameBn).trim() : String(body.name).trim(),
       price: Number(body.price),
       originalPrice: Number(body.originalPrice) || Number(body.price) * 1.2,
       category: body.category || "Tote Bags",
-      color: body.color || "Black",
+      color: body.color || validColorVariants[0].colorName || "Black",
       material: body.material || "Italian Leather",
-      image: body.image || "/tote_bag_red_1786395433017.jpg",
-      secondaryImage: body.secondaryImage || body.image,
-      images: body.images || [body.image],
-      colorVariants: body.colorVariants || [],
+      image: mainCoverImage,
+      secondaryImage: body.secondaryImage || mainCoverImage,
+      images: Array.isArray(body.images) && body.images.length > 0 ? body.images : [mainCoverImage],
+      colorVariants: validColorVariants,
       description: body.description || "Handcrafted luxury leather bag.",
-      descriptionBn: body.descriptionBn || body.description,
+      descriptionBn: body.descriptionBn || body.description || "বিলাসবহুল খাঁটি চামড়ার ব্যাগ।",
       rating: body.rating || 5.0,
       reviewCount: body.reviewCount || 1,
       isNewArrival: body.isNewArrival ?? true,
@@ -82,7 +109,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, product: newProduct }, { status: 201 });
   } catch (error: any) {
     console.error("MongoDB POST Product Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message || "Failed to create product" }, { status: 500 });
   }
 }
 
