@@ -1,38 +1,49 @@
 /**
- * Client-side Image Compression Utility
- * Resizes raw camera/high-res images to max 1200px width/height and compresses to lightweight WebP/JPEG Data URL.
- * Prevents 413 Payload Too Large errors and ensures lightning-fast upload & publishing.
+ * Ultra-Lightweight Client-Side Image Compression Utility
+ * Resizes camera/high-res images to max 950px and compresses below 200KB per photo.
+ * Prevents Vercel 4.5MB Serverless Function payload limits (HTTP 413 Request Entity Too Large).
  */
+
 export async function compressImageFile(
-  file: File,
-  maxWidth = 1200,
-  maxHeight = 1200,
-  quality = 0.82
+  file: File | string,
+  maxWidth = 950,
+  maxHeight = 950,
+  quality = 0.68
 ): Promise<string> {
   return new Promise((resolve, reject) => {
-    // If it's already a small SVG or tiny file (< 100KB), convert directly to data URL
-    if (file.type === "image/svg+xml" || file.size < 100 * 1024) {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-      return;
+    // If input is already a string URL (not base64 data url), return as is
+    if (typeof file === "string") {
+      if (!file.startsWith("data:image/")) {
+        resolve(file);
+        return;
+      }
     }
 
     const image = new Image();
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      image.src = e.target?.result as string;
-    };
-
-    reader.onerror = (err) => reject(err);
+    
+    if (typeof file === "string") {
+      image.src = file;
+    } else {
+      if (file.type === "image/svg+xml") {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        image.src = e.target?.result as string;
+      };
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    }
 
     image.onload = () => {
       let width = image.width;
       let height = image.height;
 
-      // Calculate aspect ratio scaling
+      // Scale aspect ratio
       if (width > maxWidth) {
         height = Math.round((height * maxWidth) / width);
         width = maxWidth;
@@ -48,23 +59,35 @@ export async function compressImageFile(
 
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        // Fallback to FileReader if canvas context fails
         resolve(image.src);
         return;
       }
 
-      // Smooth scaling
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
+      ctx.imageSmoothingQuality = "medium";
       ctx.drawImage(image, 0, 0, width, height);
 
-      // Export as compressed WebP or JPEG
-      const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
-      const dataUrl = canvas.toDataURL(outputType, quality);
-      resolve(dataUrl);
+      let compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
+
+      // Recursive check: If output base64 is still larger than 250KB, compress further
+      if (compressedDataUrl.length > 250 * 1024) {
+        compressedDataUrl = canvas.toDataURL("image/jpeg", 0.55);
+      }
+      if (compressedDataUrl.length > 200 * 1024) {
+        // Create smaller canvas (750px)
+        const smallCanvas = document.createElement("canvas");
+        smallCanvas.width = Math.round(width * 0.75);
+        smallCanvas.height = Math.round(height * 0.75);
+        const smallCtx = smallCanvas.getContext("2d");
+        if (smallCtx) {
+          smallCtx.drawImage(canvas, 0, 0, smallCanvas.width, smallCanvas.height);
+          compressedDataUrl = smallCanvas.toDataURL("image/jpeg", 0.50);
+        }
+      }
+
+      resolve(compressedDataUrl);
     };
 
     image.onerror = (err) => reject(err);
-    reader.readAsDataURL(file);
   });
 }

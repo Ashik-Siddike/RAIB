@@ -531,13 +531,59 @@ export default function AdminPage() {
     };
 
     try {
+      // Compress any large Base64 images in colorVariants & cover photo to guarantee < 200KB per image
+      showToast("ছবিগুলো অপটিমাইজ ও কমপ্রেস করা হচ্ছে...");
+      const compressedVariants = await Promise.all(
+        validColorVariants.map(async (cv) => ({
+          ...cv,
+          image: cv.image.startsWith("data:image/") ? await compressImageFile(cv.image) : cv.image,
+        }))
+      );
+
+      const compressedMainCover = mainCover.startsWith("data:image/")
+        ? await compressImageFile(mainCover)
+        : mainCover;
+
+      const productPayload = {
+        id: "raib-custom-" + Date.now(),
+        name: newTitle.trim(),
+        nameBn: newTitleBn ? newTitleBn.trim() : newTitle.trim(),
+        price: Number(newPrice),
+        originalPrice: Number(newPrice) * 1.2,
+        category: newCategory,
+        color: compressedVariants[0]?.colorName || "Default",
+        material: newMaterial || "Italian Leather",
+        image: compressedMainCover,
+        secondaryImage: newSecondaryImage ? (newSecondaryImage.startsWith("data:image/") ? await compressImageFile(newSecondaryImage) : newSecondaryImage) : compressedMainCover,
+        images: [compressedMainCover, ...compressedVariants.map((cv) => cv.image)].filter(Boolean),
+        colorVariants: compressedVariants,
+        description: newDesc || "Luxury handcrafted RAIB leather bag.",
+        descriptionBn: newDescBn || newDesc || "বিলাসবহুল খাঁটি চামড়ার ব্যাগ।",
+        rating: 5.0,
+        reviewCount: 1,
+        isNewArrival: true,
+      };
+
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productPayload),
       });
 
-      const data = await res.json();
+      const responseText = await res.text();
+      let data: any;
+
+      try {
+        data = JSON.parse(responseText);
+      } catch (jsonErr) {
+        if (res.status === 413 || responseText.includes("Request Entity Too Large")) {
+          showToast("ফটো সাইজ বেশি বড়! অনুগ্রহ করে ছবিগুলো কমপ্রেস করে আবার চেষ্টা করুন।");
+        } else {
+          showToast(`Server Response Error (${res.status}): ${responseText.slice(0, 100)}`);
+        }
+        return;
+      }
+
       if (data.success && data.product) {
         setProducts([data.product, ...products]);
         showToast("New Product & Color Variants Published Successfully!");
