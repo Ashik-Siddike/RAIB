@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ProductType, useApp } from "@/lib/store";
 import { motion, useReducedMotion } from "framer-motion";
 import { ShoppingCart, Star, Heart, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SafeImage } from "@/components/SafeImage";
 
 interface ProductCardProps {
   product: ProductType;
@@ -20,9 +20,11 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
   const shouldReduceMotion = useReducedMotion();
 
-  const discountPercent = product.originalPrice
+  const discountPercent = product.originalPrice && product.originalPrice > product.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
+
+  const currentImage = isHovered && product.secondaryImage ? product.secondaryImage : product.image;
 
   return (
     <motion.div
@@ -39,10 +41,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
       )}
     >
       {/* Product Image Container */}
-      <div className="relative aspect-square w-full overflow-hidden bg-stone-50">
+      <div className="relative aspect-square w-full overflow-hidden bg-stone-100 flex items-center justify-center">
         <Link href={`/product/${product.id}`} className="block w-full h-full relative">
-          <Image
-            src={isHovered && product.secondaryImage ? product.secondaryImage : product.image}
+          <SafeImage
+            src={currentImage}
             alt={lang === "bn" && product.nameBn ? product.nameBn : product.name}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-108"
@@ -92,12 +94,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
           {/* Category & Rating */}
           <div className="flex items-center justify-between text-[11px] sm:text-xs">
             <span className="text-red-600 font-bold tracking-wider uppercase text-[9px] sm:text-[10px] font-sans truncate">
-              {product.category}
+              {product.category || "Tote Bags"}
             </span>
             <div className="flex items-center gap-1 text-amber-500 font-semibold flex-shrink-0">
               <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
-              <span>{product.rating}</span>
-              <span className="text-zinc-400 text-[9px] sm:text-[10px]">({product.reviewCount})</span>
+              <span>{product.rating || 5.0}</span>
+              <span className="text-zinc-400 text-[9px] sm:text-[10px]">({product.reviewCount || 1})</span>
             </div>
           </div>
 
@@ -110,7 +112,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           {/* Material Specs */}
           <p className="text-[11px] sm:text-xs text-zinc-500 line-clamp-1">
-            {product.material}
+            {product.material || "Genuine Italian Leather"}
           </p>
         </div>
 
@@ -120,7 +122,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             <div className="text-base sm:text-lg font-extrabold text-zinc-900 font-sans">
               ৳{product.price.toLocaleString()}
             </div>
-            {product.originalPrice && (
+            {product.originalPrice && product.originalPrice > product.price && (
               <span className="text-[10px] sm:text-xs text-zinc-400 line-through">
                 ৳{product.originalPrice.toLocaleString()}
               </span>

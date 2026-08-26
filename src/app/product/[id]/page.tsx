@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
-import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import { createWhatsAppOrderLink } from "@/lib/whatsappHelper";
 import { ProductCard } from "@/components/ProductCard";
+import { SafeImage } from "@/components/SafeImage";
 import {
   Star,
   ShoppingBag,
@@ -93,33 +93,47 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [newReviewRating, setNewReviewRating] = useState(5);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
+  const [relatedProducts, setRelatedProducts] = useState<ProductType[]>([]);
+
   // Fetch product from MongoDB Atlas API
   useEffect(() => {
     async function loadProduct() {
       try {
         const res = await fetch(`/api/products?id=${productId}`);
         const data = await res.json();
-        const prodData: ProductType = (data.success && data.product) ? data.product : (SAMPLE_PRODUCTS.find((p) => p.id === productId) || SAMPLE_PRODUCTS[0]);
         
-        setProduct(prodData);
+        if (data.success && data.product) {
+          const prodData: ProductType = data.product;
+          setProduct(prodData);
 
-        // Check if there's a default color variant set by admin
-        const colorVars = prodData.colorVariants || [];
-        const defaultVar = colorVars.find((cv) => cv.isDefault) || colorVars[0];
+          // Check if there's a default color variant set by admin
+          const colorVars = prodData.colorVariants || [];
+          const defaultVar = colorVars.find((cv) => cv.isDefault) || colorVars[0];
 
-        if (defaultVar) {
-          setSelectedColor(defaultVar.colorName);
-          setActiveImage(defaultVar.image || prodData.image);
+          if (defaultVar) {
+            setSelectedColor(defaultVar.colorName);
+            setActiveImage(defaultVar.image || prodData.image);
+          } else {
+            setSelectedColor(prodData.color || "Default");
+            setActiveImage(prodData.image);
+          }
+
+          // Fetch related category products dynamically
+          try {
+            const relRes = await fetch(`/api/products?category=${encodeURIComponent(prodData.category)}`);
+            const relData = await relRes.json();
+            if (relData.success && Array.isArray(relData.products)) {
+              setRelatedProducts(relData.products.filter((p: ProductType) => p.id !== prodData.id).slice(0, 3));
+            }
+          } catch (e) {
+            console.error(e);
+          }
         } else {
-          setSelectedColor(prodData.color || "Default");
-          setActiveImage(prodData.image);
+          setProduct(null);
         }
       } catch (err) {
         console.error("Failed to load product by ID:", err);
-        const fallback = SAMPLE_PRODUCTS.find((p) => p.id === productId) || SAMPLE_PRODUCTS[0];
-        setProduct(fallback);
-        setSelectedColor(fallback.color);
-        setActiveImage(fallback.image);
+        setProduct(null);
       } finally {
         setIsLoading(false);
       }
@@ -150,10 +164,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     product.image,
     product.secondaryImage,
   ].filter((img, index, self) => Boolean(img) && self.indexOf(img) === index) as string[];
-
-  const relatedProducts = SAMPLE_PRODUCTS.filter(
-    (p) => p.id !== product.id && p.category === product.category
-  ).slice(0, 3);
 
   // Select Color Variant Trigger
   const handleSelectColorVariant = (variant: ColorVariant) => {
@@ -337,7 +347,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             animate={{ opacity: 1, scale: 1 }}
             className="relative aspect-square w-full rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 shadow-2xl group"
           >
-            <Image
+            <SafeImage
               src={activeImage}
               alt={product.name}
               fill
@@ -370,7 +380,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     activeImage === img ? "border-red-600 shadow-md scale-105" : "border-zinc-800 opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <Image src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
+                  <SafeImage src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
                 </button>
               ))}
             </div>

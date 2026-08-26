@@ -1,13 +1,11 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
-import { useApp } from "@/lib/store";
-import { SAMPLE_PRODUCTS } from "@/lib/productsData";
+import { useSettings, DEFAULT_SETTINGS } from "@/lib/settingsStore";
+import { useApp, ProductType } from "@/lib/store";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { SafeImage } from "@/components/SafeImage";
 
 // Helper function to format Instagram Reel links into embed URLs if needed
 function getInstagramEmbedUrl(url: string): string | null {
@@ -53,12 +51,26 @@ export function ReelsSection() {
           </p>
         </div>
 
-        {/* 5 Video Cards Side-By-Side in 1 Single Row (No Play/Pause Controls, Direct Buy Now) */}
+        {/* 5 Video Cards Side-By-Side in 1 Single Row */}
         <div className="flex gap-4 sm:gap-5 overflow-x-auto snap-x scrollbar-none pb-4 lg:grid lg:grid-cols-5 lg:overflow-visible">
           {displayReels.map((reel, index) => {
-            const linkedProduct =
-              SAMPLE_PRODUCTS.find((p) => p.id === reel.productId) || SAMPLE_PRODUCTS[0];
+            const reelImage = reel.poster || "/main-logo.png";
+            const reelPrice = reel.price || 3500;
             const instaEmbed = getInstagramEmbedUrl(reel.videoUrl);
+
+            const reelProduct: ProductType = {
+              id: reel.productId || reel.id || `reel-item-${index}`,
+              name: reel.title,
+              price: reelPrice,
+              originalPrice: Math.round(reelPrice * 1.2),
+              category: "Tote Bags",
+              color: "Black",
+              material: "Italian Leather",
+              image: reelImage,
+              description: "Luxury Italian leather bag featured in Client Stories.",
+              rating: 5.0,
+              reviewCount: 1,
+            };
 
             return (
               <motion.div
@@ -67,7 +79,7 @@ export function ReelsSection() {
                 transition={{ duration: 0.3 }}
                 className="group relative aspect-[9/16] min-w-[240px] sm:min-w-[260px] lg:min-w-0 min-h-[380px] sm:min-h-[420px] lg:min-h-[450px] w-full rounded-3xl overflow-hidden bg-zinc-950 border border-stone-200 shadow-xl flex flex-col justify-between flex-shrink-0 lg:flex-shrink"
               >
-                {/* Background Video Player (Autoplay, Muted, Loop, No Controls) */}
+                {/* Background Video Player */}
                 {instaEmbed ? (
                   <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
                     <iframe
@@ -80,7 +92,7 @@ export function ReelsSection() {
                 ) : reel.videoUrl ? (
                   <video
                     src={reel.videoUrl}
-                    poster={reel.poster || linkedProduct.image}
+                    poster={reelImage}
                     autoPlay
                     muted
                     loop
@@ -88,8 +100,8 @@ export function ReelsSection() {
                     className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                   />
                 ) : (
-                  <Image
-                    src={reel.poster || linkedProduct.image}
+                  <SafeImage
+                    src={reelImage}
                     alt={reel.title}
                     fill
                     className="object-cover pointer-events-none"
@@ -110,8 +122,8 @@ export function ReelsSection() {
                 <div className="relative p-3.5 sm:p-4 space-y-3 z-10">
                   <div className="flex items-center gap-2.5">
                     <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-white/30 flex-shrink-0 bg-zinc-950 shadow-md">
-                      <Image
-                        src={reel.poster || linkedProduct.image}
+                      <SafeImage
+                        src={reelImage}
                         alt={reel.title}
                         fill
                         className="object-cover"
@@ -123,7 +135,7 @@ export function ReelsSection() {
                         {reel.title}
                       </h4>
                       <p className="text-xs font-extrabold text-amber-400 font-mono drop-shadow">
-                        ৳{reel.price ? reel.price.toLocaleString() : linkedProduct.price.toLocaleString()}
+                        ৳{reelPrice.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -132,7 +144,7 @@ export function ReelsSection() {
                   <div className="grid grid-cols-2 gap-1.5 pt-1">
                     <button
                       onClick={() => {
-                        addToCart(linkedProduct);
+                        addToCart(reelProduct);
                         showToast("Added to bag!");
                       }}
                       className="py-2.5 px-2 bg-zinc-900/90 hover:bg-zinc-800 text-white font-bold text-[11px] uppercase tracking-wider rounded-xl border border-zinc-700 transition flex items-center justify-center gap-1 cursor-pointer"
@@ -143,7 +155,7 @@ export function ReelsSection() {
 
                     <button
                       onClick={() => {
-                        addToCart(linkedProduct);
+                        addToCart(reelProduct);
                         setIsCartOpen(true);
                       }}
                       className="py-2.5 px-2 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] uppercase tracking-wider rounded-xl shadow-lg transition flex items-center justify-center gap-1 cursor-pointer"

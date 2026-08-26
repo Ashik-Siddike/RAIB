@@ -7,6 +7,7 @@ import { useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Truck, Tag, Sparkles, MessageCircle } from "lucide-react";
+import { SafeImage } from "@/components/SafeImage";
 
 export function CartDrawer() {
   const { lang, t, cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal, showToast } = useApp();
@@ -134,7 +135,7 @@ _Please confirm my order & send delivery details!_`;
                   <div key={`${item.id}-${item.color}`} className="pt-4 first:pt-0 flex gap-4">
                     {/* Item Thumbnail */}
                     <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0">
-                      <Image src={item.image} alt={item.name} fill className="object-cover" />
+                      <SafeImage src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
 
                     {/* Item Details */}

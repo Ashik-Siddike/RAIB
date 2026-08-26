@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ProductType, ColorVariant, useApp } from "@/lib/store";
 import { useSettings, DEFAULT_SETTINGS, ReelType } from "@/lib/settingsStore";
-import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 import { compressImageFile } from "@/lib/imageCompressor";
 import { motion, AnimatePresence } from "framer-motion";
 import {

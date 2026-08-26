@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
-import Settings from "@/models/Settings";
-import { SAMPLE_PRODUCTS } from "@/lib/productsData";
 
 export async function GET(request: Request) {
   try {
@@ -10,23 +8,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const id = searchParams.get("id");
-
-    // Check if initial seeding has been executed
-    let systemSettings = await Settings.findOne();
-    if (!systemSettings) {
-      systemSettings = await Settings.create({ hasSeededProducts: false });
-    }
-
-    // Auto-seed SAMPLE_PRODUCTS into MongoDB ONLY ONCE on initial deployment if never seeded before
-    if (!systemSettings.hasSeededProducts) {
-      const count = await Product.countDocuments();
-      if (count === 0) {
-        await Product.insertMany(SAMPLE_PRODUCTS);
-        await Settings.updateOne({ _id: systemSettings._id }, { $set: { hasSeededProducts: true } });
-      } else {
-        await Settings.updateOne({ _id: systemSettings._id }, { $set: { hasSeededProducts: true } });
-      }
-    }
 
     if (id) {
       const product = await Product.findOne({ id });
@@ -42,7 +23,7 @@ export async function GET(request: Request) {
       }
     }
 
-    // Always fetch directly from MongoDB database
+    // Always fetch directly from MongoDB database (no dummy auto-seeding)
     const products = await Product.find(query).sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, products, source: "mongodb" });
@@ -61,7 +42,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Title and price are required." }, { status: 400 });
     }
 
-    const mainCoverImage = body.image || body.secondaryImage || "/tote_bag_red_1786395433017.jpg";
+    const mainCoverImage = body.image || body.secondaryImage || "/main-logo.png";
 
     // Sanitize color variants to ensure valid schema elements
     const rawColorVariants = Array.isArray(body.colorVariants) ? body.colorVariants : [];
@@ -136,7 +117,7 @@ export async function PUT(request: Request) {
         .map((cv: any, idx: number) => ({
           colorName: String(cv.colorName).trim() || "Default",
           colorHex: cv.colorHex || "#DC2626",
-          image: cv.image ? String(cv.image).trim() : updateFields.image || "/tote_bag_red_1786395433017.jpg",
+          image: cv.image ? String(cv.image).trim() : updateFields.image || "/main-logo.png",
           isDefault: cv.isDefault ?? idx === 0,
         }));
     }
