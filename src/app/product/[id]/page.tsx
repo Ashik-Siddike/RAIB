@@ -8,6 +8,7 @@ import { useSettings } from "@/lib/settingsStore";
 import { createWhatsAppOrderLink } from "@/lib/whatsappHelper";
 import { ProductCard } from "@/components/ProductCard";
 import { SafeImage } from "@/components/SafeImage";
+import { trackPixelViewContent, trackPixelPurchase } from "@/lib/pixelEvents";
 import {
   Star,
   ShoppingBag,
@@ -164,6 +165,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         if (data.success && data.product) {
           const prodData: ProductType = data.product;
           setProduct(prodData);
+          trackPixelViewContent(prodData);
 
           const colorVars = prodData.colorVariants || [];
           const defaultVar = colorVars.find((cv) => cv.isDefault) || colorVars[0];
@@ -332,6 +334,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       const data = await res.json();
       if (data.success) {
         setExpressSuccess(data.order);
+        trackPixelPurchase({
+          orderNumber: data.order?.orderNumber || "ORD-" + Date.now(),
+          totalAmount: Number(product.price * quantity + 120),
+        });
         showToast("Order Submitted! Redirecting to WhatsApp...");
 
         const waUrl = createWhatsAppOrderLink({

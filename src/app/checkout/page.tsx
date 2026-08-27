@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useApp } from "@/lib/store";
 import { useSettings } from "@/lib/settingsStore";
+import { trackPixelInitiateCheckout, trackPixelPurchase } from "@/lib/pixelEvents";
 import { ShieldCheck, Truck, ArrowLeft, Check, Ticket, Copy, Printer } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -32,6 +33,13 @@ export default function CheckoutPage() {
   const deliveryCharge = settings.deliveryCharge || 120;
   const subtotalAfterDiscount = Math.max(0, cartTotal - appliedDiscount);
   const totalPayable = subtotalAfterDiscount + deliveryCharge;
+
+  // Trigger InitiateCheckout event for Meta & TikTok Pixels
+  React.useEffect(() => {
+    if (cart.length > 0) {
+      trackPixelInitiateCheckout(cart, totalPayable);
+    }
+  }, []);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,6 +108,11 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (data.success) {
         setOrderConfirmed(data.order);
+        trackPixelPurchase({
+          orderNumber: data.order?.orderNumber || "ORD-" + Date.now(),
+          totalAmount: totalPayable,
+          items: cart,
+        });
         clearCart();
         showToast(lang === "en" ? "Order Placed! Redirecting to WhatsApp..." : "অর্ডার সম্পন্ন হয়েছে! হোয়াটসঅ্যাপে পাঠাতে ওপেন হচ্ছে...");
 

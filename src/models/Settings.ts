@@ -16,6 +16,7 @@ export interface ISettings extends Document {
   nagadNumber: string;
   rocketNumber: string;
   facebookPixelId: string;
+  tiktokPixelId?: string;
   whatsappNumber: string;
   messengerPageId: string;
   facebookPageUrl?: string;
@@ -102,6 +103,7 @@ const SettingsSchema = new Schema<ISettings>(
     nagadNumber: { type: String, default: "01800-000000" },
     rocketNumber: { type: String, default: "01900-000000" },
     facebookPixelId: { type: String, default: "" },
+    tiktokPixelId: { type: String, default: "" },
     whatsappNumber: { type: String, default: "+8801700000000" },
     messengerPageId: { type: String, default: "raib.official" },
     facebookPageUrl: { type: String, default: "https://facebook.com/raib.official" },

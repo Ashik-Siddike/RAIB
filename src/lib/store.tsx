@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { translations, Language } from "./translations";
+import { trackPixelAddToCart } from "./pixelEvents";
 
 export type ThemeMode = "light" | "dark";
 
@@ -182,6 +183,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       ];
     });
     setIsCartOpen(true);
+    trackPixelAddToCart(product);
     showToast(lang === 'en' ? `Added ${product.name} to Cart` : `কার্টে যোগ করা হয়েছে: ${product.nameBn || product.name}`);
   };
 

@@ -2,20 +2,26 @@
 
 import React, { useEffect } from "react";
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 import { useSettings } from "@/lib/settingsStore";
 
 export function FacebookPixel() {
   const { settings } = useSettings();
-  const pixelId = settings?.facebookPixelId || "";
+  const pixelId = settings?.facebookPixelId?.trim() || "";
+  const pathname = usePathname();
 
+  // Trigger PageView event on initial load and on every page route change
   useEffect(() => {
     if (!pixelId) return;
 
-    // Trigger PageView event
     if (typeof window !== "undefined" && (window as any).fbq) {
-      (window as any).fbq("track", "PageView");
+      try {
+        (window as any).fbq("track", "PageView");
+      } catch (err) {
+        console.warn("Facebook Pixel PageView error:", err);
+      }
     }
-  }, [pixelId]);
+  }, [pathname, pixelId]);
 
   if (!pixelId) return null;
 

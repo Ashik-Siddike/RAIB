@@ -12,6 +12,7 @@ import { SearchModal } from "@/components/SearchModal";
 import { Toast } from "@/components/Toast";
 import { LiveChatWidget } from "@/components/LiveChatWidget";
 import { FacebookPixel } from "@/components/FacebookPixel";
+import { TikTokPixel } from "@/components/TikTokPixel";
 import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -181,6 +182,7 @@ export default function RootLayout({
           <AppProvider>
             <AnalyticsTracker />
             <FacebookPixel />
+            <TikTokPixel />
             <Header />
             <main className="flex-1 w-full overflow-x-hidden">{children}</main>
             <Footer />

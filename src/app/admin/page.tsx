@@ -64,6 +64,7 @@ export default function AdminPage() {
   const [nagad, setNagad] = useState(settings.nagadNumber || "01800-000000");
   const [rocket, setRocket] = useState(settings.rocketNumber || "01900-000000");
   const [fbPixel, setFbPixel] = useState(settings.facebookPixelId || "");
+  const [tiktokPixel, setTiktokPixel] = useState(settings.tiktokPixelId || "");
   const [whatsapp, setWhatsapp] = useState(settings.whatsappNumber || "+8801700000000");
   const [messenger, setMessenger] = useState(settings.messengerPageId || "raib.official");
   const [fbPageUrl, setFbPageUrl] = useState(settings.facebookPageUrl || "https://facebook.com/raib.official");
@@ -218,6 +219,7 @@ export default function AdminPage() {
     setNagad(settings.nagadNumber || "01800-000000");
     setRocket(settings.rocketNumber || "01900-000000");
     setFbPixel(settings.facebookPixelId || "");
+    setTiktokPixel(settings.tiktokPixelId || "");
     setWhatsapp(settings.whatsappNumber || "+8801700000000");
     setMessenger(settings.messengerPageId || "raib.official");
     setFbPageUrl(settings.facebookPageUrl || "https://facebook.com/raib.official");
@@ -358,6 +360,7 @@ export default function AdminPage() {
       nagadNumber: nagad,
       rocketNumber: rocket,
       facebookPixelId: fbPixel,
+      tiktokPixelId: tiktokPixel,
       whatsappNumber: whatsapp,
       messengerPageId: messenger,
       facebookPageUrl: fbPageUrl,
@@ -2522,10 +2525,31 @@ export default function AdminPage() {
                     type="text"
                     value={fbPixel}
                     onChange={(e) => setFbPixel(e.target.value)}
-                    placeholder="e.g. 1234567890"
+                    placeholder="e.g. 123456789012345"
                     className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
                   />
+                  <span className="text-[10px] text-zinc-500 mt-1 block">Facebook Events Manager থেকে পিক্সেল আইডি দিন</span>
                 </div>
+              </div>
+
+              {/* TikTok Pixel ID Section */}
+              <div className="pt-2 border-t border-zinc-900">
+                <label className="text-zinc-300 font-bold block mb-1 flex items-center gap-1.5">
+                  <span>TikTok Pixel ID (টিকটক পিক্সেল আইডি)</span>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-900">
+                    Official SDK Connected
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  value={tiktokPixel}
+                  onChange={(e) => setTiktokPixel(e.target.value)}
+                  placeholder="e.g. C1234567890ABCDEF or TIKTOK_PIXEL_ID"
+                  className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-mono text-xs"
+                />
+                <span className="text-[10px] text-zinc-500 mt-1 block">
+                  TikTok Ads Manager &gt; Assets &gt; Events &gt; Web Events থেকে প্রাপ্ত Pixel Code / ID বসিয়ে দিন। এটি স্বয়ংক্রিয়ভাবে PageView, ViewContent, AddToCart ও CompletePayment ট্র্যাক করবে।
+                </span>
               </div>
             </div>
 

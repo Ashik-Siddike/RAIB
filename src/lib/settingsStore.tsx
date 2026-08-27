@@ -16,6 +16,7 @@ export interface SettingsType {
   nagadNumber: string;
   rocketNumber: string;
   facebookPixelId: string;
+  tiktokPixelId?: string;
   whatsappNumber: string;
   messengerPageId: string;
   facebookPageUrl?: string;
@@ -82,6 +83,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   nagadNumber: "01800-000000",
   rocketNumber: "01900-000000",
   facebookPixelId: "",
+  tiktokPixelId: "",
   whatsappNumber: "+8801700000000",
   messengerPageId: "raib.official",
   facebookPageUrl: "https://facebook.com/raib.official",
