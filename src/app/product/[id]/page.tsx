@@ -168,8 +168,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   // Select Color Variant Trigger
   const handleSelectColorVariant = (variant: ColorVariant) => {
     setSelectedColor(variant.colorName);
-    if (variant.image) {
-      setActiveImage(variant.image);
+    const targetImage = variant.image || product.image;
+    if (targetImage) {
+      setActiveImage(targetImage);
     }
   };
 
@@ -332,7 +333,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       <div className="bg-zinc-900 border border-red-900/60 p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 text-red-500 font-bold">
           <Flame className="w-4 h-4 text-red-500 animate-bounce" />
-          <span>🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।</span>
+          <span>{settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।"}</span>
         </div>
 
         <div className="flex items-center gap-2 text-zinc-300 font-mono font-bold bg-zinc-950 px-3 py-1 rounded-xl border border-zinc-800">

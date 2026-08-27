@@ -23,9 +23,10 @@ export interface ISettings extends Document {
   deliveryCharge: number;
   adminPassword?: string;
 
-  // Announcement Bar
+  // Announcement & Stock Scarcity Bar
   showAnnouncementBar: boolean;
   announcementText: string;
+  stockUrgencyText?: string;
 
   // Visibility Toggles
   showHero: boolean;
@@ -110,6 +111,7 @@ const SettingsSchema = new Schema<ISettings>(
 
     showAnnouncementBar: { type: Boolean, default: true },
     announcementText: { type: String, default: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER" },
+    stockUrgencyText: { type: String, default: "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।" },
 
     showHero: { type: Boolean, default: true },
     showBestsellers: { type: Boolean, default: true },

@@ -74,6 +74,7 @@ export default function AdminPage() {
   // Announcement Bar State
   const [showAnnouncementBar, setShowAnnouncementBar] = useState(settings.showAnnouncementBar ?? true);
   const [announcementText, setAnnouncementText] = useState(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+  const [stockUrgencyText, setStockUrgencyText] = useState(settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।");
 
   // Section Toggles State
   const [showHero, setShowHero] = useState(settings.showHero ?? true);
@@ -225,6 +226,7 @@ export default function AdminPage() {
 
     setShowAnnouncementBar(settings.showAnnouncementBar ?? true);
     setAnnouncementText(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+    setStockUrgencyText(settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।");
 
     setShowHero(settings.showHero ?? true);
     setShowBestsellers(settings.showBestsellers ?? true);
@@ -364,6 +366,7 @@ export default function AdminPage() {
 
       showAnnouncementBar,
       announcementText,
+      stockUrgencyText,
 
       showHero,
       showBestsellers,
@@ -1945,13 +1948,29 @@ export default function AdminPage() {
                 </label>
 
                 <div>
-                  <label className="text-zinc-400 block mb-1">Announcement Text</label>
+                  <label className="text-zinc-400 block mb-1">Top Announcement Text (টপ হেডার স্ট্রিপ টেক্সট)</label>
                   <input
                     type="text"
                     value={announcementText}
                     onChange={(e) => setAnnouncementText(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
                   />
+                </div>
+
+                <div>
+                  <label className="text-zinc-300 font-bold block mb-1">
+                    Product Page Stock Urgency Banner (স্টক সীমিত টেক্সট) 🔥 *
+                  </label>
+                  <input
+                    type="text"
+                    value={stockUrgencyText}
+                    onChange={(e) => setStockUrgencyText(e.target.value)}
+                    placeholder="🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
+                  />
+                  <span className="text-[10px] text-zinc-500 mt-1 block">
+                    প্রোডাক্ট পেজের ওপরে থাকা স্টক কাউন্টার টেক্সট পরিবর্তন করুন (যেমন: স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।)
+                  </span>
                 </div>
               </div>
             </div>

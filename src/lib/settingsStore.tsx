@@ -25,6 +25,7 @@ export interface SettingsType {
 
   showAnnouncementBar: boolean;
   announcementText: string;
+  stockUrgencyText?: string;
 
   showHero: boolean;
   showBestsellers: boolean;
@@ -90,6 +91,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
 
   showAnnouncementBar: true,
   announcementText: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER",
+  stockUrgencyText: "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।",
 
   showHero: true,
   showBestsellers: true,
