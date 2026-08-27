@@ -17,15 +17,27 @@ export default function Home() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Fetch live products directly from MongoDB API
+  // Fetch live products directly from MongoDB API with instant cache
   useEffect(() => {
+    try {
+      const cached = sessionStorage.getItem("raib_products_cache");
+      if (cached) {
+        setProducts(JSON.parse(cached));
+        setIsLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
     async function loadProducts() {
       try {
-        setIsLoading(true);
         const res = await fetch("/api/products");
         const data = await res.json();
         if (data.success && Array.isArray(data.products)) {
           setProducts(data.products);
+          try {
+            sessionStorage.setItem("raib_products_cache", JSON.stringify(data.products));
+          } catch (e) {}
         }
       } catch (err) {
         console.error("Failed to load products from API:", err);

@@ -13,7 +13,14 @@ export async function GET(request: Request) {
 
     if (id) {
       const product = await Product.findOne({ id }).lean();
-      return NextResponse.json({ success: true, product });
+      return NextResponse.json(
+        { success: true, product },
+        {
+          headers: {
+            "Cache-Control": "public, s-maxage=10, stale-while-revalidate=60",
+          },
+        }
+      );
     }
 
     let query: any = {};

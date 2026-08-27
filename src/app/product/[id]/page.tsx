@@ -125,8 +125,37 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   const [relatedProducts, setRelatedProducts] = useState<ProductType[]>([]);
 
-  // Fetch product from MongoDB Atlas API
+  // Fetch product from MongoDB Atlas API with instant cache & non-blocking hydration
   useEffect(() => {
+    // 1. Instant Cache Hydration (0ms load)
+    try {
+      const cachedStr = sessionStorage.getItem("raib_products_cache");
+      if (cachedStr) {
+        const cachedList: ProductType[] = JSON.parse(cachedStr);
+        const matched = cachedList.find((p) => p.id === productId);
+        if (matched) {
+          setProduct(matched);
+          const colorVars = matched.colorVariants || [];
+          const defaultVar = colorVars.find((cv) => cv.isDefault) || colorVars[0];
+          if (defaultVar) {
+            setSelectedColor(defaultVar.colorName);
+            setActiveImage(defaultVar.image || matched.image);
+          } else {
+            setSelectedColor(matched.color || "Default");
+            setActiveImage(matched.image);
+          }
+          setIsLoading(false);
+
+          // Non-blocking related products
+          const related = cachedList.filter((p) => p.category === matched.category && p.id !== matched.id).slice(0, 3);
+          if (related.length > 0) setRelatedProducts(related);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    // 2. Background fresh fetch from API
     async function loadProduct() {
       try {
         const res = await fetch(`/api/products?id=${productId}`);
@@ -136,34 +165,31 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           const prodData: ProductType = data.product;
           setProduct(prodData);
 
-          // Check if there's a default color variant set by admin
           const colorVars = prodData.colorVariants || [];
           const defaultVar = colorVars.find((cv) => cv.isDefault) || colorVars[0];
 
           if (defaultVar) {
-            setSelectedColor(defaultVar.colorName);
-            setActiveImage(defaultVar.image || prodData.image);
+            setSelectedColor((prev) => prev || defaultVar.colorName);
+            setActiveImage((prev) => prev || defaultVar.image || prodData.image);
           } else {
-            setSelectedColor(prodData.color || "Default");
-            setActiveImage(prodData.image);
+            setSelectedColor((prev) => prev || prodData.color || "Default");
+            setActiveImage((prev) => prev || prodData.image);
           }
 
-          // Fetch related category products dynamically
-          try {
-            const relRes = await fetch(`/api/products?category=${encodeURIComponent(prodData.category)}`);
-            const relData = await relRes.json();
-            if (relData.success && Array.isArray(relData.products)) {
-              setRelatedProducts(relData.products.filter((p: ProductType) => p.id !== prodData.id).slice(0, 3));
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
+          // Fetch related category products in non-blocking background
+          fetch(`/api/products?category=${encodeURIComponent(prodData.category)}`)
+            .then((r) => r.json())
+            .then((relData) => {
+              if (relData.success && Array.isArray(relData.products)) {
+                setRelatedProducts(relData.products.filter((p: ProductType) => p.id !== prodData.id).slice(0, 3));
+              }
+            })
+            .catch(() => {});
+        } else if (!product) {
           setProduct(null);
         }
       } catch (err) {
         console.error("Failed to load product by ID:", err);
-        setProduct(null);
       } finally {
         setIsLoading(false);
       }
@@ -171,10 +197,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     loadProduct();
   }, [productId]);
 
-  if (isLoading || !product) {
+  if (isLoading && !product) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center text-zinc-400">
-        Loading luxury product details...
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 animate-pulse">
+        <div className="h-12 bg-zinc-900 rounded-2xl w-full" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-7 aspect-square bg-zinc-900 rounded-3xl" />
+          <div className="lg:col-span-5 space-y-6">
+            <div className="h-6 bg-zinc-900 rounded-full w-1/3" />
+            <div className="h-10 bg-zinc-900 rounded-xl w-3/4" />
+            <div className="h-16 bg-zinc-900 rounded-2xl w-full" />
+            <div className="h-28 bg-zinc-900 rounded-2xl w-full" />
+            <div className="h-14 bg-zinc-900 rounded-2xl w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4 text-center px-4">
+        <h2 className="text-2xl font-bold text-white font-serif">প্রোডাক্ট খুঁজে পাওয়া যায়নি</h2>
+        <p className="text-zinc-400 text-xs">অনুগ্রহ করে আমাদের শপ পেজ থেকে কালেকশন ঘুরে দেখুন।</p>
+        <Link href="/shop" className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition">
+          সকল প্রোডাক্ট দেখুন
+        </Link>
       </div>
     );
   }
