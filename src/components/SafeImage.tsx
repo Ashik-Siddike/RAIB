@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image, { ImageProps } from "next/image";
 
 interface SafeImageProps extends Omit<ImageProps, "onError"> {
@@ -14,10 +14,16 @@ export function SafeImage({
   className = "",
   ...props
 }: SafeImageProps) {
-  const [imgSrc, setImgSrc] = useState<string>(
-    typeof src === "string" && src.trim() ? src : fallbackSrc
-  );
+  const resolvedSrc = typeof src === "string" && src.trim() ? src : fallbackSrc;
+  const [imgSrc, setImgSrc] = useState<string>(resolvedSrc);
   const [hasError, setHasError] = useState(false);
+
+  // Sync internal state when the src prop changes (e.g. color variant switch)
+  useEffect(() => {
+    const newSrc = typeof src === "string" && src.trim() ? src : fallbackSrc;
+    setImgSrc(newSrc);
+    setHasError(false);
+  }, [src, fallbackSrc]);
 
   return (
     <Image
