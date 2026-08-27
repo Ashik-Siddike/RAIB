@@ -107,7 +107,7 @@ export function Footer() {
           {/* Column 4: NEWSLETTER */}
           <div className="lg:col-span-4 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-widest font-serif">NEWSLETTER</h4>
-            <p className="text-xs text-stone-400">Get 10% off your first order & stay updated.</p>
+            <p className="text-xs text-stone-400">Subscribe to stay updated with our latest luxury arrivals.</p>
 
             <form onSubmit={handleSubscribe} className="flex gap-2">
               <input
