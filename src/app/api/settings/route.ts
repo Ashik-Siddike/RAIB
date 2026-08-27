@@ -5,13 +5,20 @@ import Settings from "@/models/Settings";
 export async function GET() {
   try {
     await connectToDatabase();
-    let settings = await Settings.findOne({});
+    let settings = await Settings.findOne({}).lean();
 
     if (!settings) {
       settings = await Settings.create({});
     }
 
-    return NextResponse.json({ success: true, settings });
+    return NextResponse.json(
+      { success: true, settings },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=30",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("MongoDB GET Settings Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

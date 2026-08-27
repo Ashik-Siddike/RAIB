@@ -563,60 +563,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
       </div>
 
-      {/* 3. "Why This Bag is Superior" Feature Highlights Grid (কেন এই ব্যাগটি সেরা?) */}
-      <section className="space-y-8 pt-8 border-t border-zinc-900">
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-xs font-bold text-red-500 uppercase tracking-widest">
-            Craftsmanship Excellence
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-serif">
-            কেন RAIB চামড়ার ব্যাগটি আপনার জন্য সেরা পছন্দ?
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="p-6 rounded-3xl bg-zinc-900/80 border border-zinc-800 space-y-3 shadow-xl">
-            <div className="p-3 bg-red-950/60 text-red-500 rounded-2xl border border-red-900/60 w-fit">
-              <Award className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-bold text-white font-serif">১০০% আসল ইতালিয়ান চামড়া</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Tuscan Full-Grain চামড়া দিয়ে হাতে সেলাই করা যা বছরের পর বছর নতুন ব্র্যান্ডের মতো চকচকে থাকবে।
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-zinc-900/80 border border-zinc-800 space-y-3 shadow-xl">
-            <div className="p-3 bg-red-950/60 text-red-500 rounded-2xl border border-red-900/60 w-fit">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-bold text-white font-serif">১৮K গোল্ড প্লেটেড চেইন</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              মরচে পড়া বা কালচে দাগমুক্ত ১৮K প্রিমিয়াম গোল্ড মেটালিক চেইন ও ভারী হার্ডওয়্যার সংযুক্ত।
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-zinc-900/80 border border-zinc-800 space-y-3 shadow-xl">
-            <div className="p-3 bg-red-950/60 text-red-500 rounded-2xl border border-red-900/60 w-fit">
-              <Truck className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-bold text-white font-serif">পানি ও দাগ নিরোধক প্রলেপ</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              বিশেষ ওয়াটার-রেজিস্ট্যান্ট কোটিং যা বৃষ্টি বা দুর্ঘটনাবশত তরল পড়লেও চামড়ার ক্ষতি হতে দেয় না।
-            </p>
-          </div>
-
-          <div className="p-6 rounded-3xl bg-zinc-900/80 border border-zinc-800 space-y-3 shadow-xl">
-            <div className="p-3 bg-red-950/60 text-red-500 rounded-2xl border border-red-900/60 w-fit">
-              <RotateCcw className="w-6 h-6" />
-            </div>
-            <h3 className="text-base font-bold text-white font-serif">৭ দিনের ফ্রি এক্সচেঞ্জ</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              পণ্য হাতে পাওয়ার পর ৭ দিনের মধ্যে যেকোনো রঙের পরিবর্তন বা রিপ্লেসমেন্ট গ্যারান্টি।
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* 4. "What Fits Inside My Bag?" Capacity Breakdown Visualizer */}
       <section className="p-8 sm:p-12 rounded-3xl bg-zinc-900/60 border border-zinc-800 space-y-8">
         <div className="max-w-xl mx-auto text-center space-y-2">

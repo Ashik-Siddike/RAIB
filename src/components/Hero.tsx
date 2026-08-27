@@ -10,20 +10,25 @@ import { motion } from "framer-motion";
 
 export function Hero() {
   const { lang } = useApp();
-  const { settings } = useSettings();
+  const { settings, loading } = useSettings();
 
   const heroBgImage = settings.heroImage || "/hero-luxury-bg.jpg";
 
   return (
     <section className="relative overflow-hidden bg-zinc-950 text-white min-h-[75vh] flex items-center justify-center border-b border-stone-200 transition-colors">
       
-      {/* 100% Crisp Full Opacity Background Image (No White Overlays) */}
+      {/* Background Image — uses Next.js Image for optimized loading + priority */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={heroBgImage}
-          alt="RAIB Luxury Studio Background"
-          className="w-full h-full object-cover"
-        />
+        {!loading && (
+          <Image
+            src={heroBgImage}
+            alt="RAIB Luxury Studio Background"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        )}
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6 sm:space-y-8 py-20 flex flex-col items-center justify-center">

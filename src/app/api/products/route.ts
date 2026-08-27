@@ -9,18 +9,7 @@ export async function GET(request: Request) {
     const category = searchParams.get("category");
     const id = searchParams.get("id");
 
-    // Automatically purge old AI dummy demo products from MongoDB Atlas
-    try {
-      await Product.deleteMany({
-        $or: [
-          { id: { $regex: /^raib-(tote|crossbody|shoulder|clutch|mini|backpack)-/ } },
-          { image: { $regex: /unsplash\.com|tote_bag_red|crossbody_black/ } },
-          { name: { $regex: /The Royal Crimson/i } },
-        ],
-      });
-    } catch (purgeErr) {
-      console.warn("Purge demo products warning:", purgeErr);
-    }
+    // Products are fetched directly without purging demo data on every request
 
     if (id) {
       const product = await Product.findOne({ id }).lean();
