@@ -416,18 +416,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     <div className="min-h-screen bg-zinc-950 text-white w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24 lg:pb-12 space-y-16 w-full overflow-x-hidden">
         
-        {/* 1. Urgency & Stock Scarcity Counter Header */}
-      <div className="bg-zinc-900 border border-red-900/60 p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2 text-red-500 font-bold">
-          <Flame className="w-4 h-4 text-red-500 animate-bounce" />
-          <span>{settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।"}</span>
-        </div>
-
-        <div className="flex items-center gap-2 text-zinc-300 font-mono font-bold bg-zinc-950 px-3 py-1 rounded-xl border border-zinc-800">
-          <Clock className="w-3.5 h-3.5 text-amber-400" />
-          <span>অফার শেষ হতে বাকি: <strong>০৪:১৮:৩৫</strong></span>
-        </div>
-      </div>
+        {/* 1. Urgency & Stock Scarcity Header (Toggleable & Editable) */}
+        {(settings.showStockUrgency ?? true) && (
+          <div className="bg-gradient-to-r from-zinc-900 via-red-950/40 to-zinc-900 border border-red-900/60 p-3.5 sm:p-4 rounded-2xl flex items-center justify-center gap-2.5 text-xs text-center shadow-lg">
+            <Flame className="w-4 h-4 text-red-500 animate-bounce flex-shrink-0" />
+            <span className="font-bold text-red-400 font-sans tracking-wide">
+              {settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।"}
+            </span>
+          </div>
+        )}
 
       {/* 2. Main Product Display Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">

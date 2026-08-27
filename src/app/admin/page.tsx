@@ -23,6 +23,7 @@ import {
   Calculator,
   Search,
   RefreshCw,
+  Flame,
   Lock,
   Eye,
   Key,
@@ -75,6 +76,7 @@ export default function AdminPage() {
   // Announcement Bar State
   const [showAnnouncementBar, setShowAnnouncementBar] = useState(settings.showAnnouncementBar ?? true);
   const [announcementText, setAnnouncementText] = useState(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+  const [showStockUrgency, setShowStockUrgency] = useState(settings.showStockUrgency ?? true);
   const [stockUrgencyText, setStockUrgencyText] = useState(settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।");
 
   // Section Toggles State
@@ -228,6 +230,7 @@ export default function AdminPage() {
 
     setShowAnnouncementBar(settings.showAnnouncementBar ?? true);
     setAnnouncementText(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+    setShowStockUrgency(settings.showStockUrgency ?? true);
     setStockUrgencyText(settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।");
 
     setShowHero(settings.showHero ?? true);
@@ -369,6 +372,7 @@ export default function AdminPage() {
 
       showAnnouncementBar,
       announcementText,
+      showStockUrgency,
       stockUrgencyText,
 
       showHero,
@@ -1959,10 +1963,26 @@ export default function AdminPage() {
                     className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
                   />
                 </div>
+              </div>
+
+              {/* Product Page Stock Urgency Banner Toggle & Text */}
+              <div className="pt-4 border-t border-zinc-900 space-y-3">
+                <label className="flex items-center justify-between p-3 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-red-500" />
+                    <span className="font-bold text-white">Show Stock Urgency Banner on Product Page (স্টক নোটিফিকেশন ব্যানার চালু রাখুন)</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={showStockUrgency}
+                    onChange={(e) => setShowStockUrgency(e.target.checked)}
+                    className="w-4 h-4 accent-red-600 cursor-pointer"
+                  />
+                </label>
 
                 <div>
                   <label className="text-zinc-300 font-bold block mb-1">
-                    Product Page Stock Urgency Banner (স্টক সীমিত টেক্সট) 🔥 *
+                    Stock Urgency Text (স্টক টেক্সট কাস্টমাইজ করুন) 🔥
                   </label>
                   <input
                     type="text"
@@ -1972,7 +1992,7 @@ export default function AdminPage() {
                     className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500 font-sans"
                   />
                   <span className="text-[10px] text-zinc-500 mt-1 block">
-                    প্রোডাক্ট পেজের ওপরে থাকা স্টক কাউন্টার টেক্সট পরিবর্তন করুন (যেমন: স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।)
+                    প্রোডাক্ট পেজের ওপরের স্টক নোটিফিকেশন টেক্সট পরিবর্তন করুন (যেমন: 🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।)
                   </span>
                 </div>
               </div>
