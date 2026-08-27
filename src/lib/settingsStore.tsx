@@ -97,7 +97,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   showBestsellers: true,
   showReels: true,
   showNewArrivals: true,
-  showOfferBanner: true,
+  showOfferBanner: false, // Turn off offer banner by default as requested
   showTrustBadges: true,
 
   heroBadge: "STYLED FOR THE MODERN WOMAN",
@@ -117,25 +117,25 @@ export const DEFAULT_SETTINGS: SettingsType = {
   reels: [
     {
       id: "reel-1",
-      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-fashion-model-showing-a-handbag-41551-large.mp4",
-      poster: "/tote_bag_red_1786395433017.jpg",
-      title: "Royal Crimson Italian Tote in Motion",
+      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-black-handbag-41551-large.mp4",
+      poster: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop&q=80",
+      title: "The Royal Crimson Italian Leather Tote",
       price: 4850,
       productId: "raib-tote-01",
     },
     {
       id: "reel-2",
-      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-black-bag-41550-large.mp4",
-      poster: "/crossbody_black_1786395824801.jpg",
-      title: "Obsidian Black Leather Crossbody Unboxing",
+      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-with-a-red-handbag-in-a-park-41552-large.mp4",
+      poster: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80",
+      title: "Noir Velvet Executive Crossbody",
       price: 3950,
-      productId: "raib-crossbody-02",
+      productId: "raib-black-02",
     },
     {
       id: "reel-3",
-      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-carrying-a-leather-bag-in-the-city-41552-large.mp4",
-      poster: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop&q=80",
-      title: "Emerald Gold Structured Bag Styling",
+      videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-fashion-woman-with-a-bag-walking-in-the-street-41550-large.mp4",
+      poster: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&auto=format&fit=crop&q=80",
+      title: "Emerald Gold Italian Clutch",
       price: 5200,
       productId: "raib-emerald-03",
     },
@@ -196,17 +196,32 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<SettingsType>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
 
-  // Fetch settings from MongoDB API
+  // Sync settings with localStorage synchronously on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("raib_settings");
+      if (saved) {
+        setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(saved) });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  // Fetch settings from MongoDB API and sync with state & localStorage
   useEffect(() => {
     async function fetchSettings() {
       try {
         const res = await fetch("/api/settings");
         const data = await res.json();
         if (data.success && data.settings) {
-          setSettings({
-            ...DEFAULT_SETTINGS,
-            ...data.settings,
-          });
+          const merged = { ...DEFAULT_SETTINGS, ...data.settings };
+          setSettings(merged);
+          try {
+            localStorage.setItem("raib_settings", JSON.stringify(merged));
+          } catch (e) {
+            console.error(e);
+          }
         }
       } catch (err) {
         console.error("Failed to load settings from API:", err);
@@ -220,6 +235,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const updateSettings = async (newSettings: Partial<SettingsType>): Promise<boolean> => {
     const updated = { ...settings, ...newSettings };
     setSettings(updated);
+    try {
+      localStorage.setItem("raib_settings", JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
 
     try {
       const res = await fetch("/api/settings", {

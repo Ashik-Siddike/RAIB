@@ -117,13 +117,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
         </div>
 
         {/* Price & Solid Red Add To Cart Button */}
-        <div className="pt-2 border-t border-stone-200 flex items-center justify-between gap-2 w-full">
-          <div>
-            <div className="text-base sm:text-lg font-extrabold text-zinc-900 font-sans">
+        <div className="pt-2 border-t border-stone-200 flex items-center justify-between gap-1.5 w-full">
+          <div className="min-w-0 flex-1">
+            <div className="text-sm sm:text-base font-extrabold text-zinc-900 font-sans truncate">
               ৳{product.price.toLocaleString()}
             </div>
             {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-[10px] sm:text-xs text-zinc-400 line-through">
+              <span className="text-[10px] text-zinc-400 line-through block truncate">
                 ৳{product.originalPrice.toLocaleString()}
               </span>
             )}
@@ -131,9 +131,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           <button
             onClick={() => addToCart(product)}
-            className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-md hover:scale-105 cursor-pointer flex-shrink-0"
+            className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:px-3.5 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-[11px] sm:text-xs font-bold transition-all shadow-md hover:scale-105 cursor-pointer flex-shrink-0 whitespace-nowrap"
           >
-            <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <ShoppingCart className="w-3.5 h-3.5 flex-shrink-0" />
             <span>{t("addToCart")}</span>
           </button>
         </div>

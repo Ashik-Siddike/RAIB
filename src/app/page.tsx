@@ -75,13 +75,13 @@ export default function Home() {
 
             {/* Bestsellers Grid / Loading Skeleton */}
             {isLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="aspect-square bg-stone-100 rounded-2xl animate-pulse" />
                 ))}
               </div>
             ) : bestSellers.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                 {bestSellers.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
