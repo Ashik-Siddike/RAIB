@@ -42,7 +42,7 @@ export default function TrackOrderPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 space-y-12 w-full overflow-x-hidden">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 pb-24 lg:pb-20 space-y-12 w-full overflow-x-hidden">
       
       {/* Header Banner */}
       <div className="text-center space-y-3 max-w-xl mx-auto">

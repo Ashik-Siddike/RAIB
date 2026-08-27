@@ -37,11 +37,12 @@ export function CartDrawer() {
     let cleanPhone = rawPhone.replace(/\D/g, "");
     if (cleanPhone.startsWith("01")) cleanPhone = "88" + cleanPhone;
 
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://raib.site";
     const itemsSummary = cart
       .map((item, idx) => {
         const absoluteImg = item.image.startsWith("http")
           ? item.image
-          : `https://raib.site${item.image.startsWith("/") ? "" : "/"}${item.image}`;
+          : `${origin}${item.image.startsWith("/") ? "" : "/"}${item.image}`;
         return `${idx + 1}. 👜 *${item.name}*\n   🆔 Code: ${item.id}\n   🎨 Color: ${item.color}\n   🔢 Qty: x${item.quantity}\n   💰 Price: ৳${(item.price * item.quantity).toLocaleString()}\n   🖼️ Photo: ${absoluteImg}`;
       })
       .join("\n\n");
@@ -56,7 +57,12 @@ ${itemsSummary}
 
 _Please confirm my order & send delivery details!_`;
 
-    window.open(`https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`, "_blank");
+    const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      window.location.href = waUrl;
+    } else {
+      window.open(waUrl, "_blank");
+    }
   };
 
   return (

@@ -265,7 +265,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           customerAddress: `${expressAddress}, ${expressDistrict}`,
         });
 
-        window.open(waUrl, "_blank");
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+          window.location.href = waUrl;
+        } else {
+          window.open(waUrl, "_blank");
+        }
       }
     } catch (err) {
       showToast("Order placement failed.");
@@ -322,7 +326,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16 w-full overflow-x-hidden">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24 lg:pb-12 space-y-16 w-full overflow-x-hidden">
       
       {/* 1. Urgency & Stock Scarcity Counter Header */}
       <div className="bg-zinc-900 border border-red-900/60 p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">

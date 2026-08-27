@@ -9,8 +9,21 @@ export async function GET(request: Request) {
     const category = searchParams.get("category");
     const id = searchParams.get("id");
 
+    // Automatically purge old AI dummy demo products from MongoDB Atlas
+    try {
+      await Product.deleteMany({
+        $or: [
+          { id: { $regex: /^raib-(tote|crossbody|shoulder|clutch|mini|backpack)-/ } },
+          { image: { $regex: /unsplash\.com|tote_bag_red|crossbody_black/ } },
+          { name: { $regex: /The Royal Crimson/i } },
+        ],
+      });
+    } catch (purgeErr) {
+      console.warn("Purge demo products warning:", purgeErr);
+    }
+
     if (id) {
-      const product = await Product.findOne({ id });
+      const product = await Product.findOne({ id }).lean();
       return NextResponse.json({ success: true, product });
     }
 
@@ -23,10 +36,17 @@ export async function GET(request: Request) {
       }
     }
 
-    // Always fetch directly from MongoDB database (no dummy auto-seeding)
-    const products = await Product.find(query).sort({ createdAt: -1 });
+    // Fast lean execution without heavy Mongoose document hydration
+    const products = await Product.find(query).lean().sort({ createdAt: -1 });
 
-    return NextResponse.json({ success: true, products, source: "mongodb" });
+    return NextResponse.json(
+      { success: true, products, source: "mongodb", count: products.length },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=30",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("MongoDB GET Products Error:", error);
     return NextResponse.json({ success: false, error: error.message, products: [] }, { status: 500 });

@@ -27,12 +27,14 @@ export function createWhatsAppOrderLink(details: WhatsAppOrderDetails): string {
     cleanPhone = "880" + cleanPhone;
   }
 
-  // Ensure absolute image URL
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://raib.site";
+
+  // Ensure absolute image URL dynamically
   const absoluteImgUrl = details.imageUrl.startsWith("http")
     ? details.imageUrl
-    : `https://raib.site${details.imageUrl.startsWith("/") ? "" : "/"}${details.imageUrl}`;
+    : `${origin}${details.imageUrl.startsWith("/") ? "" : "/"}${details.imageUrl}`;
 
-  const absoluteProductUrl = details.productUrl || `https://raib.site/product/${details.productId}`;
+  const absoluteProductUrl = details.productUrl || `${origin}/product/${details.productId}`;
 
   // Formatted WhatsApp Message
   let messageText = `🛍️ *RAIB LUXURY LEATHER - NEW ORDER*
