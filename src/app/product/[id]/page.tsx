@@ -199,16 +199,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   if (isLoading && !product) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12 animate-pulse">
-        <div className="h-12 bg-zinc-900 rounded-2xl w-full" />
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7 aspect-square bg-zinc-900 rounded-3xl" />
-          <div className="lg:col-span-5 space-y-6">
-            <div className="h-6 bg-zinc-900 rounded-full w-1/3" />
-            <div className="h-10 bg-zinc-900 rounded-xl w-3/4" />
-            <div className="h-16 bg-zinc-900 rounded-2xl w-full" />
-            <div className="h-28 bg-zinc-900 rounded-2xl w-full" />
-            <div className="h-14 bg-zinc-900 rounded-2xl w-full" />
+      <div className="min-h-screen bg-zinc-950 text-white w-full py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 animate-pulse">
+          <div className="h-12 bg-zinc-900 rounded-2xl w-full" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-7 aspect-square bg-zinc-900 rounded-3xl" />
+            <div className="lg:col-span-5 space-y-6">
+              <div className="h-6 bg-zinc-900 rounded-full w-1/3" />
+              <div className="h-10 bg-zinc-900 rounded-xl w-3/4" />
+              <div className="h-16 bg-zinc-900 rounded-2xl w-full" />
+              <div className="h-28 bg-zinc-900 rounded-2xl w-full" />
+              <div className="h-14 bg-zinc-900 rounded-2xl w-full" />
+            </div>
           </div>
         </div>
       </div>
@@ -217,7 +219,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   if (!product) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4 text-center px-4">
+      <div className="min-h-screen bg-zinc-950 text-white w-full flex flex-col items-center justify-center space-y-4 text-center px-4 py-20">
         <h2 className="text-2xl font-bold text-white font-serif">প্রোডাক্ট খুঁজে পাওয়া যায়নি</h2>
         <p className="text-zinc-400 text-xs">অনুগ্রহ করে আমাদের শপ পেজ থেকে কালেকশন ঘুরে দেখুন।</p>
         <Link href="/shop" className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition">
@@ -405,9 +407,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24 lg:pb-12 space-y-16 w-full overflow-x-hidden">
-      
-      {/* 1. Urgency & Stock Scarcity Counter Header */}
+    <div className="min-h-screen bg-zinc-950 text-white w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24 lg:pb-12 space-y-16 w-full overflow-x-hidden">
+        
+        {/* 1. Urgency & Stock Scarcity Counter Header */}
       <div className="bg-zinc-900 border border-red-900/60 p-3.5 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 text-red-500 font-bold">
           <Flame className="w-4 h-4 text-red-500 animate-bounce" />
@@ -753,51 +756,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         )}
       </section>
 
-      {/* 6. Product Comparison Table */}
-      <section className="space-y-6 pt-8 border-t border-zinc-900">
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-xs font-bold text-red-500 uppercase tracking-widest">
-            Quality Comparison
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white font-serif">
-            RAIB আসল ইতালিয়ান চামড়া vs সাধারণ নকল লেদার
-          </h2>
-        </div>
 
-        <div className="max-w-3xl mx-auto overflow-x-auto rounded-3xl border border-zinc-800 bg-zinc-900/60">
-          <table className="w-full text-left text-xs text-zinc-300">
-            <thead className="bg-zinc-950 text-white font-serif border-b border-zinc-800">
-              <tr>
-                <th className="p-4">বৈশিষ্ট্য (Features)</th>
-                <th className="p-4 text-red-400 font-bold">RAIB Genuine Leather 🇮🇹</th>
-                <th className="p-4 text-zinc-500">সাধারণ নকল কৃত্তিম ব্যাগ</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-800/60">
-              <tr>
-                <td className="p-4 font-bold text-white">উপাদান (Material)</td>
-                <td className="p-4 text-emerald-400 font-bold">১০০% ইতালিয়ান ফুল-গ্রেইন লেদার</td>
-                <td className="p-4 text-zinc-500">নকল প্লাস্টিক PU কৃত্তিম লেদার</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-bold text-white">স্থায়িত্ব (Durability)</td>
-                <td className="p-4 text-emerald-400 font-bold">১০+ বছর নতুন চামড়ার সুবাসসহ টেকে</td>
-                <td className="p-4 text-zinc-500">৩ মাসের মধ্যে চামড়া উঠে যায়</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-bold text-white">হার্ডওয়্যার ও চেইন</td>
-                <td className="p-4 text-emerald-400 font-bold">১৮K গোল্ড প্লেটেড ভারী মেটালিক চেইন</td>
-                <td className="p-4 text-zinc-500">হালকা অ্যালুমিনিয়াম (মরিচা ধরে)</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-bold text-white">গ্যারান্টি</td>
-                <td className="p-4 text-emerald-400 font-bold">৭ দিনের ইজি এক্সচেঞ্জ গ্যারান্টি</td>
-                <td className="p-4 text-zinc-500">কোনো গ্যারান্টি নেই</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
 
       {/* 7. Verified Customer Reviews Section */}
       <section className="space-y-8 pt-8 border-t border-zinc-900">
@@ -966,6 +925,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </section>
       )}
 
+      </div>
     </div>
   );
 }
