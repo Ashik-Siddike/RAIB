@@ -12,6 +12,10 @@ export function SafeImage({
   alt,
   fallbackSrc = "/main-logo.png",
   className = "",
+  priority = false,
+  sizes,
+  loading,
+  decoding,
   ...props
 }: SafeImageProps) {
   const resolvedSrc = typeof src === "string" && src.trim() ? src : fallbackSrc;
@@ -31,6 +35,10 @@ export function SafeImage({
       src={hasError || !imgSrc ? fallbackSrc : imgSrc}
       alt={alt || "RAIB Genuine Leather Bag"}
       className={className}
+      priority={priority}
+      loading={priority ? undefined : (loading || "lazy")}
+      decoding={decoding || "async"}
+      sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
       onError={() => {
         if (!hasError) {
           setHasError(true);

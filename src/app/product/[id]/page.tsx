@@ -466,7 +466,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     activeImage === img ? "border-red-600 shadow-md scale-105" : "border-zinc-800 opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <SafeImage src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
+                  <SafeImage src={img} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" sizes="80px" />
                 </button>
               ))}
             </div>
