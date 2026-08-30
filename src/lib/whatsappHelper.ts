@@ -45,9 +45,6 @@ export function createWhatsAppOrderLink(details: WhatsAppOrderDetails): string {
 💰 *Price:* ৳${details.price.toLocaleString()}
 📦 *Delivery Method:* Cash on Delivery (COD)
 
-🖼️ *Selected Bag Photo:*
-${absoluteImgUrl}
-
 🔗 *Product Page Link:*
 ${absoluteProductUrl}`;
 

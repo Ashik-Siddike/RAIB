@@ -37,13 +37,9 @@ export function CartDrawer() {
     let cleanPhone = rawPhone.replace(/\D/g, "");
     if (cleanPhone.startsWith("01")) cleanPhone = "88" + cleanPhone;
 
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://raib.site";
     const itemsSummary = cart
       .map((item, idx) => {
-        const absoluteImg = item.image.startsWith("http")
-          ? item.image
-          : `${origin}${item.image.startsWith("/") ? "" : "/"}${item.image}`;
-        return `${idx + 1}. 👜 *${item.name}*\n   🆔 Code: ${item.id}\n   🎨 Color: ${item.color}\n   🔢 Qty: x${item.quantity}\n   💰 Price: ৳${(item.price * item.quantity).toLocaleString()}\n   🖼️ Photo: ${absoluteImg}`;
+        return `${idx + 1}. 👜 *${item.name}*\n   🆔 Code: ${item.id}\n   🎨 Color: ${item.color}\n   🔢 Qty: x${item.quantity}\n   💰 Price: ৳${(item.price * item.quantity).toLocaleString()}`;
       })
       .join("\n\n");
 
