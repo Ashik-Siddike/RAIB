@@ -89,10 +89,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Product Details Section */}
-      <div className="p-4 sm:p-5 space-y-2.5 flex-1 flex flex-col justify-between w-full bg-white">
+      <div className="p-3.5 sm:p-5 space-y-2.5 flex-1 flex flex-col justify-between w-full bg-white">
         <div className="space-y-1">
           {/* Category & Rating */}
-          <div className="flex items-center justify-between text-[11px] sm:text-xs">
+          <div className="flex items-center justify-between text-[11px] sm:text-xs gap-1">
             <span className="text-red-600 font-bold tracking-wider uppercase text-[9px] sm:text-[10px] font-sans truncate">
               {product.category || "Tote Bags"}
             </span>
@@ -105,25 +105,25 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           {/* Product Title */}
           <Link href={`/product/${product.id}`} className="block">
-            <h3 className="text-sm sm:text-base font-bold text-zinc-900 group-hover:text-red-600 transition-colors line-clamp-1 font-serif">
+            <h3 className="text-xs sm:text-base font-bold text-zinc-900 group-hover:text-red-600 transition-colors line-clamp-1 font-serif">
               {lang === "bn" && product.nameBn ? product.nameBn : product.name}
             </h3>
           </Link>
 
           {/* Material Specs */}
-          <p className="text-[11px] sm:text-xs text-zinc-500 line-clamp-1">
+          <p className="text-[10px] sm:text-xs text-zinc-500 line-clamp-1">
             {product.material || "Premium Chinese Leather"}
           </p>
         </div>
 
         {/* Price & Solid Red Add To Cart Button */}
-        <div className="pt-2 border-t border-stone-200 flex items-center justify-between gap-1.5 w-full">
-          <div className="min-w-0 flex-1">
-            <div className="text-sm sm:text-base font-extrabold text-zinc-900 font-sans truncate">
+        <div className="pt-2 border-t border-stone-100 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-1.5 w-full">
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <span className="text-sm sm:text-base font-extrabold text-zinc-900 font-sans whitespace-nowrap">
               ৳{product.price.toLocaleString()}
-            </div>
+            </span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-[10px] text-zinc-400 line-through block truncate">
+              <span className="text-[10px] sm:text-[11px] text-zinc-400 line-through whitespace-nowrap">
                 ৳{product.originalPrice.toLocaleString()}
               </span>
             )}
@@ -131,7 +131,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           <button
             onClick={() => addToCart(product)}
-            className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:px-3.5 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-[11px] sm:text-xs font-bold transition-all shadow-md hover:scale-105 cursor-pointer flex-shrink-0 whitespace-nowrap"
+            className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-xl text-[11px] sm:text-xs font-bold transition-all shadow-md cursor-pointer whitespace-nowrap"
           >
             <ShoppingCart className="w-3.5 h-3.5 flex-shrink-0" />
             <span>{t("addToCart")}</span>
