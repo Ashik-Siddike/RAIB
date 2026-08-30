@@ -27,6 +27,7 @@ export interface IProduct extends Document {
   isNewArrival?: boolean;
   isBestSeller?: boolean;
   dimensions?: string;
+  sortOrder?: number;
 }
 
 const ColorVariantSchema: Schema = new Schema({
@@ -57,6 +58,7 @@ const ProductSchema: Schema = new Schema(
     isNewArrival: { type: Boolean, default: false },
     isBestSeller: { type: Boolean, default: false },
     dimensions: { type: String },
+    sortOrder: { type: Number, default: 100 },
   },
   { timestamps: true }
 );

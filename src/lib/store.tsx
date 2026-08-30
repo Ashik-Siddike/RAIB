@@ -45,6 +45,7 @@ export interface ProductType {
   isNewArrival?: boolean;
   isBestSeller?: boolean;
   dimensions?: string;
+  sortOrder?: number;
 }
 
 interface AppContextType {

@@ -32,8 +32,8 @@ export async function GET(request: Request) {
       }
     }
 
-    // Fast lean execution without heavy Mongoose document hydration
-    const products = await Product.find(query).lean().sort({ createdAt: -1 });
+    // Fast lean execution sorting by custom serial (sortOrder ASC, then newest createdAt DESC)
+    const products = await Product.find(query).lean().sort({ sortOrder: 1, createdAt: -1 });
 
     return NextResponse.json(
       { success: true, products, source: "mongodb", count: products.length },
@@ -101,6 +101,7 @@ export async function POST(request: Request) {
       isNewArrival: body.isNewArrival ?? true,
       isBestSeller: body.isBestSeller ?? false,
       dimensions: body.dimensions || "Standard Size",
+      sortOrder: body.sortOrder !== undefined ? Number(body.sortOrder) : 100,
     });
 
     return NextResponse.json({ success: true, product: newProduct }, { status: 201 });
@@ -114,6 +115,24 @@ export async function PUT(request: Request) {
   try {
     await connectToDatabase();
     const body = await request.json();
+
+    // 1. Bulk sequence / serial reordering support
+    if (Array.isArray(body.orderedIds) && body.orderedIds.length > 0) {
+      const bulkOps = body.orderedIds.map((pid: string, index: number) => ({
+        updateOne: {
+          filter: { id: pid },
+          update: { $set: { sortOrder: index + 1 } },
+        },
+      }));
+      await Product.bulkWrite(bulkOps);
+      const updatedProducts = await Product.find({}).lean().sort({ sortOrder: 1, createdAt: -1 });
+      return NextResponse.json({
+        success: true,
+        message: "Product serial sequence updated successfully",
+        products: updatedProducts,
+      });
+    }
+
     const { id, ...updateFields } = body;
 
     if (!id) {
@@ -125,6 +144,9 @@ export async function PUT(request: Request) {
     }
     if (updateFields.originalPrice) {
       updateFields.originalPrice = Number(updateFields.originalPrice);
+    }
+    if (updateFields.sortOrder !== undefined) {
+      updateFields.sortOrder = Number(updateFields.sortOrder);
     }
 
     if (Array.isArray(updateFields.colorVariants)) {

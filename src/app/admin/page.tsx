@@ -39,6 +39,13 @@ import {
   Layout,
   Upload,
   Image as LucideImage,
+  ArrowUp,
+  ArrowDown,
+  ChevronsUp,
+  ChevronsDown,
+  ArrowUpDown,
+  Layers,
+  GripVertical,
   Palette,
   Check
 } from "lucide-react";
@@ -157,6 +164,7 @@ export default function AdminPage() {
   ]);
   const [newDesc, setNewDesc] = useState("");
   const [newDescBn, setNewDescBn] = useState("");
+  const [newSortOrder, setNewSortOrder] = useState("1");
   const [isUploading, setIsUploading] = useState(false);
   const [isPublishingProduct, setIsPublishingProduct] = useState(false);
 
@@ -168,6 +176,7 @@ export default function AdminPage() {
   const [editOriginalPrice, setEditOriginalPrice] = useState("");
   const [editCategory, setEditCategory] = useState("Tote Bags");
   const [editMaterial, setEditMaterial] = useState("Chinese Leather");
+  const [editSortOrder, setEditSortOrder] = useState("1");
   const [editImage, setEditImage] = useState("");
   const [editSecondaryImage, setEditSecondaryImage] = useState("");
   const [editColorVariants, setEditColorVariants] = useState<ColorVariant[]>([]);
@@ -176,6 +185,7 @@ export default function AdminPage() {
   const [editIsNewArrival, setEditIsNewArrival] = useState(true);
   const [editIsBestSeller, setEditIsBestSeller] = useState(false);
   const [isUpdatingProduct, setIsUpdatingProduct] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
 
   // POS Manual Order Form State
   const [posCustomerName, setPosCustomerName] = useState("");
@@ -590,6 +600,7 @@ export default function AdminPage() {
         rating: 5.0,
         reviewCount: 1,
         isNewArrival: true,
+        sortOrder: Number(newSortOrder) || 1,
       };
 
       const res = await fetch("/api/products", {
@@ -613,11 +624,19 @@ export default function AdminPage() {
       }
 
       if (data.success && data.product) {
-        setProducts([data.product, ...products]);
+        // Refresh products sorted from server
+        const prodRes = await fetch("/api/products");
+        const prodData = await prodRes.json();
+        if (prodData.success && Array.isArray(prodData.products)) {
+          setProducts(prodData.products);
+        } else {
+          setProducts([data.product, ...products]);
+        }
         showToast("New Product & Color Variants Published Successfully!");
         setNewTitle("");
         setNewTitleBn("");
         setNewPrice("");
+        setNewSortOrder("1");
         setNewImage("/tote_bag_red_1786395433017.jpg");
         setNewSecondaryImage("");
         setNewImages([]);
@@ -647,6 +666,7 @@ export default function AdminPage() {
     setEditOriginalPrice(String(p.originalPrice || Math.round(p.price * 1.2) || ""));
     setEditCategory(p.category || "Tote Bags");
     setEditMaterial(p.material || "Chinese Leather");
+    setEditSortOrder(String(p.sortOrder || 1));
     setEditImage(p.image || "");
     setEditSecondaryImage(p.secondaryImage || "");
     setEditColorVariants(
@@ -694,6 +714,7 @@ export default function AdminPage() {
         originalPrice: editOriginalPrice ? Number(editOriginalPrice) : Number(editPrice) * 1.2,
         category: editCategory,
         material: editMaterial || "Chinese Leather",
+        sortOrder: Number(editSortOrder) || 1,
         image: compressedMainCover,
         secondaryImage: editSecondaryImage ? (editSecondaryImage.startsWith("data:image/") ? await compressImageFile(editSecondaryImage) : editSecondaryImage) : compressedMainCover,
         colorVariants: validColorVars,
@@ -720,17 +741,95 @@ export default function AdminPage() {
       }
 
       if (data.success && data.product) {
-        setProducts(products.map((item) => (item.id === editingProduct.id ? data.product : item)));
-        showToast("Product & Color Variants Updated Successfully!");
+        // Refresh products list
+        const prodRes = await fetch("/api/products");
+        const prodData = await prodRes.json();
+        if (prodData.success && Array.isArray(prodData.products)) {
+          setProducts(prodData.products);
+        } else {
+          setProducts(products.map((p) => (p.id === data.product.id ? data.product : p)));
+        }
         setEditingProduct(null);
+        showToast("Product Updated Successfully!");
       } else {
-        showToast("Update Failed: " + (data.error || "Please check input fields."));
+        showToast("Update Failed: " + (data.error || "Unknown error"));
       }
     } catch (err: any) {
       console.error("Update exception:", err);
       showToast("Update Failed: " + (err.message || "Network error"));
     } finally {
       setIsUpdatingProduct(false);
+    }
+  };
+
+  // 1-Click Product Position / Display Sequence Controller
+  const handleMoveProduct = async (index: number, direction: "top" | "up" | "down" | "bottom") => {
+    if (products.length <= 1) return;
+    const reordered = [...products];
+    const item = reordered[index];
+    reordered.splice(index, 1);
+
+    if (direction === "top") {
+      reordered.unshift(item);
+    } else if (direction === "bottom") {
+      reordered.push(item);
+    } else if (direction === "up") {
+      const newIdx = Math.max(0, index - 1);
+      reordered.splice(newIdx, 0, item);
+    } else if (direction === "down") {
+      const newIdx = Math.min(reordered.length, index + 1);
+      reordered.splice(newIdx, 0, item);
+    }
+
+    setProducts(reordered);
+    setIsReordering(true);
+    showToast("সিরিয়াল পরিবর্তন করা হচ্ছে...");
+
+    try {
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderedIds: reordered.map((p) => p.id) }),
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.products)) {
+        setProducts(data.products);
+        showToast("✅ প্রোডাক্ট সিরিয়াল সফলভাবে আপডেট হয়েছে!");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("সিরিয়াল সেভ করতে সমস্যা হয়েছে");
+    } finally {
+      setIsReordering(false);
+    }
+  };
+
+  const handleSetExactSerial = async (id: string, targetSerial: number) => {
+    const currentIdx = products.findIndex((p) => p.id === id);
+    if (currentIdx === -1) return;
+    const reordered = [...products];
+    const item = reordered[currentIdx];
+    reordered.splice(currentIdx, 1);
+    const safeIdx = Math.max(0, Math.min(reordered.length, targetSerial - 1));
+    reordered.splice(safeIdx, 0, item);
+
+    setProducts(reordered);
+    setIsReordering(true);
+    try {
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderedIds: reordered.map((p) => p.id) }),
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.products)) {
+        setProducts(data.products);
+        showToast(`✅ প্রোডাক্টটি #${safeIdx + 1} পজিশনে সেট করা হয়েছে!`);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsReordering(false);
     }
   };
 
@@ -1527,63 +1626,166 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Tab 5: Product Catalog CRUD */}
+      {/* Tab 5: Product Catalog CRUD & Display Sequence Reorder */}
       {activeTab === "products" && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-white font-serif">Catalog Handbag Products ({products.length})</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-zinc-900 border border-zinc-800">
+            <div>
+              <h3 className="text-xl font-bold text-white font-serif flex items-center gap-2">
+                <ArrowUpDown className="w-5 h-5 text-red-500" />
+                Product Catalog & Display Sequence ({products.length})
+              </h3>
+              <p className="text-xs text-zinc-400 mt-1">
+                হোমপেজ ও শপ পেজে ব্যাগের সিরিয়াল কন্ট্রোল করুন। কোনো ব্যাগ সবার প্রথমে আনতে <strong className="text-amber-400">🔝 (সবার আগে)</strong> বা <strong className="text-red-400">⬆️ (ওপরে)</strong> বাটনে ক্লিক করুন।
+              </p>
+            </div>
+
             <button
               onClick={() => setActiveTab("add")}
-              className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2.5 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 cursor-pointer flex-shrink-0 shadow-lg"
             >
               <Plus className="w-4 h-4" />
-              <span>Add New Bag & Color Variants</span>
+              <span>Add New Bag</span>
             </button>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((p) => (
-              <div key={p.id} className="p-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0">
-                    <Image src={p.image} alt={p.name} fill className="object-cover" />
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="text-xs font-bold text-white line-clamp-1 font-serif">{p.name}</h4>
-                    <p className="text-[10px] text-zinc-400">{p.category} • ৳{p.price?.toLocaleString()}</p>
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
-                        In Stock
-                      </span>
-                      {p.colorVariants && p.colorVariants.length > 0 && (
-                        <span className="text-[9px] text-purple-400 font-bold bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800">
-                          {p.colorVariants.length} Colors
+
+          <div className="space-y-3">
+            {products.map((p, index) => {
+              const isFirst = index === 0;
+              const isLast = index === products.length - 1;
+
+              return (
+                <div
+                  key={p.id}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
+                    isFirst
+                      ? "bg-gradient-to-r from-amber-950/40 via-zinc-900 to-zinc-900 border-amber-600/60 shadow-lg"
+                      : "bg-zinc-900/80 border-zinc-800 hover:border-zinc-700"
+                  }`}
+                >
+                  {/* Left Info: Position Badge + Thumbnail + Details */}
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                    {/* Position Serial Badge */}
+                    <div
+                      className={`flex flex-col items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex-shrink-0 font-mono font-black text-xs sm:text-sm border shadow-sm ${
+                        isFirst
+                          ? "bg-amber-500 text-zinc-950 border-amber-400 animate-pulse"
+                          : "bg-zinc-950 text-zinc-300 border-zinc-800"
+                      }`}
+                      title={`Position #${index + 1}`}
+                    >
+                      <span>#{index + 1}</span>
+                      {isFirst && <span className="text-[8px] uppercase tracking-tighter font-sans font-bold">TOP</span>}
+                    </div>
+
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-shrink-0">
+                      <Image src={p.image} alt={p.name} fill className="object-cover" />
+                    </div>
+
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-xs sm:text-sm font-bold text-white line-clamp-1 font-serif">
+                          {p.name}
+                        </h4>
+                        {isFirst && (
+                          <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40 hidden sm:inline-flex">
+                            ⭐️ ১ম পজিশনে প্রদর্শিত
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-zinc-400">
+                        {p.category} • <strong className="text-white font-mono">৳{p.price?.toLocaleString()}</strong>
+                        {p.originalPrice && p.originalPrice > p.price && (
+                          <span className="line-through text-zinc-500 ml-1.5 font-mono">৳{p.originalPrice?.toLocaleString()}</span>
+                        )}
+                      </p>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                          In Stock
                         </span>
-                      )}
+                        {p.colorVariants && p.colorVariants.length > 0 && (
+                          <span className="text-[9px] text-purple-400 font-bold bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800">
+                            {p.colorVariants.length} Colors
+                          </span>
+                        )}
+                        <span className="text-[9px] text-zinc-400 bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800 font-mono">
+                          ID: {p.id}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleOpenEditModal(p)}
-                    className="p-2.5 bg-zinc-950 hover:bg-amber-600 text-zinc-400 hover:text-white rounded-xl transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
-                    title="Edit & Update Product"
-                  >
-                    <Edit2 className="w-4 h-4 text-amber-400" />
-                    <span className="hidden sm:inline">Edit</span>
-                  </button>
+                  {/* Right Action Controls: Reordering Buttons & Edit/Delete */}
+                  <div className="flex items-center justify-between lg:justify-end gap-2 pt-2 lg:pt-0 border-t lg:border-t-0 border-zinc-800/80 flex-wrap">
+                    
+                    {/* Reordering Directional Controls */}
+                    <div className="flex items-center gap-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800">
+                      <button
+                        type="button"
+                        disabled={isFirst || isReordering}
+                        onClick={() => handleMoveProduct(index, "top")}
+                        className="px-2.5 py-1.5 bg-zinc-900 hover:bg-amber-600 hover:text-white text-amber-400 disabled:opacity-30 disabled:hover:bg-zinc-900 disabled:hover:text-amber-400 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1"
+                        title="সবার আগে নিন (Make #1 Top Product)"
+                      >
+                        <ChevronsUp className="w-3.5 h-3.5" />
+                        <span className="text-[10px]">সবার আগে</span>
+                      </button>
 
-                  <button
-                    onClick={() => handleDeleteProduct(p.id)}
-                    className="p-2.5 bg-zinc-950 hover:bg-red-600 text-zinc-400 hover:text-white rounded-xl transition cursor-pointer"
-                    title="Delete Product"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                      <button
+                        type="button"
+                        disabled={isFirst || isReordering}
+                        onClick={() => handleMoveProduct(index, "up")}
+                        className="p-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-900 rounded-lg transition cursor-pointer"
+                        title="এক ধাপ ওপরে নিন (Move Up)"
+                      >
+                        <ArrowUp className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={isLast || isReordering}
+                        onClick={() => handleMoveProduct(index, "down")}
+                        className="p-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-900 rounded-lg transition cursor-pointer"
+                        title="এক ধাপ নিচে নিন (Move Down)"
+                      >
+                        <ArrowDown className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={isLast || isReordering}
+                        onClick={() => handleMoveProduct(index, "bottom")}
+                        className="p-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-900 rounded-lg transition cursor-pointer"
+                        title="সবার শেষে নিন (Move to End)"
+                      >
+                        <ChevronsDown className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    {/* Edit & Delete Buttons */}
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleOpenEditModal(p)}
+                        className="px-3 py-2 bg-zinc-950 hover:bg-amber-600 text-zinc-300 hover:text-white rounded-xl transition cursor-pointer flex items-center gap-1.5 text-xs font-bold border border-zinc-800"
+                        title="Edit & Update Product"
+                      >
+                        <Edit2 className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Edit</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteProduct(p.id)}
+                        className="p-2 bg-zinc-950 hover:bg-red-600 text-zinc-400 hover:text-white rounded-xl transition cursor-pointer border border-zinc-800"
+                        title="Delete Product"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -1624,7 +1826,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div>
                 <label className="text-zinc-400 block mb-1">Price (BDT ৳) *</label>
                 <input
@@ -1661,6 +1863,18 @@ export default function AdminPage() {
                   onChange={(e) => setNewMaterial(e.target.value)}
                   placeholder="Chinese Leather"
                   className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-amber-400 font-bold block mb-1">Display Serial (#১ দিলে সবার আগে)</label>
+                <input
+                  type="number"
+                  value={newSortOrder}
+                  onChange={(e) => setNewSortOrder(e.target.value)}
+                  placeholder="1"
+                  min={1}
+                  className="w-full px-4 py-3 bg-zinc-950 border border-amber-600/60 rounded-xl text-amber-300 font-mono font-bold outline-none focus:border-amber-400"
                 />
               </div>
             </div>
@@ -2700,8 +2914,8 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                {/* Price & Category */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                {/* Price & Category & Serial */}
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                   <div>
                     <label className="text-zinc-400 block mb-1">Price (BDT ৳) *</label>
                     <input
@@ -2709,7 +2923,7 @@ export default function AdminPage() {
                       required
                       value={editPrice}
                       onChange={(e) => setEditPrice(e.target.value)}
-                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 font-mono"
+                      className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 font-mono text-xs"
                     />
                   </div>
 
@@ -2719,7 +2933,7 @@ export default function AdminPage() {
                       type="number"
                       value={editOriginalPrice}
                       onChange={(e) => setEditOriginalPrice(e.target.value)}
-                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 font-mono"
+                      className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 font-mono text-xs"
                     />
                   </div>
 
@@ -2728,7 +2942,7 @@ export default function AdminPage() {
                     <select
                       value={editCategory}
                       onChange={(e) => setEditCategory(e.target.value)}
-                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 cursor-pointer"
+                      className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 cursor-pointer text-xs"
                     >
                       <option value="Tote Bags">Tote Bags</option>
                       <option value="Crossbody Bags">Crossbody Bags</option>
@@ -2745,7 +2959,18 @@ export default function AdminPage() {
                       type="text"
                       value={editMaterial}
                       onChange={(e) => setEditMaterial(e.target.value)}
-                      className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500"
+                      className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-amber-500 text-xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-amber-400 font-bold block mb-1">Serial (পজিশন #)</label>
+                    <input
+                      type="number"
+                      value={editSortOrder}
+                      onChange={(e) => setEditSortOrder(e.target.value)}
+                      min={1}
+                      className="w-full px-3 py-2.5 bg-zinc-950 border border-amber-600/60 rounded-xl text-amber-300 font-mono font-bold outline-none focus:border-amber-400 text-xs"
                     />
                   </div>
                 </div>
