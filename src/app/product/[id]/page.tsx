@@ -63,7 +63,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       location: "Gulshan-2, Dhaka",
       rating: 5,
       date: "১ দিন আগে",
-      comment: "মাশাল্লাহ! ব্যাগটার ইতালিয়ান চামড়ার মান আর গোল্ড মেটালিক চেইনের ফিনিশিং এক কথায় অসাধারণ। শোরুমের যেকোনো ৩০-৪০ হাজার টাকার ব্র্যান্ড ব্যাগের সাথে পাল্লা দেওয়ার মতো কোয়ালিটি!",
+      comment: "মাশাল্লাহ! ব্যাগটার চাইনিজ চামড়ার মান আর গোল্ড মেটালিক চেইনের ফিনিশিং এক কথায় অসাধারণ। শোরুমের যেকোনো ৩০-৪০ হাজার টাকার ব্র্যান্ড ব্যাগের সাথে পাল্লা দেওয়ার মতো কোয়ালিটি!",
       verified: true,
       helpful: 42,
     },
@@ -93,7 +93,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       location: "Dhanmondi, Dhaka",
       rating: 5,
       date: "৫ দিন আগে",
-      comment: "আমার ফ্রেন্ডের রিকমেন্ডেশনে অর্ডার করেছিলাম। ব্যাকসাইডের সেলাই আর চেইনের ওয়েট দেখলেই বোঝা যায় আসল ইতালিয়ান লেদার। কালারটা ছবিতে যেমন ছিল বাস্তবে তার চেয়েও রয়াল!",
+      comment: "আমার ফ্রেন্ডের রিকমেন্ডেশনে অর্ডার করেছিলাম। ব্যাকসাইডের সেলাই আর চেইনের ওয়েট দেখলেই বোঝা যায় আসল চাইনিজ লেদার। কালারটা ছবিতে যেমন ছিল বাস্তবে তার চেয়েও রয়াল!",
       verified: true,
       helpful: 24,
     },
@@ -400,7 +400,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const productFaqs = [
     {
       q: "এই ব্যাগটি কি আসল খাঁটি লেদারের তৈরি?",
-      a: "জি, RAIB-এর প্রতিটি ব্যাগ ১০০% Tuscan ইতালিয়ান চামড়া থেকে অত্যন্ত যত্নসহকারে হ্যান্ডক্রাফটেড। এর সাথে ১৮K গোল্ড-প্লেটেড হার্ডওয়্যার চেইন ব্যবহৃত হয় যা সহজে রঙ নষ্ট হয় না।",
+      a: "জি, RAIB-এর প্রতিটি ব্যাগ ১০০% প্রিমিয়াম চাইনিজ চামড়া থেকে অত্যন্ত যত্নসহকারে হ্যান্ডক্রাফটেড। এর সাথে ১৮K গোল্ড-প্লেটেড হার্ডওয়্যার চেইন ব্যবহৃত হয় যা সহজে রঙ নষ্ট হয় না।",
     },
     {
       q: "ডেলিভারি সময় এবং ক্যাশ অন ডেলিভারি সুবিধা আছে কি?",
@@ -454,7 +454,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </button>
 
             <span className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-lg border border-red-500">
-              100% Genuine Italian Leather
+              100% Premium Chinese Leather
             </span>
           </motion.div>
 

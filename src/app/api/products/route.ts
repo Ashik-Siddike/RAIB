@@ -89,7 +89,7 @@ export async function POST(request: Request) {
       originalPrice: Number(body.originalPrice) || Number(body.price) * 1.2,
       category: body.category || "Tote Bags",
       color: body.color || validColorVariants[0].colorName || "Black",
-      material: body.material || "Italian Leather",
+      material: body.material || "Chinese Leather",
       image: mainCoverImage,
       secondaryImage: body.secondaryImage || mainCoverImage,
       images: Array.isArray(body.images) && body.images.length > 0 ? body.images : [mainCoverImage],

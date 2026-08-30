@@ -14,10 +14,10 @@ export const translations = {
     // Hero & Banner
     heroTagline: "Handcrafted Luxury Leather Goods",
     heroTitle: "Elegance Redefined For The Modern Woman",
-    heroSubtitle: "Discover RAIB's bespoke collection of Italian leather handbags, clutches, and totes.",
+    heroSubtitle: "Discover RAIB's bespoke collection of Chinese leather handbags, clutches, and totes.",
     exploreCollection: "Explore Collection",
     viewLookbook: "View Lookbook",
-    heroBadge: "100% Genuine Italian Leather",
+    heroBadge: "100% Premium Chinese Leather",
     heroTitleLine1: "Elegance Redefined For",
     heroTitleLine2: "The Modern Woman",
     heroCtaPrimary: "Shop Iconic Bags",
@@ -73,17 +73,17 @@ export const translations = {
     orderNumber: "Order Number",
     
     // Craftsmanship
-    craftTitle: "Artisanal Heritage & Italian Craftsmanship",
-    craftDesc: "Every RAIB handbag is meticulously constructed using full-grain calfskin leather, hand-stitched seams, and 18K gold palladium hardware.",
+    craftTitle: "Artisanal Heritage & Chinese Craftsmanship",
+    craftDesc: "Every RAIB handbag is meticulously constructed using full-grain leather, hand-stitched seams, and 18K gold palladium hardware.",
     feature1Title: "100% Full-Grain Leather",
-    feature1Desc: "Sourced from vegetable-tanned tanneries in Tuscany, Italy.",
+    feature1Desc: "Sourced from premium tanneries with meticulous quality control.",
     feature2Title: "18K Gold Palladium",
     feature2Desc: "Scratch-resistant hardware designed for timeless durability.",
     feature3Title: "Lifetime Guarantee",
     feature3Desc: "Comprehensive warranty on leather craftsmanship and zippers.",
 
     // Footer & Guarantee
-    footerDesc: "RAIB delivers contemporary luxury handbags crafted with vegetable-tanned Italian leather and gold-plated hardware.",
+    footerDesc: "RAIB delivers contemporary luxury handbags crafted with premium Chinese leather and gold-plated hardware.",
     quickLinks: "Quick Links",
     customerCare: "Customer Care",
     newsletterTitle: "Join The RAIB Circle",
@@ -121,17 +121,17 @@ export const translations = {
     // Hero & Banner
     heroTagline: "হাতে তৈরি প্রিমিয়াম লেদার ব্যাগ",
     heroTitle: "আধুনিক নারীদের অভিজাত রুচির পরিচয়",
-    heroSubtitle: "RAIB-এর খাঁটি ইতালিয়ান লেদার হ্যান্ডব্যাগ, ক্লাচ এবং টোট ব্যাগের বিশেষ কালেকশন।",
+    heroSubtitle: "RAIB-এর খাঁটি চাইনিজ লেদার হ্যান্ডব্যাগ, ক্লাচ এবং টোট ব্যাগের বিশেষ কালেকশন।",
     exploreCollection: "কালেকশন দেখুন",
     viewLookbook: "লুকবুক দেখুন",
-    heroBadge: "১০০% খাঁটি ইতালিয়ান লেদার",
+    heroBadge: "১০০% প্রিমিয়াম চাইনিজ লেদার",
     heroTitleLine1: "আধুনিক নারীদের অভিজাত",
     heroTitleLine2: "রুচির সেরা স্মারক",
     heroCtaPrimary: "ব্যাগ কালেকশন দেখুন",
 
     // Product Section
     featuredTitle: "আমাদের সেরা কালেকশন",
-    featuredSubtitle: "ইতালির ফ্লোরেন্সে ডিজাইন করা প্রিমিয়াম ব্যাগ।",
+    featuredSubtitle: "অত্যন্ত নিখুঁতভাবে তৈরি প্রিমিয়াম লেদার ব্যাগ।",
     addToCart: "কার্টে রাখুন",
     buyNow: "সরাসরি কিনুন",
     quickView: "এক পলকে দেখুন",
@@ -180,17 +180,17 @@ export const translations = {
     orderNumber: "অর্ডার নম্বর",
 
     // Craftsmanship
-    craftTitle: "ঐতিহ্য ও ইতালিয়ান শিল্পকলার অনন্য মেলবন্ধন",
-    craftDesc: "প্রতিটি RAIB ব্যাগ অত্যন্ত সূক্ষ্মতার সাথে ইতালির ফ্লোরেন্সে প্রস্তুত করা হয়। এতে ব্যবহার করা হয় খাঁটি কালফস্কিন লেদার এবং ১৮K গোল্ডেন মেটালিক লক।",
-    feature1Title: "১০০% প্রিমিয়াম ইতালিয়ান লেদার",
-    feature1Desc: "ইতালির টাস্কানি রিজিয়ন থেকে সংগৃহীত অর্গানিক লেদার।",
+    craftTitle: "ঐতিহ্য ও চাইনিজ ক্রাফটসম্যানশিপের অনন্য মেলবন্ধন",
+    craftDesc: "প্রতিটি RAIB ব্যাগ অত্যন্ত সূক্ষ্মতার সাথে প্রস্তুত করা হয়। এতে ব্যবহার করা হয় প্রিমিয়াম কোয়ালিটি লেদার এবং ১৮K গোল্ডেন মেটালিক লক।",
+    feature1Title: "১০০% প্রিমিয়াম চাইনিজ লেদার",
+    feature1Desc: "উন্নতমানের প্রিমিয়াম চাইনিজ লেদার দিয়ে নিখুঁত ফিনিশিং।",
     feature2Title: "১৮K গোল্ডেন পলিশড হার্ডওয়্যার",
     feature2Desc: "দীর্ঘস্থায়ী ও স্ক্র্যাচ-রেজিস্ট্যান্ট চকচকে লক ও মেটাল।",
-    feature3Title: "লাইফটাইম গ্যারান্টি",
-    feature3Desc: "লেদার ও জিপারের সম্পূর্ণ ওয়ারেন্টি সুবিধা।",
+    feature3Title: "কোয়ালিটি গ্যারান্টি",
+    feature3Desc: "লেদার ও জিপারের সম্পূর্ণ কোয়ালিটি সুবিধা।",
 
     // Footer & Guarantee
-    footerDesc: "RAIB তৈরি করে অভিজাত নারীদের জন্য ১০০% খাঁটি ইতালিয়ান লেদার হ্যান্ডব্যাগ ও এক্সেসরিজ।",
+    footerDesc: "RAIB তৈরি করে অভিজাত নারীদের জন্য ১০০% প্রিমিয়াম চাইনিজ লেদার হ্যান্ডব্যাগ ও এক্সেসরিজ।",
     quickLinks: "দ্রুত লিংক",
     customerCare: "গ্রাহক সেবা",
     newsletterTitle: "অফার পেতে যুক্ত থাকুন",

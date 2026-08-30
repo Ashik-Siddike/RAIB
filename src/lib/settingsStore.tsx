@@ -93,7 +93,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   adminPassword: "admin",
 
   showAnnouncementBar: true,
-  announcementText: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER",
+  announcementText: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% PREMIUM CHINESE LEATHER",
   showStockUrgency: true,
   stockUrgencyText: "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।",
 
@@ -112,18 +112,18 @@ export const DEFAULT_SETTINGS: SettingsType = {
 
   bestsellersBadge: "FEATURED TODAY",
   bestsellersTitle: "Bestsellers",
-  bestsellersSubtitle: "Handcrafted Italian leather favorites loved by modern women.",
+  bestsellersSubtitle: "Handcrafted Chinese leather favorites loved by modern women.",
   bestsellersCtaText: "VIEW ALL BESTSELLERS",
 
   reelsBadge: "CLIENT STORIES",
   reelsTitle: "STORIES THAT LEAD",
-  reelsSubtitle: "Real clients showcasing RAIB genuine Italian leather bags in motion",
+  reelsSubtitle: "Real clients showcasing RAIB genuine Chinese leather bags in motion",
   reels: [
     {
       id: "reel-1",
       videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-black-handbag-41551-large.mp4",
       poster: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop&q=80",
-      title: "The Royal Crimson Italian Leather Tote",
+      title: "The Royal Crimson China Leather Tote",
       price: 4850,
       productId: "raib-tote-01",
     },
@@ -139,7 +139,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
       id: "reel-3",
       videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-fashion-woman-with-a-bag-walking-in-the-street-41550-large.mp4",
       poster: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&auto=format&fit=crop&q=80",
-      title: "Emerald Gold Italian Clutch",
+      title: "Emerald Gold China Leather Clutch",
       price: 5200,
       productId: "raib-emerald-03",
     },
@@ -172,7 +172,7 @@ export const DEFAULT_SETTINGS: SettingsType = {
   offerBannerButtonText: "SHOP THE SALE",
   offerBannerLink: "/shop",
 
-  trustBadge1Title: "100% Genuine Italian Leather",
+  trustBadge1Title: "100% Premium Chinese Leather",
   trustBadge1Subtitle: "Handcrafted by master artisans",
   trustBadge2Title: "Cash on Delivery",
   trustBadge2Subtitle: "Fast home delivery across BD",

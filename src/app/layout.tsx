@@ -34,14 +34,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://raib.site"),
   title: {
-    default: "RAIB | Genuine Italian Leather Ladies Bags in Bangladesh",
+    default: "RAIB | Premium Chinese Leather Ladies Bags in Bangladesh",
     template: "%s | RAIB Luxury Bags",
   },
-  description: "Discover RAIB's handcrafted Italian leather tote bags, shoulder bags, crossbody bags, and evening clutches. Cash on Delivery & Free Delivery over ৳3,000 in Bangladesh.",
+  description: "Discover RAIB's handcrafted Chinese leather tote bags, shoulder bags, crossbody bags, and evening clutches. Cash on Delivery & Free Delivery over ৳3,000 in Bangladesh.",
   keywords: [
     "RAIB", "RAIB bags", "RAIB leather bags", "ladies bag Bangladesh", "luxury handbag BD",
     "leather tote bag Dhaka", "crossbody bag Bangladesh", "cash on delivery ladies bag",
-    "genuine leather purse BD", "Italian leather bags Bangladesh"
+    "genuine leather purse BD", "Chinese leather bags Bangladesh"
   ],
   authors: [{ name: "RAIB Luxury Leather Goods" }],
   creator: "RAIB",
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
     apple: "/main-logo.png",
   },
   openGraph: {
-    title: "RAIB | Genuine Italian Leather Ladies Bags in Bangladesh",
-    description: "Explore RAIB's handcrafted Italian leather tote bags, shoulder bags, crossbody bags, and clutches. Quiet luxury crafted for empowered women.",
+    title: "RAIB | Premium Chinese Leather Ladies Bags in Bangladesh",
+    description: "Explore RAIB's handcrafted Chinese leather tote bags, shoulder bags, crossbody bags, and clutches. Quiet luxury crafted for empowered women.",
     url: "https://raib.site",
     siteName: "RAIB Luxury Leather Goods",
     images: [
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
         url: "/tote_bag_red_1786395433017.jpg",
         width: 1200,
         height: 630,
-        alt: "RAIB Royal Crimson Italian Leather Tote",
+        alt: "RAIB Royal Crimson China Leather Tote",
       },
     ],
     locale: "en_US",
@@ -80,8 +80,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "RAIB | Genuine Italian Leather Ladies Bags in Bangladesh",
-    description: "Handcrafted Italian leather tote bags & clutches in Bangladesh. Cash on Delivery available.",
+    title: "RAIB | Premium Chinese Leather Ladies Bags in Bangladesh",
+    description: "Handcrafted Chinese leather tote bags & clutches in Bangladesh. Cash on Delivery available.",
     images: ["/tote_bag_red_1786395433017.jpg"],
   },
   other: {
@@ -136,7 +136,7 @@ export default function RootLayout({
     "url": "https://raib.site",
     "logo": "https://raib.site/main-logo.png",
     "image": "https://raib.site/tote_bag_red_1786395433017.jpg",
-    "description": "Contemporary luxury handcrafted Italian leather tote bags, shoulder bags, and clutches in Bangladesh.",
+    "description": "Contemporary luxury handcrafted Chinese leather tote bags, shoulder bags, and clutches in Bangladesh.",
     "telephone": "+8801700000000",
     "priceRange": "৳2,500 - ৳10,000",
     "address": {

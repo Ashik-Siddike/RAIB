@@ -47,7 +47,7 @@ export function ReelsSection() {
             {settings.reelsTitle || "STORIES THAT LEAD"}
           </h2>
           <p className="text-xs sm:text-sm text-zinc-600 font-sans max-w-xl mx-auto">
-            {settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion"}
+            {settings.reelsSubtitle || "Real clients showcasing RAIB genuine Chinese leather bags in motion"}
           </p>
         </div>
 
@@ -65,9 +65,9 @@ export function ReelsSection() {
               originalPrice: Math.round(reelPrice * 1.2),
               category: "Tote Bags",
               color: "Black",
-              material: "Italian Leather",
+              material: "Chinese Leather",
               image: reelImage,
-              description: "Luxury Italian leather bag featured in Client Stories.",
+              description: "Luxury Chinese leather bag featured in Client Stories.",
               rating: 5.0,
               reviewCount: 1,
             };

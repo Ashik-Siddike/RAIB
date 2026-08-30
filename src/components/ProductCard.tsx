@@ -112,7 +112,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           {/* Material Specs */}
           <p className="text-[11px] sm:text-xs text-zinc-500 line-clamp-1">
-            {product.material || "Genuine Italian Leather"}
+            {product.material || "Premium Chinese Leather"}
           </p>
         </div>
 

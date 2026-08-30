@@ -22,7 +22,7 @@ export function LiveChatWidget() {
   ];
 
   const handleWhatsApp = (textToSend?: string) => {
-    const finalMsg = textToSend || userMessage.trim() || "Hi RAIB Team! I am interested in your luxury Italian leather bags.";
+    const finalMsg = textToSend || userMessage.trim() || "Hi RAIB Team! I am interested in your luxury Chinese leather bags.";
     const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(finalMsg)}`;
     window.open(url, "_blank");
     setUserMessage("");
@@ -57,7 +57,7 @@ export function LiveChatWidget() {
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-white font-serif flex items-center gap-1">
-                    RAIB Italian Leather Support
+                    RAIB Luxury Leather Support
                     <Sparkles className="w-3 h-3 text-amber-400" />
                   </h3>
                   <span className="text-[10px] text-emerald-400 font-medium">

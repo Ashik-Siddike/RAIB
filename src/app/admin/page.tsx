@@ -75,7 +75,7 @@ export default function AdminPage() {
 
   // Announcement Bar State
   const [showAnnouncementBar, setShowAnnouncementBar] = useState(settings.showAnnouncementBar ?? true);
-  const [announcementText, setAnnouncementText] = useState(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+  const [announcementText, setAnnouncementText] = useState(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% PREMIUM CHINESE LEATHER");
   const [showStockUrgency, setShowStockUrgency] = useState(settings.showStockUrgency ?? true);
   const [stockUrgencyText, setStockUrgencyText] = useState(settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।");
 
@@ -97,13 +97,13 @@ export default function AdminPage() {
   // Bestsellers State
   const [bestsellersBadge, setBestsellersBadge] = useState(settings.bestsellersBadge || "FEATURED TODAY");
   const [bestsellersTitle, setBestsellersTitle] = useState(settings.bestsellersTitle || "Bestsellers");
-  const [bestsellersSubtitle, setBestsellersSubtitle] = useState(settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women.");
+  const [bestsellersSubtitle, setBestsellersSubtitle] = useState(settings.bestsellersSubtitle || "Handcrafted Chinese leather favorites loved by modern women.");
   const [bestsellersCtaText, setBestsellersCtaText] = useState(settings.bestsellersCtaText || "VIEW ALL BESTSELLERS");
 
   // Video Reels State
   const [reelsBadge, setReelsBadge] = useState(settings.reelsBadge || "CLIENT STORIES");
   const [reelsTitle, setReelsTitle] = useState(settings.reelsTitle || "STORIES THAT LEAD");
-  const [reelsSubtitle, setReelsSubtitle] = useState(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion");
+  const [reelsSubtitle, setReelsSubtitle] = useState(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Chinese leather bags in motion");
 
   // New Arrivals State
   const [newArrivalsBadge, setNewArrivalsBadge] = useState(settings.newArrivalsBadge || "JUST ARRIVED");
@@ -118,7 +118,7 @@ export default function AdminPage() {
   const [offerLink, setOfferLink] = useState(settings.offerBannerLink || "/shop");
 
   // Trust Badges State
-  const [tb1Title, setTb1Title] = useState(settings.trustBadge1Title || "100% Genuine Italian Leather");
+  const [tb1Title, setTb1Title] = useState(settings.trustBadge1Title || "100% Premium Chinese Leather");
   const [tb1Sub, setTb1Sub] = useState(settings.trustBadge1Subtitle || "Handcrafted by master artisans");
   const [tb2Title, setTb2Title] = useState(settings.trustBadge2Title || "Cash on Delivery");
   const [tb2Sub, setTb2Sub] = useState(settings.trustBadge2Subtitle || "Fast home delivery across BD");
@@ -147,7 +147,7 @@ export default function AdminPage() {
   const [newPrice, setNewPrice] = useState("");
   const [newCategory, setNewCategory] = useState("Tote Bags");
   const [newColor, setNewColor] = useState("Black");
-  const [newMaterial, setNewMaterial] = useState("Italian Leather");
+  const [newMaterial, setNewMaterial] = useState("Chinese Leather");
   const [newImage, setNewImage] = useState("/tote_bag_red_1786395433017.jpg");
   const [newSecondaryImage, setNewSecondaryImage] = useState("");
   const [newImages, setNewImages] = useState<string[]>([]);
@@ -167,7 +167,7 @@ export default function AdminPage() {
   const [editPrice, setEditPrice] = useState("");
   const [editOriginalPrice, setEditOriginalPrice] = useState("");
   const [editCategory, setEditCategory] = useState("Tote Bags");
-  const [editMaterial, setEditMaterial] = useState("Italian Leather");
+  const [editMaterial, setEditMaterial] = useState("Chinese Leather");
   const [editImage, setEditImage] = useState("");
   const [editSecondaryImage, setEditSecondaryImage] = useState("");
   const [editColorVariants, setEditColorVariants] = useState<ColorVariant[]>([]);
@@ -229,7 +229,7 @@ export default function AdminPage() {
     setDelCharge(settings.deliveryCharge || 120);
 
     setShowAnnouncementBar(settings.showAnnouncementBar ?? true);
-    setAnnouncementText(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER");
+    setAnnouncementText(settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% PREMIUM CHINESE LEATHER");
     setShowStockUrgency(settings.showStockUrgency ?? true);
     setStockUrgencyText(settings.stockUrgencyText || "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।");
 
@@ -248,12 +248,12 @@ export default function AdminPage() {
 
     setBestsellersBadge(settings.bestsellersBadge || "FEATURED TODAY");
     setBestsellersTitle(settings.bestsellersTitle || "Bestsellers");
-    setBestsellersSubtitle(settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women.");
+    setBestsellersSubtitle(settings.bestsellersSubtitle || "Handcrafted Chinese leather favorites loved by modern women.");
     setBestsellersCtaText(settings.bestsellersCtaText || "VIEW ALL BESTSELLERS");
 
     setReelsBadge(settings.reelsBadge || "CLIENT STORIES");
     setReelsTitle(settings.reelsTitle || "STORIES THAT LEAD");
-    setReelsSubtitle(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Italian leather bags in motion");
+    setReelsSubtitle(settings.reelsSubtitle || "Real clients showcasing RAIB genuine Chinese leather bags in motion");
 
     setNewArrivalsBadge(settings.newArrivalsBadge || "JUST ARRIVED");
     setNewArrivalsTitle(settings.newArrivalsTitle || "New Arrivals");
@@ -265,7 +265,7 @@ export default function AdminPage() {
     setOfferBtnText(settings.offerBannerButtonText || "SHOP THE SALE");
     setOfferLink(settings.offerBannerLink || "/shop");
 
-    setTb1Title(settings.trustBadge1Title || "100% Genuine Italian Leather");
+    setTb1Title(settings.trustBadge1Title || "100% Premium Chinese Leather");
     setTb1Sub(settings.trustBadge1Subtitle || "Handcrafted by master artisans");
     setTb2Title(settings.trustBadge2Title || "Cash on Delivery");
     setTb2Sub(settings.trustBadge2Subtitle || "Fast home delivery across BD");
@@ -546,7 +546,7 @@ export default function AdminPage() {
       originalPrice: Number(newPrice) * 1.2,
       category: newCategory,
       color: defaultColorVar.colorName,
-      material: newMaterial || "Italian Leather",
+      material: newMaterial || "Chinese Leather",
       image: mainCover,
       secondaryImage: newSecondaryImage || mainCover,
       images: allImages,
@@ -580,7 +580,7 @@ export default function AdminPage() {
         originalPrice: Number(newPrice) * 1.2,
         category: newCategory,
         color: compressedVariants[0]?.colorName || "Default",
-        material: newMaterial || "Italian Leather",
+        material: newMaterial || "Chinese Leather",
         image: compressedMainCover,
         secondaryImage: newSecondaryImage ? (newSecondaryImage.startsWith("data:image/") ? await compressImageFile(newSecondaryImage) : newSecondaryImage) : compressedMainCover,
         images: [compressedMainCover, ...compressedVariants.map((cv) => cv.image)].filter(Boolean),
@@ -646,7 +646,7 @@ export default function AdminPage() {
     setEditPrice(String(p.price || ""));
     setEditOriginalPrice(String(p.originalPrice || Math.round(p.price * 1.2) || ""));
     setEditCategory(p.category || "Tote Bags");
-    setEditMaterial(p.material || "Italian Leather");
+    setEditMaterial(p.material || "Chinese Leather");
     setEditImage(p.image || "");
     setEditSecondaryImage(p.secondaryImage || "");
     setEditColorVariants(
@@ -693,7 +693,7 @@ export default function AdminPage() {
         price: Number(editPrice),
         originalPrice: editOriginalPrice ? Number(editOriginalPrice) : Number(editPrice) * 1.2,
         category: editCategory,
-        material: editMaterial || "Italian Leather",
+        material: editMaterial || "Chinese Leather",
         image: compressedMainCover,
         secondaryImage: editSecondaryImage ? (editSecondaryImage.startsWith("data:image/") ? await compressImageFile(editSecondaryImage) : editSecondaryImage) : compressedMainCover,
         colorVariants: validColorVars,
@@ -1659,7 +1659,7 @@ export default function AdminPage() {
                   type="text"
                   value={newMaterial}
                   onChange={(e) => setNewMaterial(e.target.value)}
-                  placeholder="Italian Leather"
+                  placeholder="Chinese Leather"
                   className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white outline-none focus:border-red-500"
                 />
               </div>

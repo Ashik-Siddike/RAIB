@@ -72,7 +72,7 @@ export default function Home() {
                   {settings.bestsellersTitle || "Bestsellers"}
                 </h2>
                 <p className="text-sm text-zinc-600 max-w-xl">
-                  {settings.bestsellersSubtitle || "Handcrafted Italian leather favorites loved by modern women."}
+                  {settings.bestsellersSubtitle || "Handcrafted Chinese leather favorites loved by modern women."}
                 </p>
               </div>
 
@@ -172,7 +172,7 @@ export default function Home() {
                   <Award className="w-6 h-6" />
                 </div>
                 <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider font-serif">
-                  {settings.trustBadge1Title || "100% Genuine Italian Leather"}
+                  {settings.trustBadge1Title || "100% Premium Chinese Leather"}
                 </h4>
                 <p className="text-[11px] text-zinc-500">
                   {settings.trustBadge1Subtitle || "Handcrafted by master artisans with full-grain leather."}

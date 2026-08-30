@@ -40,7 +40,7 @@ export function Footer() {
             <p className="text-xs text-stone-400 leading-relaxed font-sans max-w-sm">
               {settings.footerTagline ||
                 (lang === "bn"
-                  ? "আধুনিক নারীদের জন্য ইতালিয়ান চামড়ার হাতে সেলাই করা অভিজাত ব্যাগ।"
+                  ? "আধুনিক নারীদের জন্য চাইনিজ চামড়ার হাতে সেলাই করা অভিজাত ব্যাগ।"
                   : "Timeless luxury ladies bags designed to carry your story with elegance.")}
             </p>
 

@@ -90,10 +90,10 @@ function ShopContent() {
           RAIB Handbag Collection
         </span>
         <h1 className="text-3xl sm:text-5xl font-extrabold font-serif tracking-tight">
-          {wishlistParam === "true" ? "Your Saved Wishlist" : "Genuine Italian Leather Catalog"}
+          {wishlistParam === "true" ? "Your Saved Wishlist" : "Premium Chinese Leather Catalog"}
         </h1>
         <p className="text-stone-400 text-xs sm:text-sm max-w-xl font-light">
-          Explore handcrafted Italian full-grain leather bags designed to complement your distinct lifestyle.
+          Explore handcrafted Chinese full-grain leather bags designed to complement your distinct lifestyle.
         </p>
       </div>
 

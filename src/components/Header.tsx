@@ -35,7 +35,7 @@ export function Header() {
   ];
 
   const showBar = settings.showAnnouncementBar ?? true;
-  const barText = settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER";
+  const barText = settings.announcementText || "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% PREMIUM CHINESE LEATHER";
 
   return (
     <>

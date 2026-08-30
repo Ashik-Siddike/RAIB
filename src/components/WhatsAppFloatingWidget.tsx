@@ -53,7 +53,7 @@ export function WhatsAppFloatingWidget() {
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-white font-serif flex items-center gap-1">
-                    RAIB Italian Leather Support
+                    RAIB Luxury Leather Support
                     <Sparkles className="w-3 h-3 text-amber-400" />
                   </h3>
                   <span className="text-[10px] text-emerald-400 font-medium">

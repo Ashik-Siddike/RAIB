@@ -113,7 +113,7 @@ const SettingsSchema = new Schema<ISettings>(
     adminPassword: { type: String, default: "admin" },
 
     showAnnouncementBar: { type: Boolean, default: true },
-    announcementText: { type: String, default: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% GENUINE ITALIAN LEATHER" },
+    announcementText: { type: String, default: "FREE EXPRESS SHIPPING NATIONWIDE ON ORDERS OVER ৳3,000 | 100% PREMIUM CHINESE LEATHER" },
     showStockUrgency: { type: Boolean, default: true },
     stockUrgencyText: { type: String, default: "🔥 স্টক সীমিত! ঢাকায় মাত্র ৪টি ব্যাগ বাকি আছে।" },
 
@@ -132,12 +132,12 @@ const SettingsSchema = new Schema<ISettings>(
 
     bestsellersBadge: { type: String, default: "FEATURED TODAY" },
     bestsellersTitle: { type: String, default: "Bestsellers" },
-    bestsellersSubtitle: { type: String, default: "Handcrafted Italian leather favorites loved by modern women." },
+    bestsellersSubtitle: { type: String, default: "Handcrafted Chinese leather favorites loved by modern women." },
     bestsellersCtaText: { type: String, default: "VIEW ALL BESTSELLERS" },
 
     reelsBadge: { type: String, default: "CLIENT STORIES" },
     reelsTitle: { type: String, default: "STORIES THAT LEAD" },
-    reelsSubtitle: { type: String, default: "Real clients showcasing RAIB genuine Italian leather bags in motion" },
+    reelsSubtitle: { type: String, default: "Real clients showcasing RAIB genuine Chinese leather bags in motion" },
     reels: [ReelSchema],
 
     newArrivalsBadge: { type: String, default: "JUST ARRIVED" },
@@ -151,7 +151,7 @@ const SettingsSchema = new Schema<ISettings>(
     offerBannerButtonText: { type: String, default: "SHOP THE SALE" },
     offerBannerLink: { type: String, default: "/shop" },
 
-    trustBadge1Title: { type: String, default: "100% Genuine Italian Leather" },
+    trustBadge1Title: { type: String, default: "100% Premium Chinese Leather" },
     trustBadge1Subtitle: { type: String, default: "Handcrafted by master artisans" },
     trustBadge2Title: { type: String, default: "Cash on Delivery" },
     trustBadge2Subtitle: { type: String, default: "Fast home delivery across BD" },
